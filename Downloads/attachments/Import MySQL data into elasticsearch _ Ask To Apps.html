@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en-US"><head>
+   
+<meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+
+<title>Import MySQL data into elasticsearch | Ask To Apps</title>
+
+<link rel="stylesheet" href="Import%20MySQL%20data%20into%20elasticsearch%20%7C%20Ask%20To%20Apps_files/style.css" media="screen">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.2, user-scalable=yes">
+
+<!--[if IE 8]>
+    <script src="http://www.asktoapps.com/wp-content/themes/Sueva-Free/suevafree/js/html5.js" type="text/javascript"></script>
+    <script src="http://www.asktoapps.com/wp-content/themes/Sueva-Free/suevafree/js/selectivizr-min.js" type="text/javascript"></script>
+<![endif]-->
+
+<link rel="alternate" type="application/rss+xml" title="Ask To Apps » Feed" href="http://www.asktoapps.com/feed/">
+<link rel="alternate" type="application/rss+xml" title="Ask To Apps » Comments Feed" href="http://www.asktoapps.com/comments/feed/">
+<link rel="alternate" type="application/rss+xml" title="Ask To Apps » Import MySQL data into elasticsearch Comments Feed" href="http://www.asktoapps.com/import-mysql-data-into-elasticsearch/feed/">
+<link rel="stylesheet" id="bootstrap-css" href="Import%20MySQL%20data%20into%20elasticsearch%20%7C%20Ask%20To%20Apps_files/bootstrap.css" type="text/css" media="all">
+<link rel="stylesheet" id="bootstrap-responsive-css" href="Import%20MySQL%20data%20into%20elasticsearch%20%7C%20Ask%20To%20Apps_files/bootstrap-responsive.css" type="text/css" media="all">
+<link rel="stylesheet" id="font-awesome.min-css" href="Import%20MySQL%20data%20into%20elasticsearch%20%7C%20Ask%20To%20Apps_files/font-awesome.css" type="text/css" media="all">
+<link rel="stylesheet" id="fonts.googleapis-css" href="Import%20MySQL%20data%20into%20elasticsearch%20%7C%20Ask%20To%20Apps_files/css.css" type="text/css" media="all">
+<link rel="stylesheet" id="prettyPhoto-css" href="Import%20MySQL%20data%20into%20elasticsearch%20%7C%20Ask%20To%20Apps_files/prettyPhoto.css" type="text/css" media="all">
+<script src="Import%20MySQL%20data%20into%20elasticsearch%20%7C%20Ask%20To%20Apps_files/analytics.js" async=""></script><script type="text/javascript" src="Import%20MySQL%20data%20into%20elasticsearch%20%7C%20Ask%20To%20Apps_files/jquery_002.js"></script>
+<script type="text/javascript" src="Import%20MySQL%20data%20into%20elasticsearch%20%7C%20Ask%20To%20Apps_files/comment-reply.js"></script>
+<link rel="prev" title="Elastic Search : Create Index and Search Index" href="http://www.asktoapps.com/elastic-search-create-index-and-search-index/">
+<link rel="next" title="Install MySQL server and client on linux" href="http://www.asktoapps.com/install-mysql-server-and-client-on-linux/">
+<link rel="shortlink" href="http://www.asktoapps.com/?p=218">
+<!-- Tracking code easily added by NK Google Analytics -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-43322350-1', 'asktoapps.com');
+  ga('send', 'pageview');
+
+</script>
+<!-- All in One SEO Pack 1.6.14.2 by Michael Torbert of Semper Fi Web Design[144,201] -->
+<meta name="description" content="Import MySQL data into elasticsearch">
+<meta name="keywords" content="import, import mysql, import mysql into elastic search,elasticsearch,linux,website peformance">
+<link rel="canonical" href="http://www.asktoapps.com/import-mysql-data-into-elasticsearch/">
+<!-- /all in one seo pack -->
+<link rel="stylesheet" type="text/css" href="Import%20MySQL%20data%20into%20elasticsearch%20%7C%20Ask%20To%20Apps_files/wp-code-highlight.css" media="screen">
+
+<style type="text/css">
+
+#footer { background: url(http://www.asktoapps.com/wp-content/themes/Sueva-Free/suevafree/images/background/patterns/pattern2.jpg);background-repeat:repeat;background-color:#f3f3f3; } #logo a { font-size:70px; } #logo a span{ font-size:18px; } nav#mainmenu ul li a { font-size:18px; } .article p, .article li, .article address, .article dd, .article blockquote, .article td, .article th { font-size:18px}h1 {font-size:26px; }h2 { font-size:24px; }h3 { font-size:21px; }h4 { font-size:16px; }h5 { font-size:14px; }h6 { font-size:12px; }.pin-article .link:hover, .contact-form input[type=submit], .pin-article .quote:hover, .pin-article .link a:hover, .button, .wp-pagenavi a:hover , .wp-pagenavi span.current { background-color: #f0b70c; } a, nav#mainmenu ul li a:hover, nav#mainmenu li:hover > a, nav#mainmenu ul li.current-menu-item > a, nav#mainmenu ul li.current_page_item > a, nav#mainmenu ul li.current-menu-parent > a, nav#mainmenu ul li.current_page_ancestor > a, nav#mainmenu ul li.current-menu-ancestor > a { color: #f0b70c; } ::-moz-selection { background-color: #f0b70c; } ::selection { background-color: #f0b70c; } nav#mainmenu ul ul { border-top-color: #f0b70c; } nav#mainmenu ul ul:before { border-bottom-color: #f0b70c; } nav#mainmenu ul ul li ul { border-top-color: #f0b70c; } nav#mainmenu ul ul li a:hover, nav#mainmenu ul ul li.current-menu-item > a, nav#mainmenu ul ul li.current_page_item > a, nav#mainmenu ul ul li.current_page_ancestor > a, nav#mainmenu ul ul li.current_page_ancestor > a, nav#mainmenu ul ul li.current-menu-ancestor > a, #sidebar .tagcloud a, #footer .tagcloud a  { background: #f0b70c; } nav#mainmenu ul ul li a:hover, nav#mainmenu ul ul li.current-menu-item > a, nav#mainmenu ul ul li.current_page_item > a, nav#mainmenu ul ul li.current_page_ancestor > a, nav#mainmenu ul ul li.current_page_ancestor > a, nav#mainmenu ul ul li.current-menu-ancestor > a  { border-top-color: #f0b70c; } .contact-form input[type=submit]:hover, .button:hover, #sidebar .tagcloud a:hover, #footer .tagcloud a:hover, .contact-form input[type=submit]:hover { background: #bd9009; } a:hover, #footer a:hover, #footer ul.widget-category li:hover, #footer ul.widget-category li a:hover, .pin-article h1.title a:hover, #logo a:hover { color: #bd9009; } #footer, #footer .widget, article blockquote { border-color: #f0b70c; } #footer .title, #footer p, #footer li, #footer address, #footer dd, #footer blockquote, #footer td, #footer th, #footer .textwidget, #footer a, #footer ul,#footer p, #footer .copyright p, #footer .copyright a  { color: #ffffff; } 
+</style>
+    
+<style type="text/css" id="custom-background-css">
+body.custom-background { background-color: #f3f3f3; }
+</style>
+
+<script src="Import%20MySQL%20data%20into%20elasticsearch%20%7C%20Ask%20To%20Apps_files/nonSecureAnonymousFramework"></script></head>
+<body class="single single-post postid-218 single-format-standard custom-background custombody">
+
+<header class="header container">
+
+	<div class="row">
+    	<div class="span12">
+        	<div id="logo">
+                    
+            	<a href="http://www.asktoapps.com/" title="Ask To Apps">
+                        
+                	Ask To Apps<span></span>                            
+                </a>
+                        
+			</div>
+
+            <nav id="mainmenu">
+                <ul id="menu-header-menu" class="menu sub-menu"><li id="menu-item-283" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-283"><a href="http://www.asktoapps.com/">Home</a></li>
+<li id="menu-item-282" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-282"><a href="http://www.asktoapps.com/category/wordpress/">WordPress</a></li>
+<li id="menu-item-324" class="menu-item menu-item-type-taxonomy menu-item-object-category current-post-ancestor current-menu-parent current-post-parent menu-item-324"><a href="http://www.asktoapps.com/category/elasticsearch/">Elasticsearch</a></li>
+<li id="menu-item-279" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-279"><a href="http://www.asktoapps.com/category/php/">PHP</a></li>
+<li id="menu-item-276" class="menu-item menu-item-type-taxonomy menu-item-object-category current-post-ancestor current-menu-parent current-post-parent menu-item-276"><a href="http://www.asktoapps.com/category/linux/">Linux</a></li>
+<li id="menu-item-281" class="menu-item menu-item-type-taxonomy menu-item-object-category current-post-ancestor current-menu-parent current-post-parent menu-item-281"><a href="http://www.asktoapps.com/category/website-peformance/">Website Peformance</a></li>
+<li id="menu-item-338" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-338"><a href="http://www.asktoapps.com/page-views/">Page Views</a></li>
+</ul>            </nav><select class="select-menu"><option selected="selected" value="#">Navigate to...</option><option value="http://www.asktoapps.com/">–&nbsp;Home</option><option value="http://www.asktoapps.com/category/wordpress/">–&nbsp;WordPress</option><option value="http://www.asktoapps.com/category/elasticsearch/">–&nbsp;Elasticsearch</option><option value="http://www.asktoapps.com/category/php/">–&nbsp;PHP</option><option value="http://www.asktoapps.com/category/linux/">–&nbsp;Linux</option><option value="http://www.asktoapps.com/category/website-peformance/">–&nbsp;Website Peformance</option><option value="http://www.asktoapps.com/page-views/">–&nbsp;Page Views</option></select>	                
+	 <div style="min-height:90px;align:center;margin-bottom:10px;">
+		<script async="" src="Import%20MySQL%20data%20into%20elasticsearch%20%7C%20Ask%20To%20Apps_files/adsbygoogle.js"></script>
+                            <!-- Responsive -->
+                            <ins data-adsbygoogle-status="done" class="adsbygoogle" style="display: block; height: 90px;" data-ad-client="ca-pub-0198539639402259" data-ad-slot="4623873483" data-ad-format="auto"><ins style="display:inline-table;border:none;height:90px;margin:0;padding:0;position:relative;visibility:visible;width:940px;background-color:transparent"><ins id="aswift_0_anchor" style="display:block;border:none;height:90px;margin:0;padding:0;position:relative;visibility:visible;width:940px;background-color:transparent"><iframe marginwidth="0" marginheight="0" vspace="0" hspace="0" allowtransparency="true" onload="var i=this.id,s=window.google_iframe_oncopy,H=s&amp;&amp;s.handlers,h=H&amp;&amp;H[i],w=this.contentWindow,d;try{d=w.document}catch(e){}if(h&amp;&amp;d&amp;&amp;(!d.body||!d.body.firstChild)){if(h.call){setTimeout(h,0)}else if(h.match){try{h=s.upd(h,i)}catch(e){}w.location.replace(h)}}" id="aswift_0" name="aswift_0" style="left:0;position:absolute;top:0;" frameborder="0" height="90" scrolling="no" width="940"></iframe></ins></ins></ins>
+                            <script>
+                            (adsbygoogle = window.adsbygoogle || []).push({});
+                            </script>
+        </div>        
+	</div>
+
+	</div>
+
+</header>
+<!-- start content -->
+
+<div class="container">
+	<div class="row">
+       
+    <div class="post-218 post type-post status-publish format-standard hentry category-elasticsearch category-linux category-website-peformance tag-elasticsearch pin-article span8">
+		
+		        
+		    
+<article class="article">
+
+    <h1 class="title"><a href="http://www.asktoapps.com/import-mysql-data-into-elasticsearch/">Import MySQL data into elasticsearch</a></h1>
+    
+    <div class="line"> 
+
+        <div class="entry-info ">
+       
+            <span class="entry-date"><i class="icon-time"></i>March 26, 2013</span>
+                        <span class="entry-standard"><i class="icon-edit"></i>Article</span>
+        </div>
+    
+    </div>
+
+	<p>There are various ways to import mysql data into elasticsearch. Couple of as follows.</p>
+<p>    Read one by one record and run curl e.g.Â curl -XPUT ‘http://localhost:9200/ …<br>
+    By using JDBC and elasticsearch river.</p>
+<p>Using JDBC and Elasticsearch River</p>
+<p>Install JDBC river plugin</p>
+<pre style="" class="wp-code-highlight prettyprint linenums:1 prettyprinted"><ol class="linenums"><li class="L0" value="1"><span class="pun">.</span><span class="str">/bin/</span><span class="pln">plugin </span><span class="pun">-</span><span class="pln">url http</span><span class="pun">:</span><span class="com">//bit.ly/10FJhEd -install river-jdbc</span></li></ol></pre>
+<p>Download MySQL JDBC driver</p>
+<pre style="" class="wp-code-highlight prettyprint linenums:1 prettyprinted"><ol class="linenums"><li class="L0" value="1"><span class="pln">&nbsp;</span></li><li class="L1"><span class="pln">http</span><span class="pun">:</span><span class="com">//dev.mysql.com/downloads/mirror.php?id=412177</span></li><li class="L2"><span class="pln">&nbsp;</span></li><li class="L3"><span class="pln">unzip</span><span class="pun">Â</span><span class="pln"> mysql</span><span class="pun">-</span><span class="pln">connector</span><span class="pun">-</span><span class="pln">java</span><span class="pun">-</span><span class="lit">5.1</span><span class="pun">.</span><span class="lit">21</span><span class="pun">-</span><span class="pln">bin</span><span class="pun">.</span><span class="pln">zip</span></li><li class="L4"><span class="pln">cp mysql</span><span class="pun">-</span><span class="pln">connector</span><span class="pun">-</span><span class="pln">java</span><span class="pun">-</span><span class="lit">5.1</span><span class="pun">.</span><span class="lit">21</span><span class="pun">-</span><span class="pln">bin</span><span class="pun">.</span><span class="pln">jar $ES_HOME</span><span class="pun">/</span><span class="pln">plugins</span><span class="pun">/</span><span class="pln">river</span><span class="pun">-</span><span class="pln">jdbc</span><span class="pun">/</span></li><li class="L5"><span class="pun">./</span><span class="pln">bin</span><span class="pun">/</span><span class="pln">elasticsearch </span><span class="pun">-</span><span class="pln">f</span></li></ol></pre>
+<p>Import table from mysql</p>
+<pre style="" class="wp-code-highlight prettyprint linenums:1 prettyprinted"><ol class="linenums"><li class="L0" value="1"><span class="pln">curl </span><span class="pun">-</span><span class="pln">XPUT </span><span class="str">'localhost:9200/_river/jdbc/_meta'</span><span class="pln"> </span><span class="pun">-</span><span class="pln">d </span><span class="str">'{</span></li><li class="L1"><span class="str">"type" : "jdbc",</span></li><li class="L2"><span class="str">"jdbc" : {</span></li><li class="L3"><span class="str">"driver" : "com.mysql.jdbc.Driver",</span></li><li class="L4"><span class="str">"url" : "jdbc:mysql://localhost:3306/test",</span></li><li class="L5"><span class="str">"user" : "",</span></li><li class="L6"><span class="str">"password" : "",</span></li><li class="L7"><span class="str">"sql" : " select * from test;"</span></li><li class="L8"><span class="str">},</span></li><li class="L9"><span class="str">"index" : {</span></li><li class="L0"><span class="str">"index" : "jdbc",</span></li><li class="L1"><span class="str">"type" : "jdbc"</span></li><li class="L2"><span class="str">}</span></li><li class="L3"><span class="str">}'</span></li></ol></pre>
+<p>Select table data from elasticsearch</p>
+<pre style="" class="wp-code-highlight prettyprint linenums:1 prettyprinted"><ol class="linenums"><li class="L0" value="1"><span class="pln">curl </span><span class="pun">-</span><span class="pln">XGET </span><span class="str">'http://localhost:9200/jdbc/_search?q=*'</span></li></ol></pre>
+<p>Display indexed data on browser interface.</p>
+<pre style="" class="wp-code-highlight prettyprint linenums:1 prettyprinted"><ol class="linenums"><li class="L0" value="1"><span class="pln">bin</span><span class="pun">/</span><span class="pln">plugin </span><span class="pun">-</span><span class="pln">install </span><span class="typ">OlegKunitsyn</span><span class="pun">/</span><span class="pln">elasticsearch</span><span class="pun">-</span><span class="pln">browser</span></li></ol></pre>
+<p>Open http://localhost:9200/_plugin/browser/?database=[index]&amp;table=[type]</p>
+<p>Ref. From -</p>
+<p>https://github.com/jprante/elasticsearch-river-jdbc/wiki/Quickstart</p>
+<p>https://github.com/OlegKunitsyn/elasticsearch-browser/wiki</p>
+<div class="clear"></div><p class="categories"><strong>Categories: </strong><a href="http://www.asktoapps.com/category/elasticsearch/" title="View all posts in Elasticsearch" rel="category tag">Elasticsearch</a>, <a href="http://www.asktoapps.com/category/linux/" title="View all posts in Linux" rel="category tag">Linux</a>, <a href="http://www.asktoapps.com/category/website-peformance/" title="View all posts in Website Peformance" rel="category tag">Website Peformance</a></p><footer class="line"><div class="entry-info"><span class="tags">Tags: <a href="http://www.asktoapps.com/tag/elasticsearch/" rel="tag">Elasticsearch</a></span></div></footer>
+</article>	        
+        <div style="clear:both"></div>
+        
+    </div>
+    <!-- HOME WIDGET -->
+    <section id="sidebar" class="pin-article span4">
+    	<div class="sidebar-box">
+
+			<div class="widget-box">		<section class="contact-form">
+			<form method="get" id="searchform" action="">
+   				 <div>
+    		     <input placeholder="Search here" name="s" id="s" class="input-search" type="text">
+    			 </div>
+			</form>
+        <div class="clear"></div>  
+		</section>
+		</div><div class="widget-box">			<div class="textwidget"><script src="Import%20MySQL%20data%20into%20elasticsearch%20%7C%20Ask%20To%20Apps_files/in.js" type="text/javascript"></script>
+<span class="IN-widget" style="line-height: 1; vertical-align: baseline; display: inline-block;"><span style="padding: 0px ! important; margin: 0px ! important; text-indent: 0px ! important; display: inline-block ! important; vertical-align: baseline ! important; font-size: 1px ! important;"><iframe src="Import%20MySQL%20data%20into%20elasticsearch%20%7C%20Ask%20To%20Apps_files/xdrpc.html" style="width: 300px; height: 181px; display: inline-block;" id="easyXDM_IN_Lib_li_gen_1402405696572_0_provider" name="easyXDM_IN_Lib_li_gen_1402405696572_0_provider" frameborder="0"></iframe></span></span><script type="IN/MemberProfile+init" data-id="http://www.linkedin.com/in/appasaheb" data-format="inline" data-width="300" data-related="false"></script></div>
+		</div><div class="widget-box">			<div class="textwidget"><script async="" src="Import%20MySQL%20data%20into%20elasticsearch%20%7C%20Ask%20To%20Apps_files/adsbygoogle.js"></script>
+                            <!-- Responsive -->
+                            <ins data-adsbygoogle-status="done" class="adsbygoogle" style="display: block; height: 250px;" data-ad-client="ca-pub-0198539639402259" data-ad-slot="4623873483" data-ad-format="auto"><ins style="display:inline-table;border:none;height:250px;margin:0;padding:0;position:relative;visibility:visible;width:310px;background-color:transparent"><ins id="aswift_1_anchor" style="display:block;border:none;height:250px;margin:0;padding:0;position:relative;visibility:visible;width:310px;background-color:transparent"><iframe marginwidth="0" marginheight="0" vspace="0" hspace="0" allowtransparency="true" onload="var i=this.id,s=window.google_iframe_oncopy,H=s&amp;&amp;s.handlers,h=H&amp;&amp;H[i],w=this.contentWindow,d;try{d=w.document}catch(e){}if(h&amp;&amp;d&amp;&amp;(!d.body||!d.body.firstChild)){if(h.call){setTimeout(h,0)}else if(h.match){try{h=s.upd(h,i)}catch(e){}w.location.replace(h)}}" id="aswift_1" name="aswift_1" style="left:0;position:absolute;top:0;" frameborder="0" height="250" scrolling="no" width="310"></iframe></ins></ins></ins>
+                            <script>
+                            (adsbygoogle = window.adsbygoogle || []).push({});
+                            </script></div>
+		</div>		<div class="widget-box">		<h3 class="title">Recent Posts</h3>		<ul>
+					<li>
+				<a href="http://www.asktoapps.com/maven-installation-and-configuration/" title="Maven installation and configuration.">Maven installation and configuration.</a>
+						</li>
+					<li>
+				<a href="http://www.asktoapps.com/scaling-and-optimization-of-elasticsearch-cluster-part-i/" title="Scaling elasticsearch cluster. Part-I">Scaling elasticsearch cluster. Part-I</a>
+						</li>
+					<li>
+				<a href="http://www.asktoapps.com/how-to-join-freenode-channel/" title="How to join freenode channel">How to join freenode channel</a>
+						</li>
+					<li>
+				<a href="http://www.asktoapps.com/send-email-using-linux-command-line-with-multiple-attachment/" title="Send email using Linux command line with multiple attachment.">Send email using Linux command line with multiple attachment.</a>
+						</li>
+					<li>
+				<a href="http://www.asktoapps.com/export-mysql-query-data-in-csv-file-using-command-line/" title="Export mysql query data in csv file using command line">Export mysql query data in csv file using command line</a>
+						</li>
+					<li>
+				<a href="http://www.asktoapps.com/custom-module-in-ansible-using-php/" title="Custom module in ansible using php">Custom module in ansible using php</a>
+						</li>
+					<li>
+				<a href="http://www.asktoapps.com/duplicate-record-problem-in-elasticsearch/" title="Duplicate record problem in elasticsearch">Duplicate record problem in elasticsearch</a>
+						</li>
+					<li>
+				<a href="http://www.asktoapps.com/why-elasticsearch-makes-two-master-nodes-in-cluster-split-brain-problem/" title="Why elasticsearch makes two master nodes in cluster – Split brain problem">Why elasticsearch makes two master nodes in cluster – Split brain problem</a>
+						</li>
+					<li>
+				<a href="http://www.asktoapps.com/website-optimizations-techniques-increase-page-load-time-and-performance/" title="Website optimizations techniques: Increase page load time and performance.">Website optimizations techniques: Increase page load time and performance.</a>
+						</li>
+					<li>
+				<a href="http://www.asktoapps.com/import-apache-access-log-into-elasticsearch/" title="Import apache access log into elasticsearch">Import apache access log into elasticsearch</a>
+						</li>
+				</ul>
+		</div><div class="widget-box">			<div class="textwidget"><script async="" src="Import%20MySQL%20data%20into%20elasticsearch%20%7C%20Ask%20To%20Apps_files/adsbygoogle.js"></script>
+                            <!-- Responsive -->
+                            <ins data-adsbygoogle-status="done" class="adsbygoogle" style="display: block; height: 250px;" data-ad-client="ca-pub-0198539639402259" data-ad-slot="4623873483" data-ad-format="auto"><ins style="display:inline-table;border:none;height:250px;margin:0;padding:0;position:relative;visibility:visible;width:310px;background-color:transparent"><ins id="aswift_2_anchor" style="display:block;border:none;height:250px;margin:0;padding:0;position:relative;visibility:visible;width:310px;background-color:transparent"><iframe marginwidth="0" marginheight="0" vspace="0" hspace="0" allowtransparency="true" onload="var i=this.id,s=window.google_iframe_oncopy,H=s&amp;&amp;s.handlers,h=H&amp;&amp;H[i],w=this.contentWindow,d;try{d=w.document}catch(e){}if(h&amp;&amp;d&amp;&amp;(!d.body||!d.body.firstChild)){if(h.call){setTimeout(h,0)}else if(h.match){try{h=s.upd(h,i)}catch(e){}w.location.replace(h)}}" id="aswift_2" name="aswift_2" style="left:0;position:absolute;top:0;" frameborder="0" height="250" scrolling="no" width="310"></iframe></ins></ins></ins>
+                            <script>
+                            (adsbygoogle = window.adsbygoogle || []).push({});
+                            </script></div>
+		</div><div class="widget-box"><h3 class="title"><a class="rsswidget" href="http://feeds.feedburner.com/TechCrunch/" title="Syndicate this content"><img style="border:0" src="Import%20MySQL%20data%20into%20elasticsearch%20%7C%20Ask%20To%20Apps_files/rss.png" alt="RSS" height="14" width="14"></a> <a class="rsswidget" href="http://techcrunch.com/" title="TechCrunch is a group-edited blog that profiles the companies, products and events defining and transforming the new web.">TechCrunch</a></h3><ul><li><a class="rsswidget" href="http://feedproxy.google.com/%7Er/Techcrunch/%7E3/KZTnjJ6-QSE/" title="&nbsp;Freshly launched, AppCam is an SDK that allows Android developers to capture videos of user activity in their apps. The startup says AppCam is the first such service developed especially for Android, though several similar products already exist for iOS, including Appsee, LookBack, and Watchsend. Read More […]">AppCam Lets Android App Developers Capture Videos Of User Activity</a> <span class="rss-date">June 10, 2014</span></li><li><a class="rsswidget" href="http://feedproxy.google.com/%7Er/Techcrunch/%7E3/I_637hjjkB8/" title="&nbsp;At its E3 press conference, Sony just announced that the Playstation TV game console (known as the PlayStation Vita TV abroad) is coming to the United States and Canada this fall. The PlayStation TV will come for $99 by itself (you’ll have to bring your own controller) or in a $139 bundle that comes with a DualShock Controller, a memory card to store downlo […]">PlayStation TV Coming To US And Canada This Fall For $99</a> <span class="rss-date">June 10, 2014</span></li><li><a class="rsswidget" href="http://feedproxy.google.com/%7Er/Techcrunch/%7E3/z6qEvY4e8Tc/" title="&nbsp;Sony kicked off its E3 press conference with a bang. After opening with a new trailer for Destiny, the new shooter from Bungie Studios, the company announced that the game’s release date would include a bundle featuring a white variant of the PS4. Read More […]">Sony Announces White PlayStation 4 As Part Of Destiny Bundle, Coming September 9</a> <span class="rss-date">June 10, 2014</span></li><li><a class="rsswidget" href="http://feedproxy.google.com/%7Er/Techcrunch/%7E3/ukWpEt52xb4/" title="&nbsp;Eventbrite is setting its sites on a bigger vision that will take on the likes of Ticketmaster and StubHub as the go-to events space. It’s been busy hiring a bunch of new and notable engineering talent of late to create what they hope will become a true platform for event discovery. Eventbrite just crossed the 200-million-tickets-sold mark and reaped over $ […]">Eventbrite Beefs Up Engineering To Take On Ticketmaster</a> <span class="rss-date">June 10, 2014</span></li><li><a class="rsswidget" href="http://feedproxy.google.com/%7Er/Techcrunch/%7E3/uHIDLFBnsUk/" title="&nbsp;Egnyte, a company that sells a hybrid storage solution that includes a cloud-based component, is turning to another provider to help house its growing set of customer data: Google. Why might a cloud company turn to another cloud provider to host its data? Google, through its Google Ventures arm, is an investor in Egnyte, making the union reasonable. Egnyte  […]">Hybrid Storage Provider Egnyte Turns To Google’s Cloud To House Future Customer Data</a> <span class="rss-date">June 9, 2014</span></li><li><a class="rsswidget" href="http://feedproxy.google.com/%7Er/Techcrunch/%7E3/QJxN2EflCEI/" title="&nbsp;London-based TransferWise has closed a new round of funding. It’s raised a further $25 million, adding Sir Richard Branson as a backer, along with existing investors, including Peter Thiel’s Valar Ventures, IA Ventures, Index Ventures, TAG (Robin Klein and Saul Klein), and Kima Ventures. Read More […]">Now Backed By Sir Richard Branson, TransferWise Raises $25M For Cheaper Money Transfers</a> <span class="rss-date">June 9, 2014</span></li><li><a class="rsswidget" href="http://feedproxy.google.com/%7Er/Techcrunch/%7E3/h3Tck7FehzU/" title="&nbsp;For a consumer-facing technology startup, the people who make the biggest impact on the company’s success or failure are not the founders. They’re actually not even employed by the company at all. They’re the users — a group that’s often referred to as the “community.” What these people think, feel, and say is the real pulse of how a company’s… Read More […]">Inside Jobs: What It’s Like To Be The Community Director At Polyvore</a> <span class="rss-date">June 9, 2014</span></li><li><a class="rsswidget" href="http://feedproxy.google.com/%7Er/Techcrunch/%7E3/ARi8fTSO_3g/" title="&nbsp;It’s likely that, at the time of the horrific acts of violence in Santa Barbara, it was someone’s first instinct to go through the digital breadcrumb trail left by the murderer and save every last item. From the deluded, misogynistic ramblings on YouTube, to the posting history on Reddit and elsewhere, to the near-incoherent “manifesto,” every grisly detail […]">Atrocity Exhibition</a> <span class="rss-date">June 9, 2014</span></li><li><a class="rsswidget" href="http://feedproxy.google.com/%7Er/Techcrunch/%7E3/69Hup4Yqh_c/" title="&nbsp;Facebook doesn’t show ads in Messenger or WhatsApp. Instead, payments could be the key to earning money on chat, especially in the developing world where ad rates are low. If that’s the strategy, Facebook just got the perfect executive to lead the charge. It’s poached PayPal’s president David Marcus to run its Messenger unit. Read More […]">Facebook Poaches PayPal President David Marcus To Run Messenger, Maybe Monetize It With Payments</a> <span class="rss-date">June 9, 2014</span></li><li><a class="rsswidget" href="http://feedproxy.google.com/%7Er/Techcrunch/%7E3/s6GLsY-Gu4Y/" title="&nbsp;Today GoDaddy, the popular domain and web-services company, filed its S-1 document to go public. The company has seen quick revenue growth in recent years and massive losses measured using generally accepted accounting principles (GAAP). The company’s 2013 revenue totaled $1.13 billion. The company lost $199.88 million during that period. The company had re […]">GoDaddy Files For $100M IPO</a> <span class="rss-date">June 9, 2014</span></li></ul></div><div class="widget-box">			<div class="textwidget"><script async="" src="Import%20MySQL%20data%20into%20elasticsearch%20%7C%20Ask%20To%20Apps_files/adsbygoogle.js"></script>
+                            <!-- Responsive -->
+                            <ins data-adsbygoogle-status="done" class="adsbygoogle" style="display: block; height: 250px;" data-ad-client="ca-pub-0198539639402259" data-ad-slot="4623873483" data-ad-format="auto"><ins style="display:inline-table;border:none;height:250px;margin:0;padding:0;position:relative;visibility:visible;width:310px;background-color:transparent"><ins id="aswift_3_anchor" style="display:block;border:none;height:250px;margin:0;padding:0;position:relative;visibility:visible;width:310px;background-color:transparent"><iframe marginwidth="0" marginheight="0" vspace="0" hspace="0" allowtransparency="true" onload="var i=this.id,s=window.google_iframe_oncopy,H=s&amp;&amp;s.handlers,h=H&amp;&amp;H[i],w=this.contentWindow,d;try{d=w.document}catch(e){}if(h&amp;&amp;d&amp;&amp;(!d.body||!d.body.firstChild)){if(h.call){setTimeout(h,0)}else if(h.match){try{h=s.upd(h,i)}catch(e){}w.location.replace(h)}}" id="aswift_3" name="aswift_3" style="left:0;position:absolute;top:0;" frameborder="0" height="250" scrolling="no" width="310"></iframe></ins></ins></ins>
+                            <script>
+                            (adsbygoogle = window.adsbygoogle || []).push({});
+                            </script></div>
+		</div><div class="widget-box"><h3 class="title">Tags</h3><div class="tagcloud"><a href="http://www.asktoapps.com/tag/access-log/" class="tag-link-57" title="1 topic" style="font-size: 8pt;">access log</a>
+<a href="http://www.asktoapps.com/tag/ansible/" class="tag-link-63" title="1 topic" style="font-size: 8pt;">ansible</a>
+<a href="http://www.asktoapps.com/tag/ansible-custom-module/" class="tag-link-64" title="1 topic" style="font-size: 8pt;">ansible custom module</a>
+<a href="http://www.asktoapps.com/tag/ansible-module-using-php/" class="tag-link-65" title="1 topic" style="font-size: 8pt;">ansible module using php</a>
+<a href="http://www.asktoapps.com/tag/apache/" class="tag-link-56" title="1 topic" style="font-size: 8pt;">apache</a>
+<a href="http://www.asktoapps.com/tag/apache-lucene/" class="tag-link-31" title="1 topic" style="font-size: 8pt;">Apache Lucene</a>
+<a href="http://www.asktoapps.com/tag/cache/" class="tag-link-47" title="1 topic" style="font-size: 8pt;">cache</a>
+<a href="http://www.asktoapps.com/tag/csv/" class="tag-link-67" title="1 topic" style="font-size: 8pt;">csv</a>
+<a href="http://www.asktoapps.com/tag/distributed/" class="tag-link-28" title="1 topic" style="font-size: 8pt;">Distributed</a>
+<a href="http://www.asktoapps.com/tag/duplicate-document/" class="tag-link-62" title="1 topic" style="font-size: 8pt;">Duplicate document</a>
+<a href="http://www.asktoapps.com/tag/elastic-index/" class="tag-link-37" title="2 topics" style="font-size: 12.2pt;">Elastic Index</a>
+<a href="http://www.asktoapps.com/tag/elasticsearch/" class="tag-link-26" title="7 topics" style="font-size: 22pt;">Elasticsearch</a>
+<a href="http://www.asktoapps.com/tag/elasticsearch-performance/" class="tag-link-61" title="2 topics" style="font-size: 12.2pt;">elasticsearch performance</a>
+<a href="http://www.asktoapps.com/tag/freenode/" class="tag-link-74" title="1 topic" style="font-size: 8pt;">freenode</a>
+<a href="http://www.asktoapps.com/tag/freenode-channel/" class="tag-link-75" title="1 topic" style="font-size: 8pt;">freenode channel</a>
+<a href="http://www.asktoapps.com/tag/import/" class="tag-link-55" title="1 topic" style="font-size: 8pt;">Import</a>
+<a href="http://www.asktoapps.com/tag/increase-page-load-time/" class="tag-link-59" title="1 topic" style="font-size: 8pt;">increase page load time</a>
+<a href="http://www.asktoapps.com/tag/irc/" class="tag-link-72" title="1 topic" style="font-size: 8pt;">irc</a>
+<a href="http://www.asktoapps.com/tag/json-over-http/" class="tag-link-34" title="1 topic" style="font-size: 8pt;">JSON over HTTP</a>
+<a href="http://www.asktoapps.com/tag/linux-commands/" class="tag-link-44" title="3 topics" style="font-size: 15pt;">Linux Commands</a>
+<a href="http://www.asktoapps.com/tag/load-data-infile/" class="tag-link-68" title="1 topic" style="font-size: 8pt;">load data infile</a>
+<a href="http://www.asktoapps.com/tag/lsyncd/" class="tag-link-52" title="1 topic" style="font-size: 8pt;">lsyncd</a>
+<a href="http://www.asktoapps.com/tag/mail/" class="tag-link-69" title="1 topic" style="font-size: 8pt;">mail</a>
+<a href="http://www.asktoapps.com/tag/mutt/" class="tag-link-70" title="1 topic" style="font-size: 8pt;">mutt</a>
+<a href="http://www.asktoapps.com/tag/mysql-2/" class="tag-link-38" title="2 topics" style="font-size: 12.2pt;">MySQL</a>
+<a href="http://www.asktoapps.com/tag/mysql-export/" class="tag-link-66" title="1 topic" style="font-size: 8pt;">mysql export</a>
+<a href="http://www.asktoapps.com/tag/open-source/" class="tag-link-27" title="1 topic" style="font-size: 8pt;">Open Source</a>
+<a href="http://www.asktoapps.com/tag/optimization/" class="tag-link-51" title="2 topics" style="font-size: 12.2pt;">optimization</a>
+<a href="http://www.asktoapps.com/tag/performance/" class="tag-link-49" title="3 topics" style="font-size: 15pt;">performance</a>
+<a href="http://www.asktoapps.com/tag/php-performance/" class="tag-link-50" title="1 topic" style="font-size: 8pt;">php performance</a>
+<a href="http://www.asktoapps.com/tag/pidgin/" class="tag-link-73" title="1 topic" style="font-size: 8pt;">pidgin</a>
+<a href="http://www.asktoapps.com/tag/real-time-search/" class="tag-link-36" title="1 topic" style="font-size: 8pt;">real time search</a>
+<a href="http://www.asktoapps.com/tag/remote-sync/" class="tag-link-54" title="2 topics" style="font-size: 12.2pt;">remote sync</a>
+<a href="http://www.asktoapps.com/tag/restful/" class="tag-link-29" title="1 topic" style="font-size: 8pt;">RESTful</a>
+<a href="http://www.asktoapps.com/tag/scale/" class="tag-link-35" title="1 topic" style="font-size: 8pt;">Scale</a>
+<a href="http://www.asktoapps.com/tag/scaling-elasticsearch/" class="tag-link-76" title="1 topic" style="font-size: 8pt;">scaling elasticsearch</a>
+<a href="http://www.asktoapps.com/tag/schema-free/" class="tag-link-33" title="1 topic" style="font-size: 8pt;">Schema Free</a>
+<a href="http://www.asktoapps.com/tag/search-engine/" class="tag-link-30" title="1 topic" style="font-size: 8pt;">Search Engine</a>
+<a href="http://www.asktoapps.com/tag/search-index/" class="tag-link-43" title="2 topics" style="font-size: 12.2pt;">Search Index</a>
+<a href="http://www.asktoapps.com/tag/send-mail-with-attachment/" class="tag-link-71" title="1 topic" style="font-size: 8pt;">send mail with attachment</a>
+<a href="http://www.asktoapps.com/tag/split-brain-problem/" class="tag-link-60" title="1 topic" style="font-size: 8pt;">split brain problem</a>
+<a href="http://www.asktoapps.com/tag/static-cache/" class="tag-link-48" title="1 topic" style="font-size: 8pt;">static cache</a>
+<a href="http://www.asktoapps.com/tag/sync/" class="tag-link-53" title="1 topic" style="font-size: 8pt;">sync</a>
+<a href="http://www.asktoapps.com/tag/very-fast/" class="tag-link-32" title="1 topic" style="font-size: 8pt;">Very fast</a>
+<a href="http://www.asktoapps.com/tag/website-optimization/" class="tag-link-58" title="1 topic" style="font-size: 8pt;">website optimization</a></div>
+</div>
+            </div>
+        </section>
+	<!--  END HOME WIDGET -->
+	<div class="clear"></div>
+
+
+
+           
+    </div>
+</div>
+
+	<!--WP Code Highlight_start-->
+	<script type="text/javascript">
+		window.onload = function(){prettyPrint();};
+	</script>
+	<script type="text/javascript" src="Import%20MySQL%20data%20into%20elasticsearch%20%7C%20Ask%20To%20Apps_files/wp-code-highlight.js"></script>
+	<!--WP Code Highlight_end-->
+<footer id="footer">
+<div class="container">
+		 <div style="min-height:90px;align:center;margin-bottom:10px;margin-top:10px;">
+		<script async="" src="Import%20MySQL%20data%20into%20elasticsearch%20%7C%20Ask%20To%20Apps_files/adsbygoogle.js"></script>
+                            <!-- Responsive -->
+                            <ins data-adsbygoogle-status="done" class="adsbygoogle" style="display: block; height: 90px;" data-ad-client="ca-pub-0198539639402259" data-ad-slot="4623873483" data-ad-format="auto"><ins style="display:inline-table;border:none;height:90px;margin:0;padding:0;position:relative;visibility:visible;width:995px;background-color:transparent"><ins id="aswift_4_anchor" style="display:block;border:none;height:90px;margin:0;padding:0;position:relative;visibility:visible;width:995px;background-color:transparent"><iframe marginwidth="0" marginheight="0" vspace="0" hspace="0" allowtransparency="true" onload="var i=this.id,s=window.google_iframe_oncopy,H=s&amp;&amp;s.handlers,h=H&amp;&amp;H[i],w=this.contentWindow,d;try{d=w.document}catch(e){}if(h&amp;&amp;d&amp;&amp;(!d.body||!d.body.firstChild)){if(h.call){setTimeout(h,0)}else if(h.match){try{h=s.upd(h,i)}catch(e){}w.location.replace(h)}}" id="aswift_4" name="aswift_4" style="left:0;position:absolute;top:0;" frameborder="0" height="90" scrolling="no" width="995"></iframe></ins></ins></ins>
+                            <script>
+                            (adsbygoogle = window.adsbygoogle || []).push({});
+                            </script>
+        </div>        
+	
+		
+         <div class="row copyright">
+            <div class="span6">
+            <p>
+				                  Copyright Ask To Apps 2014 
+                 
+                |
+                <a href="http://wordpress.org/" title="A Semantic Personal Publishing Platform" rel="generator">Proudly powered by WordPress</a>
+
+            </p>
+            </div>
+            <div class="span6">
+                <!-- start social -->
+                <div class="socials">
+                    <a href="https://www.facebook.com/appasaheb" target="_blank" title="facebook" class="social facebook"> facebook  </a> <a href="https://twitter.com/appasaheb" target="_blank" title="twitter" class="social twitter"> twitter  </a> <a href="https://plus.google.com/u/0/+AppasahebSawant14" target="_blank" title="google" class="social google"> google  </a> <a href="http://in.linkedin.com/in/appasaheb" target="_blank" title="linkedin" class="social linkedin"> linkedin  </a> <a href="mailto:appasaheb.sawant@gmail.com" title="Email" class="social email"> Email  </a><a href="http://www.asktoapps.com/feed/" title="Rss" class="social rss"> Rss  </a>                 </div>
+                <!-- end social -->
+
+            </div>
+		</div>
+	</div>
+</footer>
+
+<script type="text/javascript" src="Import%20MySQL%20data%20into%20elasticsearch%20%7C%20Ask%20To%20Apps_files/jquery_003.js"></script>
+<script type="text/javascript" src="Import%20MySQL%20data%20into%20elasticsearch%20%7C%20Ask%20To%20Apps_files/jquery.js"></script>
+<script type="text/javascript" src="Import%20MySQL%20data%20into%20elasticsearch%20%7C%20Ask%20To%20Apps_files/jquery_004.js"></script>
+<script type="text/javascript" src="Import%20MySQL%20data%20into%20elasticsearch%20%7C%20Ask%20To%20Apps_files/jquery_005.js"></script>
+   
+
+
+
+</body></html>

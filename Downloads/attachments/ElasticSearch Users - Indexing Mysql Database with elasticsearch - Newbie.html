@@ -1,0 +1,1098 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html><head>
+					<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+					<link rel="stylesheet" href="ElasticSearch%20Users%20-%20Indexing%20Mysql%20Database%20with%20elasticsearch%20-%20Newbie_files/nabble.css" type="text/css">
+	<link rel="stylesheet" href="ElasticSearch%20Users%20-%20Indexing%20Mysql%20Database%20with%20elasticsearch%20-%20Newbie_files/NamlServlet.css" type="text/css">
+					<script src="ElasticSearch%20Users%20-%20Indexing%20Mysql%20Database%20with%20elasticsearch%20-%20Newbie_files/s1.js" defer="defer"></script><script src="ElasticSearch%20Users%20-%20Indexing%20Mysql%20Database%20with%20elasticsearch%20-%20Newbie_files/ga.js" async="" type="text/javascript"></script><script src="ElasticSearch%20Users%20-%20Indexing%20Mysql%20Database%20with%20elasticsearch%20-%20Newbie_files/jquery-1.js" type="text/javascript"></script>
+	<script src="ElasticSearch%20Users%20-%20Indexing%20Mysql%20Database%20with%20elasticsearch%20-%20Newbie_files/nabbledropdown-2.js" type="text/javascript"></script>
+	<script src="ElasticSearch%20Users%20-%20Indexing%20Mysql%20Database%20with%20elasticsearch%20-%20Newbie_files/NamlServlet.js" type="text/javascript"></script>
+					<script type="text/javascript">
+		var terms = Nabble.getSearchTerms();
+		var hasTurnOff = false;
+		Nabble.searchHighlight = function($elem) {
+			if (terms != null && terms.length > 0) {
+				$elem.each(function() {
+					Nabble.highlightSearchTerms(terms, this);
+				});
+				if (Nabble.hasHighlightedTerms && !hasTurnOff) {
+					var turnOffLink = '<span id="turn-off-highlight-control"><span class="highlight">&nbsp;X&nbsp;</span> ';
+					turnOffLink += '<a href="javascript:void(0)" onclick="Nabble.turnOffHighlight()">Turn off highlighting</a></span>';
+					$('#topics-controls-right').prepend(turnOffLink);
+					hasTurnOff = true;
+				}
+			}
+		};
+		Nabble.turnOffHighlight = function() {
+			Nabble.deleteCookie("query");
+			Nabble.deleteCookie("searchuser");
+			Nabble.deleteCookie("searchterms");
+			$('span.search-highlight').removeClass('bold highlight');
+			$('#turn-off-highlight-control').hide();
+		};
+	</script>
+	<script type="text/javascript">
+		Nabble.messageTextWidth();
+	</script>
+			<script type="text/javascript"> $(document).ready(function() { Nabble.searchHighlight($('h2.post-subject,div.message-text')); }); </script> <script type="text/javascript"> var _hash = Nabble.hash(); if (_hash) { (function(){ var post = _hash.substr(2); var allPosts = [3608232, 3608529, 4021319, 4021338, 4021339, 4021356]; var allURLs = ["/Indexing-Mysql-Database-with-elasticsearch-Newbie-td3608232.html"]; var iPost = allPosts.indexOf(parseInt(post)); var lower = 0; var upper = lower + 20; if (iPost != -1 && (iPost < lower || iPost >= upper)) location.replace(allURLs[Math.floor(iPost/20)]+_hash); })(); } $(document).ready(function() { var rootId = '3608232'; var currentPostId = rootId; var isChangingViews = _hash == '#none'; if (_hash && !isChangingViews) currentPostId = _hash.substr(2); Nabble.hideQuotes(); function scrollToSelectedPost() { var $arrow = $('#red-arrow'+currentPostId).show(); if ($arrow.size() > 0) { var isRootPost = currentPostId == rootId; if (Nabble.isEmbedded) { if (Nabble.canScroll()) scrollTo(0, 0); var y = isChangingViews? null : isRootPost? 1 : $arrow.parents('div.classic-row').offset().top; Nabble.resizeFrames('', y); } else if (Nabble.canScroll() && !isRootPost) { var yPos = $arrow.offset().top; scrollTo(0,yPos-20); } } else { if (Nabble.isEmbedded && Nabble.canScroll()) { Nabble.resizeFrames('', 1); } else { var tb = $('div.top-bar').get(0); if (tb) tb.scrollIntoView(); } } }; $(window).load(scrollToSelectedPost); if (Nabble.isEmbedded) { $('div.message-text img').load(Nabble.resizeFrames); } }); </script> <style type="text/css"> div.classic-header { height:2.2em; clear:both; overflow:hidden; } div.classic-author-name { float:left; width: 140px; overflow: hidden; text-align:center; font-weight:bold; } div.classic-subject-line { left:.5em; overflow:hidden; height:1.3em; position:relative; } div.classic-right-menu { float:right; padding-left:1em; } div.classic-bar { padding:.5em .3em; clear:both; height:1.8em; } table.classic-body { border-collapse:collapse; margin-bottom:1em; table-layout: fixed; width:100%; } td.classic-author { vertical-align: top; text-align:center; width:140px; padding-bottom:1em; } td.classic-message { vertical-align:top; padding:1em; } div.message-text { cursor:text; overflow-x:auto; } div.avatar-inner { margin-left:20px; } div.avatar-outer { width:140px; text-align:left; } div.avatar-label { white-space:nowrap; font-size:80%; } </style>
+
+	<title>ElasticSearch Users - Indexing Mysql Database with elasticsearch - Newbie</title>
+			<meta name="description" content="Indexing Mysql Database with elasticsearch - Newbie. I recently started looking ElasticSearch to implement search in my application. I have my database in Mysql which have approx. &gt;2 mn records. I...">
+			<meta name="keywords" content="indexing, mysql, database, with, elasticsearch, -, newbie, recently, started, looking, implement, search, my, application, have, which, approx, 2, mn, records, know, sphinx, we, could, create, index, directly, users">
+			<style type="text/css">
+			#search-box-dropdown {
+				text-align:left;
+				position:absolute;
+				display:none;
+				z-index:1000;
+				overflow:hidden;
+			}
+		</style>
+		<script type="text/javascript">
+			$(document).ready(function() {
+				var $sdd = $('#search-box-dropdown');
+				var $sb = $('#search-input');
+				var $form = $sb.parent();
+				var timeout;
+				$(document).click(function(o){
+					var $target = $(o.target);
+					if ($target.parents().hasClass('search-box-dropdown')) {
+						clearTimeout(timeout);
+						$sb.focus();
+					}
+				});
+				$sb.focusin(function(e) {
+					$sdd.css('left', $sb.position().left - 5);
+					$sdd.width($sb.outerWidth() + 10);
+					$sdd.show();
+				});
+				$sb.focusout(function() {
+					timeout = setTimeout(function() {
+						$sdd.hide();
+					},250);
+				});
+				$('input[type=radio]', $sdd).change(function() {
+					var nodeId = $(this).val();
+					$('input[name="node"]', $form).val(nodeId);
+				});
+				$('input[name="node"]', $form).val(115913);
+			});
+		</script><script type="text/javascript">
+			Nabble.setView = function(view,url,post) {
+				Nabble.setVar("tview",view);
+				url += Nabble.getClientID(';');
+				if (url.indexOf('#') == -1)
+					url += '#none';
+				location.replace(url);
+			};
+		</script><style type="text/css"> div.nabble-tooltip, div.nabble-tooltip * { color: #EEE; font-weight:bold; } div.nabble-tooltip { background: #000; font-size:90%; line-height:normal; display: none; position: absolute; z-index: 88888; padding: .5em; border: 1px solid #FFF; white-space:normal; -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px; } div.nabble-tooltip-small-row, div.nabble-tooltip-small-row * { color:#D0EAF2; } div.nabble-tooltip-small-row { font-size:80%; font-weight:normal; padding-top: .4em; } div.nabble-tooltip-arrow { font: 40px Arial, Sans-serif; line-height:1em; left:15px; position:absolute; bottom:-15px; height:15px; width:30px; overflow:hidden; } div.nabble-tooltip-arrow div { position:absolute; } div.nabble-tooltip-arrow div.d1 { top:-22px; color: #FFF; } div.nabble-tooltip-arrow div.d2 { top:-25px; color: #000; } </style> <script type="text/javascript"> Nabble.startTooltip = function(e, position, delay) { if (e.nabbletooltip) return; e.nabbletooltip = true; var $this = $(e); var $arrow = $this.children().last(); var $elem = $this.prev(); $elem.hover( function() { setTip(); setTimer(); }, function() { stopTimer(); $this.hide(); } ); function setTimer() { $this.showTipTimer = setTimeout(function() { $('div.nabble-tooltip').hide(); stopTimer(); $this.fadeTo('fast', .8); }, delay); }; function stopTimer() { clearInterval($this.showTipTimer); }; function setTip(){ if ($this.parent().get() != document.body) $(document.body).append($this); var useTitle = $this.attr('use_title') == 'true'; if (useTitle) { var title = $elem.attr('title'); if (title != '') { $arrow.remove(); $this.html(title); $elem.attr('title',''); $this.append($arrow); } } var win = $(window).width(); if (position == 'up') { var w = $this.outerWidth(); if (w > 250) { w = 250; $this.width(w); } var xMid = $elem.offset().left + $elem.outerWidth()/2; var xTip = xMid - w/2; if (xTip+w > win-5) xTip = win-w-5; if (xTip < 0) xTip = 0; var xArrow = xMid-xTip-11; var yTip = $elem.offset().top-$this.outerHeight()-12; $arrow.css('left', xArrow); $this.css({'top' : yTip, 'left' : xTip}); } else if (position == 'right') { var h = $this.outerHeight(); var yMid = $elem.offset().top + $elem.outerHeight()/2; var yTip = yMid - h/2; var xTip = $elem.offset().left + $elem.outerWidth() + 10; $arrow.width(8).height(24).css({bottom:0,left:-8}); var yArrow = (h - 24)/2; $arrow.css({top:yArrow}); var $d1 = $arrow.children().first(); var $d2 = $arrow.children().last(); $d1.css({top:-11}); $d2.css({top:-11,left:1}); $this.css({'top' : yTip, 'left' : xTip}); } }; }; </script><script type="text/javascript">
+			Nabble.pinTopic = function(id) {
+				var call = '/template/NamlServlet.jtp?macro=pin_topic&node=' + id + Nabble.getClientID();
+				$.getScript(call, function() {
+					$('#pin-icon').show();
+					NabbleDropdown.show('unpinTopic');
+					NabbleDropdown.hide('pinTopic');
+					alert('This topic has been pinned.');
+				});
+			};
+		</script><script type="text/javascript">
+			Nabble.unpinTopic = function(id) {
+				var call = '/template/NamlServlet.jtp?macro=unpin_topic&node=' + id + Nabble.getClientID();
+				$.getScript(call, function() {
+					$('#pin-icon').hide();
+					NabbleDropdown.hide('unpinTopic');
+					NabbleDropdown.show('pinTopic');
+					alert('This topic has been unpinned.');
+				});
+			};
+		</script><script type="text/javascript">
+			Nabble.lockTopic = function(id) {
+				var call = '/template/NamlServlet.jtp?macro=lock_topic&node=' + id + Nabble.getClientID();
+				$.getScript(call, function() {
+					$('#lock-icon').show();
+					NabbleDropdown.show('unlockTopic');
+					NabbleDropdown.hide('lockTopic');
+					alert('This topic has been locked.');
+				});
+			};
+		</script><script type="text/javascript">
+			Nabble.unlockTopic = function(id) {
+				var call = '/template/NamlServlet.jtp?macro=unlock_topic&node=' + id + Nabble.getClientID();
+				$.getScript(call, function() {
+					$('#lock-icon').hide();
+					NabbleDropdown.hide('unlockTopic');
+					NabbleDropdown.show('lockTopic');
+					alert('This topic has been unlocked.');
+				});
+			};
+		</script><script type="text/javascript" src="ElasticSearch%20Users%20-%20Indexing%20Mysql%20Database%20with%20elasticsearch%20-%20Newbie_files/LoadUnit.js"></script><script src="ElasticSearch%20Users%20-%20Indexing%20Mysql%20Database%20with%20elasticsearch%20-%20Newbie_files/LoadUnit_002.js"></script>
+			<script type="text/javascript">
+				Nabble.adbayes();
+			</script><script type="text/javascript">
+			Nabble.nViews = function(id, views) {
+				var $v = $('#v'+id);
+				var pos = views=='1'?0:1;
+				var t = $v.html()? $v.html().split('|')[pos]:'';
+				$v.html(t == ''? views : t.replace(/%1/g,views)).show();
+			};
+		</script><style type="text/css">
+			img.report-flag {
+				vertical-align:middle;
+				cursor: pointer;
+			}
+			#report-inappropriate-content {
+				position: fixed;
+				z-index:9999;
+				display:none;
+				padding:1.5em;
+				left:8%;
+				right:8%;
+				top:8%;
+				background-color:#555;
+			}
+			#report-inappropriate-content-inner { padding:.5em; }
+			#report-inappropriate-content-inner div.big {
+				height:5em;
+				padding-top:2em;
+				text-align:center;
+				font-size:250%;
+			}
+			#report-inappropriate-content-inner div.big2 { font-size:70%; }
+			div.inappropriate-option { margin:.5em 0; }
+		</style>
+		<script type="text/javascript">
+			var reportNodeId = null;
+			Nabble.reportContent = function(nodeId) {
+				reportNodeId = nodeId;
+				$('#report-inappropriate-content').show();
+				var url = '/template/NamlServlet.jtp?macro=report_inappropriate_content_form';
+				$.get(url, function(data) {
+					$('#report-inappropriate-content-inner').html(data);
+				});
+			}
+			Nabble.closeReport = function() {
+				$('#report-inappropriate-content').hide();
+			}
+			Nabble.sendReport = function() {
+				$('#send-report-button').attr('disabled','true').addClass('toolbar-disabled');
+				var type = $('input[name=report_type]:checked').val();
+				var url = '/template/NamlServlet.jtp?macro=report_inappropriate_content_submit&node='+reportNodeId+'&type='+type+Nabble.getClientID();
+				$.get(url, function(data) {
+					var h = 'Thank You';
+					h += '<div class="weak-color big2">We will review your report soon.</div>';
+					h += '<a href="javascript: void Nabble.closeReport()">Close</a>';
+					$('#report-inappropriate-content-inner').html('<div class="big">'+h+'</div>');
+				});
+			}
+		</script>
+					<script type="text/javascript">
+		Nabble.setFontSize();
+		
+	</script>
+	<script type="text/javascript">
+		if (Nabble.analytics) Nabble.analytics();
+	</script><script type="text/javascript" src="ElasticSearch%20Users%20-%20Indexing%20Mysql%20Database%20with%20elasticsearch%20-%20Newbie_files/VisitCounter.js"></script>
+	<!-- Start Quantcast tag -->
+	<script type="text/javascript">
+		_qoptions={ qacct:"p-34EL1DZyJypTI" };
+	</script>
+	<script type="text/javascript" src="ElasticSearch%20Users%20-%20Indexing%20Mysql%20Database%20with%20elasticsearch%20-%20Newbie_files/quant.js"></script>
+	<noscript>
+		<a href="http://www.quantcast.com/p-34EL1DZyJypTI" target="_blank" rel="nofollow">
+			<img src="http://pixel.quantserve.com/pixel/p-34EL1DZyJypTI.gif" style="display: none;" border="0" height="1" width="1" alt="Quantcast"/>
+		</a>
+	</noscript>
+	<!-- End Quantcast tag -->
+	<!-- Start Google Analytics -->
+	<script type="text/javascript">
+		var _gaq = _gaq || [];
+		_gaq.push(['nabble._setAccount', 'UA-91855-9']);
+		_gaq.push(['nabble._trackPageview']);
+		(function() {
+			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		})();
+	</script>
+	<!-- End Google Analytics -->
+	<script type="text/javascript">
+		var site_admins = [418874, 15852];
+	</script>
+	<script type="text/javascript">
+		var isSafe = true;
+		var Ads = Ads || {};
+		Ads.text = {
+			daysLeft: 'Trial period ends in $1 day(s)',
+			removeAds: 'Remove Ads',
+			buyCredits: 'Buy credits'
+		};
+		$(document).ready(function() {
+			if (Nabble.wasCreatedRecently && Nabble.currentCredits == 0) {
+				var s = '<div class="weak-color" style="text-align:center;margin:1em;font-size:80%">';
+				s += Ads.text.daysLeft.replace(/\$1/,daysLeft)+' &ndash; ';
+				s += '<a href="'+Nabble.buyCreditsPath+'">'+(Nabble.isSafe?Ads.text.removeAds:Ads.text.buyCredits)+'</a>';
+				s += '</div>';
+				var isAdmin = Nabble.userId && site_admins.indexOf(Number(Nabble.userId)) >= 0;
+				if (!isSafe || isAdmin)
+					$('div.nabble').append(s);
+			}
+		});
+	</script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			if (Nabble.userId && site_admins.indexOf(Number(Nabble.userId)) >= 0)
+				$('div.no-ads-message').show();
+		});
+	</script>
+				<script src="ElasticSearch%20Users%20-%20Indexing%20Mysql%20Database%20with%20elasticsearch%20-%20Newbie_files/14024056153690.asc" charset="UTF-8" type="text/javascript"></script></head>
+				<body>
+					<div id="notice" class="notice rounded-bottom"></div>
+					<div class="nabble macro_classic_forum_topic" id="nabble">
+						
+			
+			<div class="top-bar">
+		<div class="breadcrumbs" style="float:left">
+			<span id="breadcrumbs" class="weak-color">
+		
+				<a href="http://elasticsearch-users.115913.n3.nabble.com/">ElasticSearch Users</a>
+	</span>
+		</div>
+		<div style="text-align:right;">
+			<span style="white-space:nowrap;" id="nabble-user-header"><a href="http://elasticsearch-users.115913.n3.nabble.com/template/NamlServlet.jtp?macro=login_page&amp;nextUrl=http%3A%2F%2Felasticsearch-users.115913.n3.nabble.com%2FIndexing-Mysql-Database-with-elasticsearch-Newbie-td3608232.html">Login</a>&nbsp;&nbsp;<a href="http://elasticsearch-users.115913.n3.nabble.com/template/NamlServlet.jtp?macro=start_registration_page&amp;nextUrl=http%3A%2F%2Felasticsearch-users.115913.n3.nabble.com%2FIndexing-Mysql-Database-with-elasticsearch-Newbie-td3608232.html">Register</a></span>
+	<script type="text/javascript">Nabble.userHeader();</script>
+		</div>
+	</div>
+			
+			<div id="nabble-newsflash" class="info-message" style="display:none;padding:.5em;margin-bottom:.5em"></div>
+	
+			<div id="topic-search-box" class="search-box float-right" style="padding:.5em 0">
+		<form action="/template/NamlServlet.jtp">
+		<input name="macro" value="search_page" type="hidden">
+		<input name="node" value="115913" type="hidden">
+		
+		
+		
+		<input id="search-input" name="query" size="18" class="medium-border-color">
+		<div id="search-box-dropdown" class="search-box-dropdown light-bg-color drop-shadow border1 medium-border-color rounded-bottom">
+		<div style="margin:.5em .5em 0 .5em">
+					<b>Search</b><br>
+					<input id="search-root-node" name="n" value="115913" checked="checked" type="radio">
+					<label for="search-root-node">everywhere</label><br>
+
+					<input id="search-this-node" name="n" value="3608232" type="radio">
+					<label for="search-this-node">
+						only in this topic
+					</label>
+				</div>
+		<div style="margin:.5em;line-height:2em">
+			<input class="toolbar action-button float-right" value="Search" type="submit">
+			<a href="http://elasticsearch-users.115913.n3.nabble.com/template/NamlServlet.jtp?macro=adv_search_page&amp;node=3608232" rel="nofollow" style="font-size:80%">Advanced Search</a>
+		</div>
+	</div>
+	</form>
+	</div>
+
+	<h1 id="post-title" class="adbayes-content" style="margin:0.25em 0 .8em">
+		Indexing Mysql Database with elasticsearch - Newbie
+	</h1>
+			<div style="margin:1.2em 0 5em">
+		<div id="topics-controls-left" class="float-left nowrap">
+			<table>
+		<tbody><tr>
+			<td style="padding-right:.1em">
+		<img src="ElasticSearch%20Users%20-%20Indexing%20Mysql%20Database%20with%20elasticsearch%20-%20Newbie_files/view-classic.gif" style="border:none" alt="classic" height="18" width="18">
+	</td>
+
+	<td style="padding-right:1.1em">
+		Classic
+	</td>
+
+			<td style="padding-right:.1em">
+		<a href="javascript:void(0)" onclick="Nabble.setView('list', '/Indexing-Mysql-Database-with-elasticsearch-Newbie-tc3608232.html',null)"><img src="ElasticSearch%20Users%20-%20Indexing%20Mysql%20Database%20with%20elasticsearch%20-%20Newbie_files/view-list.gif" style="border:none" alt="list" height="18" width="18"></a>
+	</td>
+
+	<td style="padding-right:1.1em">
+		<a href="javascript:void(0)" onclick="Nabble.setView('list', '/Indexing-Mysql-Database-with-elasticsearch-Newbie-tc3608232.html',null)">List</a>
+	</td>
+
+			<td style="padding-right:.1em">
+		<a href="javascript:void(0)" onclick="Nabble.setView('threaded', '/Indexing-Mysql-Database-with-elasticsearch-Newbie-tt3608232.html',null)"><img src="ElasticSearch%20Users%20-%20Indexing%20Mysql%20Database%20with%20elasticsearch%20-%20Newbie_files/view-threaded.gif" style="border:none" alt="threaded" height="18" width="18"></a>
+	</td>
+
+	<td style="padding-right:1.1em">
+		<a href="javascript:void(0)" onclick="Nabble.setView('threaded', '/Indexing-Mysql-Database-with-elasticsearch-Newbie-tt3608232.html',null)">Threaded</a>
+	</td>
+		</tr>
+	</tbody></table>
+		</div>
+		<div id="topics-controls-right" class="float-right nowrap" style="padding-top:.3em">
+			<span style="padding-right:1em;height:21px">
+		<img id="pin-icon" src="ElasticSearch%20Users%20-%20Indexing%20Mysql%20Database%20with%20elasticsearch%20-%20Newbie_files/pin.png" title="This topic has been pinned in ElasticSearch Users." style="vertical-align:middle;display:none;" height="21" width="20">
+		<div id="tooltip13870" class="nabble-tooltip" use_title="true">
+		
+		<div class="nabble-tooltip-arrow">
+			<div class="d1">♦</div>
+			<div class="d2">♦</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		Nabble.startTooltip(Nabble.get('tooltip13870'), 'up', 400);
+	</script>
+	</span>
+	<span id="lock-icon" class="weak-color" style="padding:0 .5em;margin-right:.5em;display:none;">
+		<img src="ElasticSearch%20Users%20-%20Indexing%20Mysql%20Database%20with%20elasticsearch%20-%20Newbie_files/lock_sm.png" style="vertical-align:middle" height="15" width="10"> Locked
+	</span>
+	<span style="padding-right:1em">
+		6 messages
+	</span>
+	<img src="ElasticSearch%20Users%20-%20Indexing%20Mysql%20Database%20with%20elasticsearch%20-%20Newbie_files/gear.png" class="image16" alt="Options">
+	<span id="dd_topicdropdown"><span id="topicdropdown" class="dropdown"><a href="javascript:void(0)" title="Click for more options">Options</a> <img src="ElasticSearch%20Users%20-%20Indexing%20Mysql%20Database%20with%20elasticsearch%20-%20Newbie_files/more.png" height="10" width="10"><table class="light-bg-color medium-border-color drop-shadow" style="margin-top:1px;"><tbody><tr id="_loadingtopicdropdown" style="display:none"><td class="dropdown-simple-row"><span id="_loadingSpantopicdropdown">Loading...</span></td></tr><tr id="topicSubscriptionLink"><td style="border:none"><a href="http://elasticsearch-users.115913.n3.nabble.com/template/NamlServlet.jtp?macro=subscribe&amp;node=3608232" rel="nofollow">Subscribe via email</a></td></tr><tr class="dropdown-separator"><td class="action-separator medium-border-color">&nbsp;</td></tr><tr id="moveTopic" style="display:none"><td style="border:none"><a href="http://elasticsearch-users.115913.n3.nabble.com/template/NamlServlet.jtp?macro=move_node&amp;node=3608232" rel="nofollow">Move topic</a></td></tr><tr id="pinTopic" style="display:none"><td style="border:none"><a href="javascript:%20void%20Nabble.pinTopic(3608232)" rel="nofollow">Pin topic</a></td></tr><tr id="unpinTopic" style="display:none"><td style="border:none"><a href="javascript:%20void%20Nabble.unpinTopic(3608232)" rel="nofollow">Unpin topic</a></td></tr><tr id="lockTopic" style="display:none"><td style="border:none"><a href="javascript:%20void%20Nabble.lockTopic(3608232)" rel="nofollow">Lock topic</a></td></tr><tr id="unlockTopic" style="display:none"><td style="border:none"><a href="javascript:%20void%20Nabble.unlockTopic(3608232)" rel="nofollow">Unlock topic</a></td></tr><tr id="deleteRecursively" style="display:none"><td style="border:none"><a href="javascript:%20void(0)" onclick="Nabble.deleteFromSite(3608232)" rel="nofollow">Delete this topic</a></td></tr><tr id="deletePost" style="display:none"><td style="border:none"><a href="javascript:%20void(0)" onclick="Nabble.deletePost(3608232)" rel="nofollow">Delete this topic</a></td></tr><tr id="changeMetaTags" style="display:none"><td style="border:none"><a href="http://elasticsearch-users.115913.n3.nabble.com/template/NamlServlet.jtp?macro=change_title_and_meta_tags&amp;node=3608232" rel="nofollow">Change title and meta tags</a></td></tr><tr id="embedPost3608232"><td style="border:none"><a href="http://elasticsearch-users.115913.n3.nabble.com/embed/EmbedOptions.jtp?node=3608232" rel="nofollow">Embed post</a></td></tr><tr id="permalink3608232"><td style="border:none"><a href="javascript:%20void(0)" onclick="prompt('Copy this:','http://elasticsearch-users.115913.n3.nabble.com/Indexing-Mysql-Database-with-elasticsearch-Newbie-tp3608232.html')">Permalink</a></td></tr></tbody></table></span></span>
+	<script type="text/javascript">
+		var dropdown = new NabbleDropdown("topicdropdown", "Options","Click for more options");
+		
+		dropdown.add('topicSubscriptionLink', '\x3Ca href\x3D\"/template/NamlServlet.jtp?macro\x3Dsubscribe&amp;node\x3D3608232\" rel\x3D\"nofollow\"\x3ESubscribe via email\x3C/a\x3E');
+		dropdown.addSeparator();
+		dropdown.add('moveTopic', '\x3Ca href\x3D\"/template/NamlServlet.jtp?macro\x3Dmove_node&amp;node\x3D3608232\" rel\x3D\"nofollow\"\x3EMove topic\x3C/a\x3E', 'display:none');
+		dropdown.add('pinTopic', '\x3Ca href\x3D\"javascript: void Nabble.pinTopic(3608232)\" rel\x3D\"nofollow\"\x3EPin topic\x3C/a\x3E', 'display:none');
+		dropdown.add('unpinTopic', '\x3Ca href\x3D\"javascript: void Nabble.unpinTopic(3608232)\" rel\x3D\"nofollow\"\x3EUnpin topic\x3C/a\x3E', 'display:none');
+		dropdown.add('lockTopic', '\x3Ca href\x3D\"javascript: void Nabble.lockTopic(3608232)\" rel\x3D\"nofollow\"\x3ELock topic\x3C/a\x3E', 'display:none');
+		dropdown.add('unlockTopic', '\x3Ca href\x3D\"javascript: void Nabble.unlockTopic(3608232)\" rel\x3D\"nofollow\"\x3EUnlock topic\x3C/a\x3E', 'display:none');
+		dropdown.add('deleteRecursively', '\x3Ca href\x3D\"javascript: void(0)\" onclick\x3D\"Nabble.deleteFromSite(3608232)\" rel\x3D\"nofollow\"\x3EDelete this topic\x3C/a\x3E', 'display:none');
+			dropdown.add('deletePost', '\x3Ca href\x3D\"javascript: void(0)\" onclick\x3D\"Nabble.deletePost(3608232)\" rel\x3D\"nofollow\"\x3EDelete this topic\x3C/a\x3E', 'display:none');
+		dropdown.add('changeMetaTags', '\x3Ca href\x3D\"/template/NamlServlet.jtp?macro\x3Dchange_title_and_meta_tags&amp;node\x3D3608232\" rel\x3D\"nofollow\"\x3EChange title and meta tags\x3C/a\x3E', 'display:none');
+		dropdown.add('embedPost3608232', '\x3Ca href\x3D\"/embed/EmbedOptions.jtp?node\x3D3608232\" rel\x3D\"nofollow\"\x3EEmbed post\x3C/a\x3E');
+		dropdown.add('permalink3608232', '\x3Ca href\x3D\"javascript: void(0)\" onclick\x3D\"prompt(\'Copy this:\',\'http://elasticsearch-users.115913.n3.nabble.com/Indexing-Mysql-Database-with-elasticsearch-Newbie-tp3608232.html\')\"\x3EPermalink\x3C/a\x3E');
+		dropdown.build('dd_topicdropdown');
+		dropdown.loadOnClick('/template/NamlServlet.jtp?macro=topic_dropdown_later&node=3608232' + Nabble.getClientID() + '&_=' + Math.floor(Math.random()*999999));
+	</script>
+		</div>
+	</div>
+			<div id="topic-contents" style="margin-top:1em;clear:both">
+		<div id="classic-contents">
+		
+		<div class="classic-row">
+		<div class="classic-header">
+			<div class="classic-bar shaded-bg-color rounded-top">
+				<div class="classic-author-name nowrap">
+					<a href="http://elasticsearch-users.115913.n3.nabble.com/template/NamlServlet.jtp?macro=user_nodes&amp;user=451175">Mohit</a>
+				</div>
+				<div class="classic-right-menu shaded-bg-color weak-color">
+					<a href="http://elasticsearch-users.115913.n3.nabble.com/template/NamlServlet.jtp?macro=reply&amp;node=3608232" rel="nofollow">Reply</a> |
+					<a href="javascript:void(0)" onclick="Nabble.setView('threaded', '/Indexing-Mysql-Database-with-elasticsearch-Newbie-tt3608232.html',3608232)">Threaded</a>
+	<div id="tooltip43277" class="nabble-tooltip" use_title="false">
+		Open this post in threaded view
+		<div class="nabble-tooltip-arrow">
+			<div class="d1">♦</div>
+			<div class="d2">♦</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		Nabble.startTooltip(Nabble.get('tooltip43277'), 'up', 400);
+	</script> |
+					<span id="dd_postdropdown3608232"><span id="postdropdown3608232" class="dropdown"><a href="javascript:void(0)" title="Click for more options">More</a> <img src="ElasticSearch%20Users%20-%20Indexing%20Mysql%20Database%20with%20elasticsearch%20-%20Newbie_files/more.png" height="10" width="10"><table class="light-bg-color medium-border-color drop-shadow" style="margin-top:1px;"><tbody><tr id="_loadingpostdropdown3608232" style="display:none"><td class="dropdown-simple-row"><span id="_loadingSpanpostdropdown3608232">Loading...</span></td></tr><tr id="replyToAuthor3608232" style="display:none"><td style="border:none"><a href="http://elasticsearch-users.115913.n3.nabble.com/user/SendEmail.jtp?type=pm&amp;post=3608232" rel="nofollow">Reply to author</a></td></tr><tr id="editPost3608232" style="display:none"><td style="border:none"><a href="http://elasticsearch-users.115913.n3.nabble.com/template/NamlServlet.jtp?macro=edit_post&amp;node=3608232" rel="nofollow">Edit post</a></td></tr><tr id="movePost3608232" style="display:none"><td style="border:none"><a href="http://elasticsearch-users.115913.n3.nabble.com/template/NamlServlet.jtp?macro=move_node&amp;node=3608232" rel="nofollow">Move post</a></td></tr><tr id="deletePost3608232" style="display:none"><td style="border:none"><a href="javascript:%20void(0)" onclick="Nabble.deletePost(3608232)" rel="nofollow">Delete this post</a></td></tr><tr id="deleteRecursively3608232" style="display:none"><td style="border:none"><a href="javascript:%20void(0)" onclick="Nabble.deleteFromSite(3608232)" rel="nofollow">Delete this post and replies</a></td></tr><tr id="changePostDate3608232" style="display:none"><td style="border:none"><a href="http://elasticsearch-users.115913.n3.nabble.com/template/NamlServlet.jtp?macro=change_post_date&amp;node=3608232" rel="nofollow">Change post date</a></td></tr><tr id="print3608232"><td style="border:none"><a href="http://elasticsearch-users.115913.n3.nabble.com/template/NamlServlet.jtp?macro=print_post&amp;node=3608232" rel="nofollow">Print post</a></td></tr><tr id="permalink3608232"><td style="border:none"><a href="javascript:%20void(0)" onclick="prompt('Copy this:','http://elasticsearch-users.115913.n3.nabble.com/Indexing-Mysql-Database-with-elasticsearch-Newbie-tp3608232.html')">Permalink</a></td></tr><tr id="rawMail3608232" style="display:none"><td style="border:none"><a href="http://elasticsearch-users.115913.n3.nabble.com/template/NamlServlet.jtp?macro=raw_mail&amp;node=3608232" rel="nofollow">Raw mail</a></td></tr></tbody></table></span></span>
+	<script type="text/javascript">
+		var dropdown = new NabbleDropdown("postdropdown3608232", "More","Click for more options");
+		
+		dropdown.add('replyToAuthor3608232', '\x3Ca href\x3D\"/user/SendEmail.jtp?type\x3Dpm&amp;post\x3D3608232\" rel\x3D\"nofollow\"\x3EReply to author\x3C/a\x3E', 'display:none');
+		dropdown.add('editPost3608232', '\x3Ca href\x3D\"/template/NamlServlet.jtp?macro\x3Dedit_post&amp;node\x3D3608232\" rel\x3D\"nofollow\"\x3EEdit post\x3C/a\x3E', 'display:none');
+		dropdown.add('movePost3608232', '\x3Ca href\x3D\"/template/NamlServlet.jtp?macro\x3Dmove_node&amp;node\x3D3608232\" rel\x3D\"nofollow\"\x3EMove post\x3C/a\x3E', 'display:none');
+		dropdown.add('deletePost3608232', '\x3Ca href\x3D\"javascript: void(0)\" onclick\x3D\"Nabble.deletePost(3608232)\" rel\x3D\"nofollow\"\x3EDelete this post\x3C/a\x3E', 'display:none');
+			dropdown.add('deleteRecursively3608232', '\x3Ca href\x3D\"javascript: void(0)\" onclick\x3D\"Nabble.deleteFromSite(3608232)\" rel\x3D\"nofollow\"\x3EDelete this post and replies\x3C/a\x3E', 'display:none');
+		dropdown.add('changePostDate3608232', '\x3Ca href\x3D\"/template/NamlServlet.jtp?macro\x3Dchange_post_date&amp;node\x3D3608232\" rel\x3D\"nofollow\"\x3EChange post date\x3C/a\x3E', 'display:none');
+		dropdown.add('print3608232', '\x3Ca href\x3D\"/template/NamlServlet.jtp?macro\x3Dprint_post&amp;node\x3D3608232\" rel\x3D\"nofollow\"\x3EPrint post\x3C/a\x3E');
+		dropdown.add('permalink3608232', '\x3Ca href\x3D\"javascript: void(0)\" onclick\x3D\"prompt(\'Copy this:\',\'http://elasticsearch-users.115913.n3.nabble.com/Indexing-Mysql-Database-with-elasticsearch-Newbie-tp3608232.html\')\"\x3EPermalink\x3C/a\x3E');
+		dropdown.add('rawMail3608232', '\x3Ca href\x3D\"/template/NamlServlet.jtp?macro\x3Draw_mail&amp;node\x3D3608232\" rel\x3D\"nofollow\"\x3ERaw mail\x3C/a\x3E', 'display:none');
+		dropdown.build('dd_postdropdown3608232');
+		dropdown.loadOnClick('/template/NamlServlet.jtp?macro=post_dropdown_later&node=3608232' + Nabble.getClientID() + '&_=' + Math.floor(Math.random()*999999));
+	</script>
+					&nbsp;
+					<img src="ElasticSearch%20Users%20-%20Indexing%20Mysql%20Database%20with%20elasticsearch%20-%20Newbie_files/flag_gray.png" class="report-flag" onclick="Nabble.reportContent(3608232)">
+	<div id="tooltip97886" class="nabble-tooltip" use_title="false">
+		Report Content as Inappropriate
+		<div class="nabble-tooltip-arrow">
+			<div class="d1">♦</div>
+			<div class="d2">♦</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		Nabble.startTooltip(Nabble.get('tooltip97886'), 'up', 400);
+	</script>
+				</div>
+				<div class="classic-subject-line">
+					<span id="red-arrow3608232" class="float-left invisible" style="margin-top: 0.2em; display: inline;">
+		<img title="Selected post" src="ElasticSearch%20Users%20-%20Indexing%20Mysql%20Database%20with%20elasticsearch%20-%20Newbie_files/arrow.png" alt="Selected post" height="15" width="15">
+	</span>
+					<span class="post-date float-left">
+		<span id="d1324623654000-911">Dec 23, 2011; 12:30pm</span><script type="text/javascript">
+		Nabble.get('d1324623654000-911').innerHTML= Nabble.formatDateLong(new Date(1324623654000));
+	</script>
+	</span>
+					<h2 class="post-subject float-left adbayes-content" style="width:30%;overflow:visible;font-family:inherit">
+		Indexing Mysql Database with elasticsearch - Newbie
+	</h2>
+				</div>
+			</div>
+		</div>
+		<table class="classic-body">
+			<tbody><tr>
+				<td class="classic-author shaded-bg-color rounded-bottom">
+					<div class="avatar-outer">
+		<div class="avatar-inner">
+			<a href="http://elasticsearch-users.115913.n3.nabble.com/template/NamlServlet.jtp?macro=user_nodes&amp;user=451175" rel="nofollow" title="View profile of Mohit" class="nowrap no-decoration"><img class="avatar medium-border-color" src="ElasticSearch%20Users%20-%20Indexing%20Mysql%20Database%20with%20elasticsearch%20-%20Newbie_files/82edc61a77b9d35807d558d1b511fcce.png" alt="Mohit" title="Mohit" height="100" width="100"><img src="ElasticSearch%20Users%20-%20Indexing%20Mysql%20Database%20with%20elasticsearch%20-%20Newbie_files/online.png" class="online451175 online invisible" title="User is online" alt="online"></a>
+
+	
+	
+		</div>
+	</div>
+	
+	
+	<div class="post-count451175 avatar-label weak-color">1 post</div>
+	
+				</td>
+				<td class="classic-message">
+					
+	
+	
+	<div id="message3608232" class="message-text adbayes-content">
+		I recently started looking ElasticSearch to implement search in my
+<br>application. I have my database in Mysql which have approx. &gt;2 mn
+<br>records. I know in sphinx we could create an index directly on any
+<br>mysql table column. I wanted to know if its possible in Elasticsearch,
+<br>if not directly how we could implement that?
+<br><br><br>Thanks
+<br>Mohit
+<br><br>
+
+	
+	
+	
+	</div>
+	<script type="text/javascript">
+				Nabble.ads('first_classic_message');
+			</script><div class="ad " style="display:block !important;visibility:visible !important;height:auto !important; width: auto !important;position:static !important;top:auto !important;left:auto !important;text-align:left;width:675px !important;">
+<div class="div954112" style="width:336px; float:left; clear:none; display:block !important;">
+<script type="text/javascript">Nabble._fn()</script><a id="ad954112" href="#" style="display:none">.</a>
+<script type="text/javascript" src="ElasticSearch%20Users%20-%20Indexing%20Mysql%20Database%20with%20elasticsearch%20-%20Newbie_files/show_ads.js"></script><ins style="display:inline-table;border:none;height:280px;margin:0;padding:0;position:relative;visibility:visible;width:336px;background-color:transparent"><ins id="aswift_0_anchor" style="display:block;border:none;height:280px;margin:0;padding:0;position:relative;visibility:visible;width:336px;background-color:transparent"><iframe marginwidth="0" marginheight="0" vspace="0" hspace="0" allowtransparency="true" onload="var i=this.id,s=window.google_iframe_oncopy,H=s&amp;&amp;s.handlers,h=H&amp;&amp;H[i],w=this.contentWindow,d;try{d=w.document}catch(e){}if(h&amp;&amp;d&amp;&amp;(!d.body||!d.body.firstChild)){if(h.call){setTimeout(h,0)}else if(h.match){try{h=s.upd(h,i)}catch(e){}w.location.replace(h)}}" id="aswift_0" name="aswift_0" style="left:0;position:absolute;top:0;" frameborder="0" height="280" scrolling="no" width="336"></iframe></ins></ins><style type="text/css">.nabble .div954112 ins { display:inline-table !important; visibility: visible !important; height:280px !important; width: 336px !important; position:static !important;top:auto !important;left:auto !important; }.nabble .div954112 ins ins iframe { display:block !important; visibility: visible !important; height:280px !important; width: 336px !important; position:static !important;top:auto !important;left:auto !important; }</style>
+</div>
+<div class="div97975" style="width:336px; float:left; clear:none; display:block !important;">
+<script type="text/javascript">Nabble._fn()</script><a id="ad97975" href="#" style="display:none">.</a>
+<script type="text/javascript" src="ElasticSearch%20Users%20-%20Indexing%20Mysql%20Database%20with%20elasticsearch%20-%20Newbie_files/show_ads.js"></script><ins style="display:inline-table;border:none;height:280px;margin:0;padding:0;position:relative;visibility:visible;width:336px;background-color:transparent"><ins id="aswift_1_anchor" style="display:block;border:none;height:280px;margin:0;padding:0;position:relative;visibility:visible;width:336px;background-color:transparent"><iframe marginwidth="0" marginheight="0" vspace="0" hspace="0" allowtransparency="true" onload="var i=this.id,s=window.google_iframe_oncopy,H=s&amp;&amp;s.handlers,h=H&amp;&amp;H[i],w=this.contentWindow,d;try{d=w.document}catch(e){}if(h&amp;&amp;d&amp;&amp;(!d.body||!d.body.firstChild)){if(h.call){setTimeout(h,0)}else if(h.match){try{h=s.upd(h,i)}catch(e){}w.location.replace(h)}}" id="aswift_1" name="aswift_1" style="left:0;position:absolute;top:0;" frameborder="0" height="280" scrolling="no" width="336"></iframe></ins></ins><style type="text/css">.nabble .div97975 ins { display:inline-table !important; visibility: visible !important; height:280px !important; width: 336px !important; position:static !important;top:auto !important;left:auto !important; }.nabble .div97975 ins ins iframe { display:block !important; visibility: visible !important; height:280px !important; width: 336px !important; position:static !important;top:auto !important;left:auto !important; }</style>
+</div>
+<div style="padding-top:.3em;font-size:90%;clear:both"><a href="http://elasticsearch-users.115913.n3.nabble.com/template/NamlServlet.jtp?macro=buy_credits_page">Remove Ads</a></div>
+</div>
+
+			
+				</td>
+			</tr>
+		</tbody></table>
+	</div>
+	<div class="classic-row">
+		<div class="classic-header">
+			<div class="classic-bar shaded-bg-color rounded-top">
+				<div class="classic-author-name nowrap">
+					<a href="http://elasticsearch-users.115913.n3.nabble.com/template/NamlServlet.jtp?macro=user_nodes&amp;user=316173">Karussell</a>
+				</div>
+				<div class="classic-right-menu shaded-bg-color weak-color">
+					<a href="http://elasticsearch-users.115913.n3.nabble.com/template/NamlServlet.jtp?macro=reply&amp;node=3608529" rel="nofollow">Reply</a> |
+					<a href="javascript:void(0)" onclick="Nabble.setView('threaded', '/Indexing-Mysql-Database-with-elasticsearch-Newbie-tt3608232.html#a3608529',3608529)">Threaded</a>
+	<div id="tooltip64739" class="nabble-tooltip" use_title="false">
+		Open this post in threaded view
+		<div class="nabble-tooltip-arrow">
+			<div class="d1">♦</div>
+			<div class="d2">♦</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		Nabble.startTooltip(Nabble.get('tooltip64739'), 'up', 400);
+	</script> |
+					<span id="dd_postdropdown3608529"><span id="postdropdown3608529" class="dropdown"><a href="javascript:void(0)" title="Click for more options">More</a> <img src="ElasticSearch%20Users%20-%20Indexing%20Mysql%20Database%20with%20elasticsearch%20-%20Newbie_files/more.png" height="10" width="10"><table class="light-bg-color medium-border-color drop-shadow" style="margin-top:1px;"><tbody><tr id="_loadingpostdropdown3608529" style="display:none"><td class="dropdown-simple-row"><span id="_loadingSpanpostdropdown3608529">Loading...</span></td></tr><tr id="replyToAuthor3608529" style="display:none"><td style="border:none"><a href="http://elasticsearch-users.115913.n3.nabble.com/user/SendEmail.jtp?type=pm&amp;post=3608529" rel="nofollow">Reply to author</a></td></tr><tr id="editPost3608529" style="display:none"><td style="border:none"><a href="http://elasticsearch-users.115913.n3.nabble.com/template/NamlServlet.jtp?macro=edit_post&amp;node=3608529" rel="nofollow">Edit post</a></td></tr><tr id="movePost3608529" style="display:none"><td style="border:none"><a href="http://elasticsearch-users.115913.n3.nabble.com/template/NamlServlet.jtp?macro=move_node&amp;node=3608529" rel="nofollow">Move post</a></td></tr><tr id="deletePost3608529" style="display:none"><td style="border:none"><a href="javascript:%20void(0)" onclick="Nabble.deletePost(3608529)" rel="nofollow">Delete this post</a></td></tr><tr id="deleteRecursively3608529" style="display:none"><td style="border:none"><a href="javascript:%20void(0)" onclick="Nabble.deleteFromSite(3608529)" rel="nofollow">Delete this post and replies</a></td></tr><tr id="changePostDate3608529" style="display:none"><td style="border:none"><a href="http://elasticsearch-users.115913.n3.nabble.com/template/NamlServlet.jtp?macro=change_post_date&amp;node=3608529" rel="nofollow">Change post date</a></td></tr><tr id="print3608529"><td style="border:none"><a href="http://elasticsearch-users.115913.n3.nabble.com/template/NamlServlet.jtp?macro=print_post&amp;node=3608529" rel="nofollow">Print post</a></td></tr><tr id="permalink3608529"><td style="border:none"><a href="javascript:%20void(0)" onclick="prompt('Copy this:','http://elasticsearch-users.115913.n3.nabble.com/Indexing-Mysql-Database-with-elasticsearch-Newbie-tp3608232p3608529.html')">Permalink</a></td></tr><tr id="rawMail3608529" style="display:none"><td style="border:none"><a href="http://elasticsearch-users.115913.n3.nabble.com/template/NamlServlet.jtp?macro=raw_mail&amp;node=3608529" rel="nofollow">Raw mail</a></td></tr></tbody></table></span></span>
+	<script type="text/javascript">
+		var dropdown = new NabbleDropdown("postdropdown3608529", "More","Click for more options");
+		
+		dropdown.add('replyToAuthor3608529', '\x3Ca href\x3D\"/user/SendEmail.jtp?type\x3Dpm&amp;post\x3D3608529\" rel\x3D\"nofollow\"\x3EReply to author\x3C/a\x3E', 'display:none');
+		dropdown.add('editPost3608529', '\x3Ca href\x3D\"/template/NamlServlet.jtp?macro\x3Dedit_post&amp;node\x3D3608529\" rel\x3D\"nofollow\"\x3EEdit post\x3C/a\x3E', 'display:none');
+		dropdown.add('movePost3608529', '\x3Ca href\x3D\"/template/NamlServlet.jtp?macro\x3Dmove_node&amp;node\x3D3608529\" rel\x3D\"nofollow\"\x3EMove post\x3C/a\x3E', 'display:none');
+		dropdown.add('deletePost3608529', '\x3Ca href\x3D\"javascript: void(0)\" onclick\x3D\"Nabble.deletePost(3608529)\" rel\x3D\"nofollow\"\x3EDelete this post\x3C/a\x3E', 'display:none');
+			dropdown.add('deleteRecursively3608529', '\x3Ca href\x3D\"javascript: void(0)\" onclick\x3D\"Nabble.deleteFromSite(3608529)\" rel\x3D\"nofollow\"\x3EDelete this post and replies\x3C/a\x3E', 'display:none');
+		dropdown.add('changePostDate3608529', '\x3Ca href\x3D\"/template/NamlServlet.jtp?macro\x3Dchange_post_date&amp;node\x3D3608529\" rel\x3D\"nofollow\"\x3EChange post date\x3C/a\x3E', 'display:none');
+		dropdown.add('print3608529', '\x3Ca href\x3D\"/template/NamlServlet.jtp?macro\x3Dprint_post&amp;node\x3D3608529\" rel\x3D\"nofollow\"\x3EPrint post\x3C/a\x3E');
+		dropdown.add('permalink3608529', '\x3Ca href\x3D\"javascript: void(0)\" onclick\x3D\"prompt(\'Copy this:\',\'http://elasticsearch-users.115913.n3.nabble.com/Indexing-Mysql-Database-with-elasticsearch-Newbie-tp3608232p3608529.html\')\"\x3EPermalink\x3C/a\x3E');
+		dropdown.add('rawMail3608529', '\x3Ca href\x3D\"/template/NamlServlet.jtp?macro\x3Draw_mail&amp;node\x3D3608529\" rel\x3D\"nofollow\"\x3ERaw mail\x3C/a\x3E', 'display:none');
+		dropdown.build('dd_postdropdown3608529');
+		dropdown.loadOnClick('/template/NamlServlet.jtp?macro=post_dropdown_later&node=3608529' + Nabble.getClientID() + '&_=' + Math.floor(Math.random()*999999));
+	</script>
+					&nbsp;
+					<img src="ElasticSearch%20Users%20-%20Indexing%20Mysql%20Database%20with%20elasticsearch%20-%20Newbie_files/flag_gray.png" class="report-flag" onclick="Nabble.reportContent(3608529)">
+	<div id="tooltip49136" class="nabble-tooltip" use_title="false">
+		Report Content as Inappropriate
+		<div class="nabble-tooltip-arrow">
+			<div class="d1">♦</div>
+			<div class="d2">♦</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		Nabble.startTooltip(Nabble.get('tooltip49136'), 'up', 400);
+	</script>
+				</div>
+				<div class="classic-subject-line">
+					<span id="red-arrow3608529" class="float-left invisible" style="margin-top:.2em">
+		<img title="Selected post" src="ElasticSearch%20Users%20-%20Indexing%20Mysql%20Database%20with%20elasticsearch%20-%20Newbie_files/arrow.png" alt="Selected post" height="15" width="15">
+	</span>
+					<span class="post-date float-left">
+		<span id="d1324636218000-347">Dec 23, 2011; 4:00pm</span><script type="text/javascript">
+		Nabble.get('d1324636218000-347').innerHTML= Nabble.formatDateLong(new Date(1324636218000));
+	</script>
+	</span>
+					<h2 class="post-subject float-left adbayes-content" style="width:30%;overflow:visible;font-family:inherit">
+		Re: Indexing Mysql Database with elasticsearch - Newbie
+	</h2>
+				</div>
+			</div>
+		</div>
+		<table class="classic-body">
+			<tbody><tr>
+				<td class="classic-author shaded-bg-color rounded-bottom">
+					<div class="avatar-outer">
+		<div class="avatar-inner">
+			<a href="http://elasticsearch-users.115913.n3.nabble.com/template/NamlServlet.jtp?macro=user_nodes&amp;user=316173" rel="nofollow" title="View profile of Karussell" class="nowrap no-decoration"><img class="avatar medium-border-color" src="ElasticSearch%20Users%20-%20Indexing%20Mysql%20Database%20with%20elasticsearch%20-%20Newbie_files/8e2149625bfd15a1546813b582d44d28.png" alt="Karussell" title="Karussell" height="100" width="100"><img src="ElasticSearch%20Users%20-%20Indexing%20Mysql%20Database%20with%20elasticsearch%20-%20Newbie_files/online.png" class="online316173 online invisible" title="User is online" alt="online"></a>
+
+	
+	
+		</div>
+	</div>
+	
+	
+	<div class="post-count316173 avatar-label weak-color">438 posts</div>
+	
+				</td>
+				<td class="classic-message">
+					
+	
+	
+	<div id="message3608529" class="message-text adbayes-content">
+		There is an external projects which could help:
+<br><br><a href="https://github.com/Aconex/scrutineer" target="_top" rel="nofollow" link="external">https://github.com/Aconex/scrutineer</a><br><br>Peter.
+<br><br>On 23 Dez., 08:00, Mohit &lt;<a href="http://elasticsearch-users.115913.n3.nabble.com/user/SendEmail.jtp?type=node&amp;node=3608529&amp;i=0" target="_top" rel="nofollow" link="external">[hidden email]</a>&gt; wrote:
+<br>&gt; I recently started looking ElasticSearch to implement search in my
+<br>&gt; application. I have my database in Mysql which have approx. &gt;2 mn
+<br>&gt; records. I know in sphinx we could create an index directly on any
+<br>&gt; mysql table column. I wanted to know if its possible in Elasticsearch,
+<br>&gt; if not directly how we could implement that?
+<br>&gt;
+<br>&gt; Thanks
+<br>&gt; Mohit
+<br>
+
+	
+	
+	
+	</div>
+	
+			
+				</td>
+			</tr>
+		</tbody></table>
+	</div>
+	<div class="classic-row">
+		<div class="classic-header">
+			<div class="classic-bar shaded-bg-color rounded-top">
+				<div class="classic-author-name nowrap">
+					<a href="http://elasticsearch-users.115913.n3.nabble.com/template/NamlServlet.jtp?macro=user_nodes&amp;user=494405">sowmyak</a>
+				</div>
+				<div class="classic-right-menu shaded-bg-color weak-color">
+					<a href="http://elasticsearch-users.115913.n3.nabble.com/template/NamlServlet.jtp?macro=reply&amp;node=4021319" rel="nofollow">Reply</a> |
+					<a href="javascript:void(0)" onclick="Nabble.setView('threaded', '/Indexing-Mysql-Database-with-elasticsearch-Newbie-tt3608232.html#a4021319',4021319)">Threaded</a>
+	<div id="tooltip87130" class="nabble-tooltip" use_title="false">
+		Open this post in threaded view
+		<div class="nabble-tooltip-arrow">
+			<div class="d1">♦</div>
+			<div class="d2">♦</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		Nabble.startTooltip(Nabble.get('tooltip87130'), 'up', 400);
+	</script> |
+					<span id="dd_postdropdown4021319"><span id="postdropdown4021319" class="dropdown"><a href="javascript:void(0)" title="Click for more options">More</a> <img src="ElasticSearch%20Users%20-%20Indexing%20Mysql%20Database%20with%20elasticsearch%20-%20Newbie_files/more.png" height="10" width="10"><table class="light-bg-color medium-border-color drop-shadow" style="margin-top:1px;"><tbody><tr id="_loadingpostdropdown4021319" style="display:none"><td class="dropdown-simple-row"><span id="_loadingSpanpostdropdown4021319">Loading...</span></td></tr><tr id="replyToAuthor4021319" style="display:none"><td style="border:none"><a href="http://elasticsearch-users.115913.n3.nabble.com/user/SendEmail.jtp?type=pm&amp;post=4021319" rel="nofollow">Reply to author</a></td></tr><tr id="editPost4021319" style="display:none"><td style="border:none"><a href="http://elasticsearch-users.115913.n3.nabble.com/template/NamlServlet.jtp?macro=edit_post&amp;node=4021319" rel="nofollow">Edit post</a></td></tr><tr id="movePost4021319" style="display:none"><td style="border:none"><a href="http://elasticsearch-users.115913.n3.nabble.com/template/NamlServlet.jtp?macro=move_node&amp;node=4021319" rel="nofollow">Move post</a></td></tr><tr id="deletePost4021319" style="display:none"><td style="border:none"><a href="javascript:%20void(0)" onclick="Nabble.deletePost(4021319)" rel="nofollow">Delete this post</a></td></tr><tr id="deleteRecursively4021319" style="display:none"><td style="border:none"><a href="javascript:%20void(0)" onclick="Nabble.deleteFromSite(4021319)" rel="nofollow">Delete this post and replies</a></td></tr><tr id="changePostDate4021319" style="display:none"><td style="border:none"><a href="http://elasticsearch-users.115913.n3.nabble.com/template/NamlServlet.jtp?macro=change_post_date&amp;node=4021319" rel="nofollow">Change post date</a></td></tr><tr id="print4021319"><td style="border:none"><a href="http://elasticsearch-users.115913.n3.nabble.com/template/NamlServlet.jtp?macro=print_post&amp;node=4021319" rel="nofollow">Print post</a></td></tr><tr id="permalink4021319"><td style="border:none"><a href="javascript:%20void(0)" onclick="prompt('Copy this:','http://elasticsearch-users.115913.n3.nabble.com/Indexing-Mysql-Database-with-elasticsearch-Newbie-tp3608232p4021319.html')">Permalink</a></td></tr><tr id="rawMail4021319" style="display:none"><td style="border:none"><a href="http://elasticsearch-users.115913.n3.nabble.com/template/NamlServlet.jtp?macro=raw_mail&amp;node=4021319" rel="nofollow">Raw mail</a></td></tr></tbody></table></span></span>
+	<script type="text/javascript">
+		var dropdown = new NabbleDropdown("postdropdown4021319", "More","Click for more options");
+		
+		dropdown.add('replyToAuthor4021319', '\x3Ca href\x3D\"/user/SendEmail.jtp?type\x3Dpm&amp;post\x3D4021319\" rel\x3D\"nofollow\"\x3EReply to author\x3C/a\x3E', 'display:none');
+		dropdown.add('editPost4021319', '\x3Ca href\x3D\"/template/NamlServlet.jtp?macro\x3Dedit_post&amp;node\x3D4021319\" rel\x3D\"nofollow\"\x3EEdit post\x3C/a\x3E', 'display:none');
+		dropdown.add('movePost4021319', '\x3Ca href\x3D\"/template/NamlServlet.jtp?macro\x3Dmove_node&amp;node\x3D4021319\" rel\x3D\"nofollow\"\x3EMove post\x3C/a\x3E', 'display:none');
+		dropdown.add('deletePost4021319', '\x3Ca href\x3D\"javascript: void(0)\" onclick\x3D\"Nabble.deletePost(4021319)\" rel\x3D\"nofollow\"\x3EDelete this post\x3C/a\x3E', 'display:none');
+			dropdown.add('deleteRecursively4021319', '\x3Ca href\x3D\"javascript: void(0)\" onclick\x3D\"Nabble.deleteFromSite(4021319)\" rel\x3D\"nofollow\"\x3EDelete this post and replies\x3C/a\x3E', 'display:none');
+		dropdown.add('changePostDate4021319', '\x3Ca href\x3D\"/template/NamlServlet.jtp?macro\x3Dchange_post_date&amp;node\x3D4021319\" rel\x3D\"nofollow\"\x3EChange post date\x3C/a\x3E', 'display:none');
+		dropdown.add('print4021319', '\x3Ca href\x3D\"/template/NamlServlet.jtp?macro\x3Dprint_post&amp;node\x3D4021319\" rel\x3D\"nofollow\"\x3EPrint post\x3C/a\x3E');
+		dropdown.add('permalink4021319', '\x3Ca href\x3D\"javascript: void(0)\" onclick\x3D\"prompt(\'Copy this:\',\'http://elasticsearch-users.115913.n3.nabble.com/Indexing-Mysql-Database-with-elasticsearch-Newbie-tp3608232p4021319.html\')\"\x3EPermalink\x3C/a\x3E');
+		dropdown.add('rawMail4021319', '\x3Ca href\x3D\"/template/NamlServlet.jtp?macro\x3Draw_mail&amp;node\x3D4021319\" rel\x3D\"nofollow\"\x3ERaw mail\x3C/a\x3E', 'display:none');
+		dropdown.build('dd_postdropdown4021319');
+		dropdown.loadOnClick('/template/NamlServlet.jtp?macro=post_dropdown_later&node=4021319' + Nabble.getClientID() + '&_=' + Math.floor(Math.random()*999999));
+	</script>
+					&nbsp;
+					<img src="ElasticSearch%20Users%20-%20Indexing%20Mysql%20Database%20with%20elasticsearch%20-%20Newbie_files/flag_gray.png" class="report-flag" onclick="Nabble.reportContent(4021319)">
+	<div id="tooltip28845" class="nabble-tooltip" use_title="false">
+		Report Content as Inappropriate
+		<div class="nabble-tooltip-arrow">
+			<div class="d1">♦</div>
+			<div class="d2">♦</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		Nabble.startTooltip(Nabble.get('tooltip28845'), 'up', 400);
+	</script>
+				</div>
+				<div class="classic-subject-line">
+					<span id="red-arrow4021319" class="float-left invisible" style="margin-top:.2em">
+		<img title="Selected post" src="ElasticSearch%20Users%20-%20Indexing%20Mysql%20Database%20with%20elasticsearch%20-%20Newbie_files/arrow.png" alt="Selected post" height="15" width="15">
+	</span>
+					<span class="post-date float-left">
+		<span id="d1344269851000-502">Aug 06, 2012; 9:47pm</span><script type="text/javascript">
+		Nabble.get('d1344269851000-502').innerHTML= Nabble.formatDateLong(new Date(1344269851000));
+	</script>
+	</span>
+					<h2 class="post-subject float-left adbayes-content" style="width:30%;overflow:visible;font-family:inherit">
+		Re: Indexing Mysql Database with elasticsearch - Newbie
+	</h2>
+				</div>
+			</div>
+		</div>
+		<table class="classic-body">
+			<tbody><tr>
+				<td class="classic-author shaded-bg-color rounded-bottom">
+					<div class="avatar-outer">
+		<div class="avatar-inner">
+			<a href="http://elasticsearch-users.115913.n3.nabble.com/template/NamlServlet.jtp?macro=user_nodes&amp;user=494405" rel="nofollow" title="View profile of sowmyak" class="nowrap no-decoration"><img class="avatar medium-border-color" src="ElasticSearch%20Users%20-%20Indexing%20Mysql%20Database%20with%20elasticsearch%20-%20Newbie_files/ba2d38c5a1333515b1337ff89eea59c4.png" alt="sowmyak" title="sowmyak" height="100" width="100"><img src="ElasticSearch%20Users%20-%20Indexing%20Mysql%20Database%20with%20elasticsearch%20-%20Newbie_files/online.png" class="online494405 online invisible" title="User is online" alt="online"></a>
+
+	
+	
+		</div>
+	</div>
+	
+	
+	<div class="post-count494405 avatar-label weak-color">8 posts</div>
+	
+				</td>
+				<td class="classic-message">
+					
+	
+	<div class="weak-color" style="font-size:80%;padding-bottom:1em">
+				In reply to <a href="http://elasticsearch-users.115913.n3.nabble.com/Indexing-Mysql-Database-with-elasticsearch-Newbie-tp3608232.html" rel="nofollow">this post</a> by Mohit
+			</div>
+	<div id="message4021319" class="message-text adbayes-content">
+		Hi, <br><br>Have you got it working?<br><br>If so, can you please let me know the procedure?<br><br>Thanks!<br><br>On Friday, December 23, 2011 1:00:54 AM UTC-6, Mohit wrote:<blockquote class="gmail_quote" style="margin: 0;margin-left: 0.8ex;border-left: 1px #ccc solid;padding-left: 1ex;">I recently started looking ElasticSearch to implement search in my
+<br>application. I have my database in Mysql which have approx. &gt;2 mn
+<br>records. I know in sphinx we could create an index directly on any
+<br>mysql table column. I wanted to know if its possible in Elasticsearch,
+<br>if not directly how we could implement that?
+<br>
+<br>
+<br>Thanks
+<br>Mohit
+<br>
+<br></blockquote>
+
+	
+	
+	
+	</div>
+	
+			
+				</td>
+			</tr>
+		</tbody></table>
+	</div>
+	<div class="classic-row">
+		<div class="classic-header">
+			<div class="classic-bar shaded-bg-color rounded-top">
+				<div class="classic-author-name nowrap">
+					<a href="http://elasticsearch-users.115913.n3.nabble.com/template/NamlServlet.jtp?macro=user_nodes&amp;user=393681">joergprante@gmail.com</a>
+				</div>
+				<div class="classic-right-menu shaded-bg-color weak-color">
+					<a href="http://elasticsearch-users.115913.n3.nabble.com/template/NamlServlet.jtp?macro=reply&amp;node=4021338" rel="nofollow">Reply</a> |
+					<a href="javascript:void(0)" onclick="Nabble.setView('threaded', '/Indexing-Mysql-Database-with-elasticsearch-Newbie-tt3608232.html#a4021338',4021338)">Threaded</a>
+	<div id="tooltip61794" class="nabble-tooltip" use_title="false">
+		Open this post in threaded view
+		<div class="nabble-tooltip-arrow">
+			<div class="d1">♦</div>
+			<div class="d2">♦</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		Nabble.startTooltip(Nabble.get('tooltip61794'), 'up', 400);
+	</script> |
+					<span id="dd_postdropdown4021338"><span id="postdropdown4021338" class="dropdown"><a href="javascript:void(0)" title="Click for more options">More</a> <img src="ElasticSearch%20Users%20-%20Indexing%20Mysql%20Database%20with%20elasticsearch%20-%20Newbie_files/more.png" height="10" width="10"><table class="light-bg-color medium-border-color drop-shadow" style="margin-top:1px;"><tbody><tr id="_loadingpostdropdown4021338" style="display:none"><td class="dropdown-simple-row"><span id="_loadingSpanpostdropdown4021338">Loading...</span></td></tr><tr id="replyToAuthor4021338" style="display:none"><td style="border:none"><a href="http://elasticsearch-users.115913.n3.nabble.com/user/SendEmail.jtp?type=pm&amp;post=4021338" rel="nofollow">Reply to author</a></td></tr><tr id="editPost4021338" style="display:none"><td style="border:none"><a href="http://elasticsearch-users.115913.n3.nabble.com/template/NamlServlet.jtp?macro=edit_post&amp;node=4021338" rel="nofollow">Edit post</a></td></tr><tr id="movePost4021338" style="display:none"><td style="border:none"><a href="http://elasticsearch-users.115913.n3.nabble.com/template/NamlServlet.jtp?macro=move_node&amp;node=4021338" rel="nofollow">Move post</a></td></tr><tr id="deletePost4021338" style="display:none"><td style="border:none"><a href="javascript:%20void(0)" onclick="Nabble.deletePost(4021338)" rel="nofollow">Delete this post</a></td></tr><tr id="deleteRecursively4021338" style="display:none"><td style="border:none"><a href="javascript:%20void(0)" onclick="Nabble.deleteFromSite(4021338)" rel="nofollow">Delete this post and replies</a></td></tr><tr id="changePostDate4021338" style="display:none"><td style="border:none"><a href="http://elasticsearch-users.115913.n3.nabble.com/template/NamlServlet.jtp?macro=change_post_date&amp;node=4021338" rel="nofollow">Change post date</a></td></tr><tr id="print4021338"><td style="border:none"><a href="http://elasticsearch-users.115913.n3.nabble.com/template/NamlServlet.jtp?macro=print_post&amp;node=4021338" rel="nofollow">Print post</a></td></tr><tr id="permalink4021338"><td style="border:none"><a href="javascript:%20void(0)" onclick="prompt('Copy this:','http://elasticsearch-users.115913.n3.nabble.com/Indexing-Mysql-Database-with-elasticsearch-Newbie-tp3608232p4021338.html')">Permalink</a></td></tr><tr id="rawMail4021338" style="display:none"><td style="border:none"><a href="http://elasticsearch-users.115913.n3.nabble.com/template/NamlServlet.jtp?macro=raw_mail&amp;node=4021338" rel="nofollow">Raw mail</a></td></tr></tbody></table></span></span>
+	<script type="text/javascript">
+		var dropdown = new NabbleDropdown("postdropdown4021338", "More","Click for more options");
+		
+		dropdown.add('replyToAuthor4021338', '\x3Ca href\x3D\"/user/SendEmail.jtp?type\x3Dpm&amp;post\x3D4021338\" rel\x3D\"nofollow\"\x3EReply to author\x3C/a\x3E', 'display:none');
+		dropdown.add('editPost4021338', '\x3Ca href\x3D\"/template/NamlServlet.jtp?macro\x3Dedit_post&amp;node\x3D4021338\" rel\x3D\"nofollow\"\x3EEdit post\x3C/a\x3E', 'display:none');
+		dropdown.add('movePost4021338', '\x3Ca href\x3D\"/template/NamlServlet.jtp?macro\x3Dmove_node&amp;node\x3D4021338\" rel\x3D\"nofollow\"\x3EMove post\x3C/a\x3E', 'display:none');
+		dropdown.add('deletePost4021338', '\x3Ca href\x3D\"javascript: void(0)\" onclick\x3D\"Nabble.deletePost(4021338)\" rel\x3D\"nofollow\"\x3EDelete this post\x3C/a\x3E', 'display:none');
+			dropdown.add('deleteRecursively4021338', '\x3Ca href\x3D\"javascript: void(0)\" onclick\x3D\"Nabble.deleteFromSite(4021338)\" rel\x3D\"nofollow\"\x3EDelete this post and replies\x3C/a\x3E', 'display:none');
+		dropdown.add('changePostDate4021338', '\x3Ca href\x3D\"/template/NamlServlet.jtp?macro\x3Dchange_post_date&amp;node\x3D4021338\" rel\x3D\"nofollow\"\x3EChange post date\x3C/a\x3E', 'display:none');
+		dropdown.add('print4021338', '\x3Ca href\x3D\"/template/NamlServlet.jtp?macro\x3Dprint_post&amp;node\x3D4021338\" rel\x3D\"nofollow\"\x3EPrint post\x3C/a\x3E');
+		dropdown.add('permalink4021338', '\x3Ca href\x3D\"javascript: void(0)\" onclick\x3D\"prompt(\'Copy this:\',\'http://elasticsearch-users.115913.n3.nabble.com/Indexing-Mysql-Database-with-elasticsearch-Newbie-tp3608232p4021338.html\')\"\x3EPermalink\x3C/a\x3E');
+		dropdown.add('rawMail4021338', '\x3Ca href\x3D\"/template/NamlServlet.jtp?macro\x3Draw_mail&amp;node\x3D4021338\" rel\x3D\"nofollow\"\x3ERaw mail\x3C/a\x3E', 'display:none');
+		dropdown.build('dd_postdropdown4021338');
+		dropdown.loadOnClick('/template/NamlServlet.jtp?macro=post_dropdown_later&node=4021338' + Nabble.getClientID() + '&_=' + Math.floor(Math.random()*999999));
+	</script>
+					&nbsp;
+					<img src="ElasticSearch%20Users%20-%20Indexing%20Mysql%20Database%20with%20elasticsearch%20-%20Newbie_files/flag_gray.png" class="report-flag" onclick="Nabble.reportContent(4021338)">
+	<div id="tooltip33321" class="nabble-tooltip" use_title="false">
+		Report Content as Inappropriate
+		<div class="nabble-tooltip-arrow">
+			<div class="d1">♦</div>
+			<div class="d2">♦</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		Nabble.startTooltip(Nabble.get('tooltip33321'), 'up', 400);
+	</script>
+				</div>
+				<div class="classic-subject-line">
+					<span id="red-arrow4021338" class="float-left invisible" style="margin-top:.2em">
+		<img title="Selected post" src="ElasticSearch%20Users%20-%20Indexing%20Mysql%20Database%20with%20elasticsearch%20-%20Newbie_files/arrow.png" alt="Selected post" height="15" width="15">
+	</span>
+					<span class="post-date float-left">
+		<span id="d1344297449000-367">Aug 07, 2012; 5:27am</span><script type="text/javascript">
+		Nabble.get('d1344297449000-367').innerHTML= Nabble.formatDateLong(new Date(1344297449000));
+	</script>
+	</span>
+					<h2 class="post-subject float-left adbayes-content" style="width:30%;overflow:visible;font-family:inherit">
+		Re: Indexing Mysql Database with elasticsearch - Newbie
+	</h2>
+				</div>
+			</div>
+		</div>
+		<table class="classic-body">
+			<tbody><tr>
+				<td class="classic-author shaded-bg-color rounded-bottom">
+					<div class="avatar-outer">
+		<div class="avatar-inner">
+			<a href="http://elasticsearch-users.115913.n3.nabble.com/template/NamlServlet.jtp?macro=user_nodes&amp;user=393681" rel="nofollow" title="View profile of joergprante@gmail.com" class="nowrap no-decoration"><img class="avatar medium-border-color" src="ElasticSearch%20Users%20-%20Indexing%20Mysql%20Database%20with%20elasticsearch%20-%20Newbie_files/d3dee3b0e234ca5835a7b935a01af494.png" alt="joergprante@gmail.com" title="joergprante@gmail.com" height="100" width="100"><img src="ElasticSearch%20Users%20-%20Indexing%20Mysql%20Database%20with%20elasticsearch%20-%20Newbie_files/online.png" class="online393681 online invisible" title="User is online" alt="online"></a>
+
+	
+	
+		</div>
+	</div>
+	
+	
+	<div class="post-count393681 avatar-label weak-color">1844 posts</div>
+	
+				</td>
+				<td class="classic-message">
+					
+	
+	<div class="weak-color" style="font-size:80%;padding-bottom:1em">
+				In reply to <a href="http://elasticsearch-users.115913.n3.nabble.com/Indexing-Mysql-Database-with-elasticsearch-Newbie-tp3608232.html" rel="nofollow">this post</a> by Mohit
+			</div>
+	<div id="message4021338" class="message-text adbayes-content">
+		<div>Hi Mohit,</div><div><br></div><div>welcome to elasticsearch!&nbsp;You can try the JDBC river here:&nbsp;https://github.com/jprante/elasticsearch-river-jdbc</div><div><br>Best regards,</div><div><br></div><div>Jörg<br><br>On Friday, December 23, 2011 8:00:54 AM UTC+1, Mohit wrote:<blockquote class="gmail_quote" style="margin: 0;margin-left: 0.8ex;border-left: 1px #ccc solid;padding-left: 1ex;">I recently started looking ElasticSearch to implement search in my
+<br>application. I have my database in Mysql which have approx. &gt;2 mn
+<br>records. I know in sphinx we could create an index directly on any
+<br>mysql table column. I wanted to know if its possible in Elasticsearch,
+<br>if not directly how we could implement that?
+<br>
+<br>
+<br>Thanks
+<br>Mohit
+<br>
+<br></blockquote></div>
+
+	
+	
+	
+	</div>
+	
+			
+				</td>
+			</tr>
+		</tbody></table>
+	</div>
+	<div class="classic-row">
+		<div class="classic-header">
+			<div class="classic-bar shaded-bg-color rounded-top">
+				<div class="classic-author-name nowrap">
+					<a href="http://elasticsearch-users.115913.n3.nabble.com/template/NamlServlet.jtp?macro=user_nodes&amp;user=393681">joergprante@gmail.com</a>
+				</div>
+				<div class="classic-right-menu shaded-bg-color weak-color">
+					<a href="http://elasticsearch-users.115913.n3.nabble.com/template/NamlServlet.jtp?macro=reply&amp;node=4021339" rel="nofollow">Reply</a> |
+					<a href="javascript:void(0)" onclick="Nabble.setView('threaded', '/Indexing-Mysql-Database-with-elasticsearch-Newbie-tt3608232.html#a4021339',4021339)">Threaded</a>
+	<div id="tooltip1559" class="nabble-tooltip" use_title="false">
+		Open this post in threaded view
+		<div class="nabble-tooltip-arrow">
+			<div class="d1">♦</div>
+			<div class="d2">♦</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		Nabble.startTooltip(Nabble.get('tooltip1559'), 'up', 400);
+	</script> |
+					<span id="dd_postdropdown4021339"><span id="postdropdown4021339" class="dropdown"><a href="javascript:void(0)" title="Click for more options">More</a> <img src="ElasticSearch%20Users%20-%20Indexing%20Mysql%20Database%20with%20elasticsearch%20-%20Newbie_files/more.png" height="10" width="10"><table class="light-bg-color medium-border-color drop-shadow" style="margin-top:1px;"><tbody><tr id="_loadingpostdropdown4021339" style="display:none"><td class="dropdown-simple-row"><span id="_loadingSpanpostdropdown4021339">Loading...</span></td></tr><tr id="replyToAuthor4021339" style="display:none"><td style="border:none"><a href="http://elasticsearch-users.115913.n3.nabble.com/user/SendEmail.jtp?type=pm&amp;post=4021339" rel="nofollow">Reply to author</a></td></tr><tr id="editPost4021339" style="display:none"><td style="border:none"><a href="http://elasticsearch-users.115913.n3.nabble.com/template/NamlServlet.jtp?macro=edit_post&amp;node=4021339" rel="nofollow">Edit post</a></td></tr><tr id="movePost4021339" style="display:none"><td style="border:none"><a href="http://elasticsearch-users.115913.n3.nabble.com/template/NamlServlet.jtp?macro=move_node&amp;node=4021339" rel="nofollow">Move post</a></td></tr><tr id="deletePost4021339" style="display:none"><td style="border:none"><a href="javascript:%20void(0)" onclick="Nabble.deletePost(4021339)" rel="nofollow">Delete this post</a></td></tr><tr id="deleteRecursively4021339" style="display:none"><td style="border:none"><a href="javascript:%20void(0)" onclick="Nabble.deleteFromSite(4021339)" rel="nofollow">Delete this post and replies</a></td></tr><tr id="changePostDate4021339" style="display:none"><td style="border:none"><a href="http://elasticsearch-users.115913.n3.nabble.com/template/NamlServlet.jtp?macro=change_post_date&amp;node=4021339" rel="nofollow">Change post date</a></td></tr><tr id="print4021339"><td style="border:none"><a href="http://elasticsearch-users.115913.n3.nabble.com/template/NamlServlet.jtp?macro=print_post&amp;node=4021339" rel="nofollow">Print post</a></td></tr><tr id="permalink4021339"><td style="border:none"><a href="javascript:%20void(0)" onclick="prompt('Copy this:','http://elasticsearch-users.115913.n3.nabble.com/Indexing-Mysql-Database-with-elasticsearch-Newbie-tp3608232p4021339.html')">Permalink</a></td></tr><tr id="rawMail4021339" style="display:none"><td style="border:none"><a href="http://elasticsearch-users.115913.n3.nabble.com/template/NamlServlet.jtp?macro=raw_mail&amp;node=4021339" rel="nofollow">Raw mail</a></td></tr></tbody></table></span></span>
+	<script type="text/javascript">
+		var dropdown = new NabbleDropdown("postdropdown4021339", "More","Click for more options");
+		
+		dropdown.add('replyToAuthor4021339', '\x3Ca href\x3D\"/user/SendEmail.jtp?type\x3Dpm&amp;post\x3D4021339\" rel\x3D\"nofollow\"\x3EReply to author\x3C/a\x3E', 'display:none');
+		dropdown.add('editPost4021339', '\x3Ca href\x3D\"/template/NamlServlet.jtp?macro\x3Dedit_post&amp;node\x3D4021339\" rel\x3D\"nofollow\"\x3EEdit post\x3C/a\x3E', 'display:none');
+		dropdown.add('movePost4021339', '\x3Ca href\x3D\"/template/NamlServlet.jtp?macro\x3Dmove_node&amp;node\x3D4021339\" rel\x3D\"nofollow\"\x3EMove post\x3C/a\x3E', 'display:none');
+		dropdown.add('deletePost4021339', '\x3Ca href\x3D\"javascript: void(0)\" onclick\x3D\"Nabble.deletePost(4021339)\" rel\x3D\"nofollow\"\x3EDelete this post\x3C/a\x3E', 'display:none');
+			dropdown.add('deleteRecursively4021339', '\x3Ca href\x3D\"javascript: void(0)\" onclick\x3D\"Nabble.deleteFromSite(4021339)\" rel\x3D\"nofollow\"\x3EDelete this post and replies\x3C/a\x3E', 'display:none');
+		dropdown.add('changePostDate4021339', '\x3Ca href\x3D\"/template/NamlServlet.jtp?macro\x3Dchange_post_date&amp;node\x3D4021339\" rel\x3D\"nofollow\"\x3EChange post date\x3C/a\x3E', 'display:none');
+		dropdown.add('print4021339', '\x3Ca href\x3D\"/template/NamlServlet.jtp?macro\x3Dprint_post&amp;node\x3D4021339\" rel\x3D\"nofollow\"\x3EPrint post\x3C/a\x3E');
+		dropdown.add('permalink4021339', '\x3Ca href\x3D\"javascript: void(0)\" onclick\x3D\"prompt(\'Copy this:\',\'http://elasticsearch-users.115913.n3.nabble.com/Indexing-Mysql-Database-with-elasticsearch-Newbie-tp3608232p4021339.html\')\"\x3EPermalink\x3C/a\x3E');
+		dropdown.add('rawMail4021339', '\x3Ca href\x3D\"/template/NamlServlet.jtp?macro\x3Draw_mail&amp;node\x3D4021339\" rel\x3D\"nofollow\"\x3ERaw mail\x3C/a\x3E', 'display:none');
+		dropdown.build('dd_postdropdown4021339');
+		dropdown.loadOnClick('/template/NamlServlet.jtp?macro=post_dropdown_later&node=4021339' + Nabble.getClientID() + '&_=' + Math.floor(Math.random()*999999));
+	</script>
+					&nbsp;
+					<img src="ElasticSearch%20Users%20-%20Indexing%20Mysql%20Database%20with%20elasticsearch%20-%20Newbie_files/flag_gray.png" class="report-flag" onclick="Nabble.reportContent(4021339)">
+	<div id="tooltip90693" class="nabble-tooltip" use_title="false">
+		Report Content as Inappropriate
+		<div class="nabble-tooltip-arrow">
+			<div class="d1">♦</div>
+			<div class="d2">♦</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		Nabble.startTooltip(Nabble.get('tooltip90693'), 'up', 400);
+	</script>
+				</div>
+				<div class="classic-subject-line">
+					<span id="red-arrow4021339" class="float-left invisible" style="margin-top:.2em">
+		<img title="Selected post" src="ElasticSearch%20Users%20-%20Indexing%20Mysql%20Database%20with%20elasticsearch%20-%20Newbie_files/arrow.png" alt="Selected post" height="15" width="15">
+	</span>
+					<span class="post-date float-left">
+		<span id="d1344297548000-344">Aug 07, 2012; 5:29am</span><script type="text/javascript">
+		Nabble.get('d1344297548000-344').innerHTML= Nabble.formatDateLong(new Date(1344297548000));
+	</script>
+	</span>
+					<h2 class="post-subject float-left adbayes-content" style="width:30%;overflow:visible;font-family:inherit">
+		Re: Indexing Mysql Database with elasticsearch - Newbie
+	</h2>
+				</div>
+			</div>
+		</div>
+		<table class="classic-body">
+			<tbody><tr>
+				<td class="classic-author shaded-bg-color rounded-bottom">
+					<div class="avatar-outer">
+		<div class="avatar-inner">
+			<a href="http://elasticsearch-users.115913.n3.nabble.com/template/NamlServlet.jtp?macro=user_nodes&amp;user=393681" rel="nofollow" title="View profile of joergprante@gmail.com" class="nowrap no-decoration"><img class="avatar medium-border-color" src="ElasticSearch%20Users%20-%20Indexing%20Mysql%20Database%20with%20elasticsearch%20-%20Newbie_files/d3dee3b0e234ca5835a7b935a01af494.png" alt="joergprante@gmail.com" title="joergprante@gmail.com" height="100" width="100"><img src="ElasticSearch%20Users%20-%20Indexing%20Mysql%20Database%20with%20elasticsearch%20-%20Newbie_files/online.png" class="online393681 online invisible" title="User is online" alt="online"></a>
+
+	
+	
+		</div>
+	</div>
+	
+	
+	<div class="post-count393681 avatar-label weak-color">1844 posts</div>
+	
+				</td>
+				<td class="classic-message">
+					
+	
+	
+	<div id="message4021339" class="message-text adbayes-content">
+		Hi Sowmya,<br><br>On Tuesday, August 7, 2012 1:57:29 AM UTC+2, Jörg Prante wrote:<blockquote class="gmail_quote" style="margin: 0;margin-left: 0.8ex;border-left: 1px #ccc solid;padding-left: 1ex;"><div><br></div><div>welcome to elasticsearch!&nbsp;You can try the JDBC river here:&nbsp;<a href="https://github.com/jprante/elasticsearch-river-jdbc" target="_blank" rel="nofollow" link="external">https://github.com/<wbr>jprante/elasticsearch-river-<wbr>jdbc</a></div><div><blockquote class="gmail_quote" style="margin:0;margin-left:0.8ex;border-left:1px #ccc solid;padding-left:1ex"><br></blockquote></div></blockquote>
+
+	
+	
+	
+	</div>
+	
+			
+				</td>
+			</tr>
+		</tbody></table>
+	</div>
+	<div class="classic-row">
+		<div class="classic-header">
+			<div class="classic-bar shaded-bg-color rounded-top">
+				<div class="classic-author-name nowrap">
+					<a href="http://elasticsearch-users.115913.n3.nabble.com/template/NamlServlet.jtp?macro=user_nodes&amp;user=494405">sowmyak</a>
+				</div>
+				<div class="classic-right-menu shaded-bg-color weak-color">
+					<a href="http://elasticsearch-users.115913.n3.nabble.com/template/NamlServlet.jtp?macro=reply&amp;node=4021356" rel="nofollow">Reply</a> |
+					<a href="javascript:void(0)" onclick="Nabble.setView('threaded', '/Indexing-Mysql-Database-with-elasticsearch-Newbie-tt3608232.html#a4021356',4021356)">Threaded</a>
+	<div id="tooltip53338" class="nabble-tooltip" use_title="false">
+		Open this post in threaded view
+		<div class="nabble-tooltip-arrow">
+			<div class="d1">♦</div>
+			<div class="d2">♦</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		Nabble.startTooltip(Nabble.get('tooltip53338'), 'up', 400);
+	</script> |
+					<span id="dd_postdropdown4021356"><span id="postdropdown4021356" class="dropdown"><a href="javascript:void(0)" title="Click for more options">More</a> <img src="ElasticSearch%20Users%20-%20Indexing%20Mysql%20Database%20with%20elasticsearch%20-%20Newbie_files/more.png" height="10" width="10"><table class="light-bg-color medium-border-color drop-shadow" style="margin-top:1px;"><tbody><tr id="_loadingpostdropdown4021356" style="display:none"><td class="dropdown-simple-row"><span id="_loadingSpanpostdropdown4021356">Loading...</span></td></tr><tr id="replyToAuthor4021356" style="display:none"><td style="border:none"><a href="http://elasticsearch-users.115913.n3.nabble.com/user/SendEmail.jtp?type=pm&amp;post=4021356" rel="nofollow">Reply to author</a></td></tr><tr id="editPost4021356" style="display:none"><td style="border:none"><a href="http://elasticsearch-users.115913.n3.nabble.com/template/NamlServlet.jtp?macro=edit_post&amp;node=4021356" rel="nofollow">Edit post</a></td></tr><tr id="movePost4021356" style="display:none"><td style="border:none"><a href="http://elasticsearch-users.115913.n3.nabble.com/template/NamlServlet.jtp?macro=move_node&amp;node=4021356" rel="nofollow">Move post</a></td></tr><tr id="deletePost4021356" style="display:none"><td style="border:none"><a href="javascript:%20void(0)" onclick="Nabble.deletePost(4021356)" rel="nofollow">Delete this post</a></td></tr><tr id="deleteRecursively4021356" style="display:none"><td style="border:none"><a href="javascript:%20void(0)" onclick="Nabble.deleteFromSite(4021356)" rel="nofollow">Delete this post and replies</a></td></tr><tr id="changePostDate4021356" style="display:none"><td style="border:none"><a href="http://elasticsearch-users.115913.n3.nabble.com/template/NamlServlet.jtp?macro=change_post_date&amp;node=4021356" rel="nofollow">Change post date</a></td></tr><tr id="print4021356"><td style="border:none"><a href="http://elasticsearch-users.115913.n3.nabble.com/template/NamlServlet.jtp?macro=print_post&amp;node=4021356" rel="nofollow">Print post</a></td></tr><tr id="permalink4021356"><td style="border:none"><a href="javascript:%20void(0)" onclick="prompt('Copy this:','http://elasticsearch-users.115913.n3.nabble.com/Indexing-Mysql-Database-with-elasticsearch-Newbie-tp3608232p4021356.html')">Permalink</a></td></tr><tr id="rawMail4021356" style="display:none"><td style="border:none"><a href="http://elasticsearch-users.115913.n3.nabble.com/template/NamlServlet.jtp?macro=raw_mail&amp;node=4021356" rel="nofollow">Raw mail</a></td></tr></tbody></table></span></span>
+	<script type="text/javascript">
+		var dropdown = new NabbleDropdown("postdropdown4021356", "More","Click for more options");
+		
+		dropdown.add('replyToAuthor4021356', '\x3Ca href\x3D\"/user/SendEmail.jtp?type\x3Dpm&amp;post\x3D4021356\" rel\x3D\"nofollow\"\x3EReply to author\x3C/a\x3E', 'display:none');
+		dropdown.add('editPost4021356', '\x3Ca href\x3D\"/template/NamlServlet.jtp?macro\x3Dedit_post&amp;node\x3D4021356\" rel\x3D\"nofollow\"\x3EEdit post\x3C/a\x3E', 'display:none');
+		dropdown.add('movePost4021356', '\x3Ca href\x3D\"/template/NamlServlet.jtp?macro\x3Dmove_node&amp;node\x3D4021356\" rel\x3D\"nofollow\"\x3EMove post\x3C/a\x3E', 'display:none');
+		dropdown.add('deletePost4021356', '\x3Ca href\x3D\"javascript: void(0)\" onclick\x3D\"Nabble.deletePost(4021356)\" rel\x3D\"nofollow\"\x3EDelete this post\x3C/a\x3E', 'display:none');
+			dropdown.add('deleteRecursively4021356', '\x3Ca href\x3D\"javascript: void(0)\" onclick\x3D\"Nabble.deleteFromSite(4021356)\" rel\x3D\"nofollow\"\x3EDelete this post and replies\x3C/a\x3E', 'display:none');
+		dropdown.add('changePostDate4021356', '\x3Ca href\x3D\"/template/NamlServlet.jtp?macro\x3Dchange_post_date&amp;node\x3D4021356\" rel\x3D\"nofollow\"\x3EChange post date\x3C/a\x3E', 'display:none');
+		dropdown.add('print4021356', '\x3Ca href\x3D\"/template/NamlServlet.jtp?macro\x3Dprint_post&amp;node\x3D4021356\" rel\x3D\"nofollow\"\x3EPrint post\x3C/a\x3E');
+		dropdown.add('permalink4021356', '\x3Ca href\x3D\"javascript: void(0)\" onclick\x3D\"prompt(\'Copy this:\',\'http://elasticsearch-users.115913.n3.nabble.com/Indexing-Mysql-Database-with-elasticsearch-Newbie-tp3608232p4021356.html\')\"\x3EPermalink\x3C/a\x3E');
+		dropdown.add('rawMail4021356', '\x3Ca href\x3D\"/template/NamlServlet.jtp?macro\x3Draw_mail&amp;node\x3D4021356\" rel\x3D\"nofollow\"\x3ERaw mail\x3C/a\x3E', 'display:none');
+		dropdown.build('dd_postdropdown4021356');
+		dropdown.loadOnClick('/template/NamlServlet.jtp?macro=post_dropdown_later&node=4021356' + Nabble.getClientID() + '&_=' + Math.floor(Math.random()*999999));
+	</script>
+					&nbsp;
+					<img src="ElasticSearch%20Users%20-%20Indexing%20Mysql%20Database%20with%20elasticsearch%20-%20Newbie_files/flag_gray.png" class="report-flag" onclick="Nabble.reportContent(4021356)">
+	<div id="tooltip21441" class="nabble-tooltip" use_title="false">
+		Report Content as Inappropriate
+		<div class="nabble-tooltip-arrow">
+			<div class="d1">♦</div>
+			<div class="d2">♦</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		Nabble.startTooltip(Nabble.get('tooltip21441'), 'up', 400);
+	</script>
+				</div>
+				<div class="classic-subject-line">
+					<span id="red-arrow4021356" class="float-left invisible" style="margin-top:.2em">
+		<img title="Selected post" src="ElasticSearch%20Users%20-%20Indexing%20Mysql%20Database%20with%20elasticsearch%20-%20Newbie_files/arrow.png" alt="Selected post" height="15" width="15">
+	</span>
+					<span class="post-date float-left">
+		<span id="d1344346467000-343">Aug 07, 2012; 7:04pm</span><script type="text/javascript">
+		Nabble.get('d1344346467000-343').innerHTML= Nabble.formatDateLong(new Date(1344346467000));
+	</script>
+	</span>
+					<h2 class="post-subject float-left adbayes-content" style="width:30%;overflow:visible;font-family:inherit">
+		Re: Indexing Mysql Database with elasticsearch - Newbie
+	</h2>
+				</div>
+			</div>
+		</div>
+		<table class="classic-body">
+			<tbody><tr>
+				<td class="classic-author shaded-bg-color rounded-bottom">
+					<div class="avatar-outer">
+		<div class="avatar-inner">
+			<a href="http://elasticsearch-users.115913.n3.nabble.com/template/NamlServlet.jtp?macro=user_nodes&amp;user=494405" rel="nofollow" title="View profile of sowmyak" class="nowrap no-decoration"><img class="avatar medium-border-color" src="ElasticSearch%20Users%20-%20Indexing%20Mysql%20Database%20with%20elasticsearch%20-%20Newbie_files/ba2d38c5a1333515b1337ff89eea59c4.png" alt="sowmyak" title="sowmyak" height="100" width="100"><img src="ElasticSearch%20Users%20-%20Indexing%20Mysql%20Database%20with%20elasticsearch%20-%20Newbie_files/online.png" class="online494405 online invisible" title="User is online" alt="online"></a>
+
+	
+	
+		</div>
+	</div>
+	
+	
+	<div class="post-count494405 avatar-label weak-color">8 posts</div>
+	
+				</td>
+				<td class="classic-message">
+					
+	
+	
+	<div id="message4021356" class="message-text adbayes-content">
+		<br><br>Hi,<br><br>Thanks! I have seen the link and followed to index my mysql data in elasticsearch. <br>I could index the data of the tables. <br>But,
+ I couldn't index the data which is updated in the mysql database tables
+ ( either because of insertion or deletion of the rows on the tables) 
+into the elasticsearch.<br>
+<br>I have followed the procedure described below to update the indexes.
+ Can you please let me know the correct procedure if I have understood 
+the concept by mistake.<br><br><br>Step 1: create table class_info(rno int, name varchar(100)); &nbsp;//table in mysql database
+whose data has to be indexed.<br><br><br>Step 2 : create table my_jdbc_river(_index varchar(64), _type 
+varchar(64), _id varchar(64), source_timestamp timestamp not null 
+default current_timestamp, source_operation varchar(8), source_sql 
+varchar(255), target_timestamp timestamp, target_operation varchar(8) 
+default 'n/a', target_failed boolean, target_message varchar(255), 
+primary key(_index, _type, _id, source_timestamp, source_operation)); &nbsp;
+<br><br>//create a river table in mysql database
+<br><br>Step 3: Create a trigger on class_info table to insert the rows into my_jdbc_river on insert operation
+<br>delimiter $$
+<br><br>create trigger check_root after insert on class_info for each 
+row begin insert into my_jdbc_river values("index", "type", "id", null, 
+'create', 'select * from check_es', null, null, true, null); &nbsp;end$$
+<br><br>delimiter ;
+<br><br>I am not sure whether the parameters to insert statement are correct or not.
+<br><br>Step 4: Create a river on ElasticSearch
+<br>curl -XPUT 'localhost:9200/_river/my_jdbc_river/_meta' -d '{ &nbsp;"type"
+ : "jdbc", "jdbc" : { "driver" : "com.mysql.jdbc.Driver", "url" : 
+"jdbc:mysql://localhost:3306/testes", "user" : "root", &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+"password" : "p00ph34d", &nbsp;"poll" : "300s","rivertable" : true, &nbsp; &nbsp; &nbsp; 
+"interval" : "305s" }, "index" : { "index" : "jdbc","type" : "jdbc", 
+&nbsp;"bulk_size" : 100,"max_bulk_requests" : 30, "bulk_timeout" : "60s"} }'
+<br><br>And, when i am inserting the values into class_info they are not being indexed in elasticsearch.
+<br><br>Please let me know the correct procedure I am missing anything or misunderstood the concept.
+<br><br>Thanks! 
+
+	
+	
+	
+	<br><br><div class="gmail_quote">On Mon, Aug 6, 2012 at 6:59 PM, Jörg Prante <span dir="ltr">&lt;<a href="http://elasticsearch-users.115913.n3.nabble.com/user/SendEmail.jtp?type=node&amp;node=4021356&amp;i=0" target="_top" rel="nofollow" link="external">[hidden email]</a>&gt;</span> wrote:<br><blockquote class="gmail_quote" style="margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex">
+Hi Sowmya,<div class="HOEnZb"><div class="h5"><br><br>On Tuesday, August 7, 2012 1:57:29 AM UTC+2, Jörg Prante wrote:<blockquote class="gmail_quote" style="margin:0;margin-left:0.8ex;border-left:1px #ccc solid;padding-left:1ex">
+<div><br></div><div>welcome to elasticsearch!&nbsp;You can try the JDBC river here:&nbsp;<a href="https://github.com/jprante/elasticsearch-river-jdbc" target="_blank" rel="nofollow" link="external">https://github.com/<u></u>jprante/elasticsearch-river-<u></u>jdbc</a></div>
+<div><blockquote class="gmail_quote" style="margin:0;margin-left:0.8ex;border-left:1px #ccc solid;padding-left:1ex"><br></blockquote></div></blockquote></div></div></blockquote></div><br>
+
+
+	
+	
+	
+	</div>
+	
+			<script type="text/javascript">
+				Nabble.ads('last_classic_message');
+			</script><div class="ad  div126215" style="display:block !important;visibility:visible !important;height:auto !important; width: auto !important;position:static !important;top:auto !important;left:auto !important;text-align:left;padding-top:1em;">
+<a id="ad126215" href="#" style="display:none">.</a>
+<script type="text/javascript" src="ElasticSearch%20Users%20-%20Indexing%20Mysql%20Database%20with%20elasticsearch%20-%20Newbie_files/show_ads.js"></script><ins style="display:inline-table;border:none;height:90px;margin:0;padding:0;position:relative;visibility:visible;width:728px;background-color:transparent"><ins id="aswift_2_anchor" style="display:block;border:none;height:90px;margin:0;padding:0;position:relative;visibility:visible;width:728px;background-color:transparent"><iframe marginwidth="0" marginheight="0" vspace="0" hspace="0" allowtransparency="true" onload="var i=this.id,s=window.google_iframe_oncopy,H=s&amp;&amp;s.handlers,h=H&amp;&amp;H[i],w=this.contentWindow,d;try{d=w.document}catch(e){}if(h&amp;&amp;d&amp;&amp;(!d.body||!d.body.firstChild)){if(h.call){setTimeout(h,0)}else if(h.match){try{h=s.upd(h,i)}catch(e){}w.location.replace(h)}}" id="aswift_2" name="aswift_2" style="left:0;position:absolute;top:0;" frameborder="0" height="90" scrolling="no" width="728"></iframe></ins></ins><style type="text/css">.nabble .div126215 ins { display:inline-table !important; visibility: visible !important; height:90px !important; width: 728px !important; position:static !important;top:auto !important;left:auto !important; }.nabble .div126215 ins ins iframe { display:block !important; visibility: visible !important; height:90px !important; width: 728px !important; position:static !important;top:auto !important;left:auto !important; }</style><div style="padding-top:.3em;font-size:90%;clear:both"><a href="http://elasticsearch-users.115913.n3.nabble.com/template/NamlServlet.jtp?macro=buy_credits_page">Remove Ads</a></div>
+</div>
+
+				</td>
+			</tr>
+		</tbody></table>
+	</div>
+	
+		
+	</div>
+	</div>
+			<div id="topic-footer" class="weak-color" style="padding-top:1em">
+		«
+		<a href="http://elasticsearch-users.115913.n3.nabble.com/">Return to ElasticSearch Users</a>
+		&nbsp;|&nbsp;
+		<span id="v3608232" style="">1502 views</span>
+	
+	
+	</div>
+			<div id="report-inappropriate-content" class="report-inappropriate-content rounded">
+		<div id="report-inappropriate-content-inner" class="no-bg-color medium-border-color border2">
+			<div class="big">Loading...</div>
+		</div>
+	</div>
+				<script type="text/javascript">
+				Nabble.ads('topic_bottom');
+			</script>
+	<script type="text/javascript">
+	var infolinks_pid = 1480243;
+	var infolinks_wsid = 0;
+	</script>
+	<script type="text/javascript" src="ElasticSearch%20Users%20-%20Indexing%20Mysql%20Database%20with%20elasticsearch%20-%20Newbie_files/infolinks_main.js"></script><script type="text/javascript" src="ElasticSearch%20Users%20-%20Indexing%20Mysql%20Database%20with%20elasticsearch%20-%20Newbie_files/ice.js"></script>
+			<table class="footer-table shaded-bg-color">
+		<tbody><tr>
+			<td class="footer-left weak-color">
+				Powered by
+				<a href="http://www.nabble.com/" target="_top">Nabble</a>
+			</td>
+			<td class="footer-right">
+				<a href="http://elasticsearch-users.115913.n3.nabble.com/template/NamlServlet.jtp?macro=macro_viewer&amp;id=classic_forum_topic%21nabble%3Atopic.naml&amp;base=nabble.view.web.template.ServletNamespace" rel="nofollow">Edit this page</a>
+			</td>
+		</tr>
+	</tbody></table>
+	<!-- Ad.true -->
+			<script type="text/javascript">
+var scriptUrl = '/template/NamlServlet.jtp?macro=js_page&searchSpecial=3608232&incViewCount=3608232&newsflash=&visitorOnline=&avatarOnline=451175|316173|494405|393681&postCount=451175|316173|494405|393681&markVisited=4021356&views=3608232';
+scriptUrl += '&_=' + Math.floor(Math.random()*9999) + Nabble.getClientID();
+$.getScript(scriptUrl, function() { Nabble.resizeFrames(); });
+</script>
+
+					</div>
+					<script type="text/javascript">
+		$(document).ready(function() { Nabble.fixCookieClientID(); });
+		(function(){ var sNew = document.createElement("script"); sNew.defer = true; sNew.src = "http://tag.crsspxl.com/s1.js?d=1294"; var s0 = document.getElementsByTagName('script')[0]; s0.parentNode.insertBefore(sNew, s0); })();
+	</script>
+					<!-- n3.nabble.com | Site ID = 115913 -->
+				
+			<iframe src="ElasticSearch%20Users%20-%20Indexing%20Mysql%20Database%20with%20elasticsearch%20-%20Newbie_files/s2.html" style="visibility:hidden;position:absolute;border:medium none" frameborder="0" height="1" width="1"></iframe></body></html>

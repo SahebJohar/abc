@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html><head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+    <title>Redis PHP Introduction | kvz.io</title>
+    <meta name="description" content="Kevin van Zonneveld on writing apps and their ecosystems.">
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="Redis%20PHP%20Introduction%20%7C%20kvz.io_files/css.css" rel="stylesheet" type="text/css">
+
+    <link rel="stylesheet" type="text/css" href="Redis%20PHP%20Introduction%20%7C%20kvz.io_files/screen.css">
+    <link rel="stylesheet" type="text/css" href="Redis%20PHP%20Introduction%20%7C%20kvz.io_files/css_002.css">
+    <!-- This is for syntax highlight -->
+    <link rel="stylesheet" type="text/css" href="Redis%20PHP%20Introduction%20%7C%20kvz.io_files/syntax.css">
+    <!-- Customisation  -->
+    <link rel="stylesheet" type="text/css" href="Redis%20PHP%20Introduction%20%7C%20kvz.io_files/main.css">
+    <link rel="stylesheet" type="text/css" href="Redis%20PHP%20Introduction%20%7C%20kvz.io_files/prism.css">
+
+<div style="display: none;" id="fit-vids-style" class="fit-vids-style">­<style>.fluid-width-video-wrapper{width:100%;position:relative;padding:0;}.fluid-width-video-wrapper iframe,.fluid-width-video-wrapper object,.fluid-width-video-wrapper embed {position:absolute;top:0;left:0;width:100%;height:100%;}</style></div><script src="Redis%20PHP%20Introduction%20%7C%20kvz.io_files/ga.js" async="" type="text/javascript"></script><script src="Redis%20PHP%20Introduction%20%7C%20kvz.io_files/embed.js" async="" type="text/javascript"></script></head>
+<body class="home-template">
+
+    
+
+    <main class="content" role="main">
+
+    <article class="post">
+        <header class="post-header">
+            <a id="blog-logo" href="http://kvz.io/">
+                
+                    <span class="blog-title">kvz.io</span>
+                
+            </a>
+        </header>
+
+        <span class="post-meta">
+        	<time datetime="2010-03-25">25 Mar 2010</time>
+        	
+       	</span>
+
+        <h1 class="post-title">Redis PHP Introduction</h1>
+
+        <section class="post-content">
+            <p>Don't know <a href="http://code.google.com/p/redis/" title="A persistent key-value database with built-in net interface written in ANSI-C for Posix systems">Redis</a>? Think Memcache, with support for
+for <strong>lists</strong>, and  <strong>disk</strong>-based storage.
+You can use Redis as a database, queue, cache server or all of those combined.
+Let's see how you can use this power in your PHP apps.</p>
+
+<!--more-->
+
+<p>About those <strong>disk</strong>s.
+Well, Redis keeps the entire dataset in memory, so it's
+still crazy fast:
+110000 SETs/second, 81000 GETs/second. Good enough for to you?</p>
+
+<p>"..and from time to time the data is saved on disk asynchronously (semi
+persistent mode) or alternatively every change is written into an append
+only file (fully persistent mode). Redis is able to rebuild the append
+only file in background when it gets too big."</p>
+
+<p>About those <strong>list</strong>s. Yes, you can store (serialized) arrays in Memcache.
+But everytime you change 1 element, you'd have to invalidate &amp; overwrite
+the entire array.
+Clearly very inefficient, yet a commonly faced problem.</p>
+
+<p>About this <strong>article</strong>. It's meant to help PHP developers taking their first steps
+into the Redis world. From here on, there are plenty of other resources
+online to dig deeper.</p>
+
+<h2 id="toc_0">Install Redis Server</h2>
+
+<p>Simple on Ubuntu / Debian:</p>
+<div class="highlight"><pre class=" language-bash"><code class="bash  language-bash" data-lang="bash">$ aptitude install redis<span class="token operator">-</span>server
+</code></pre></div>
+<h2 id="toc_1">Install PHP Library</h2>
+
+<p>There are many different PHP client implementations.
+I'd like to recommend <a href="http://rediska.geometria-lab.net/" title="Rediska">Rediska</a>.
+It's feature complete and a true pleasure to work with.
+This code will pull in the latest Rediska source, and copy it to
+<code>/usr/share/php/</code> so you can include it rightaway.</p>
+<div class="highlight"><pre class=" language-bash"><code class="bash  language-bash" data-lang="bash">$ cd <span class="token operator">/</span>usr<span class="token operator">/</span>src
+$ <span class="token punctuation">[</span> <span class="token operator">-</span>d Rediska <span class="token punctuation">]</span> <span class="token operator">||</span> git clone git<span class="token punctuation">:</span><span class="token operator">/</span><span class="token operator">/</span>github<span class="token punctuation">.</span>com<span class="token operator">/</span>Shumkov<span class="token operator">/</span>Rediska<span class="token punctuation">.</span>git
+$ cd Rediska <span class="token operator">&amp;&amp;</span> git pull <span class="token operator">&amp;&amp;</span> rsync <span class="token operator">-</span>a <span class="token punctuation">.</span><span class="token operator">/</span>library<span class="token operator">/</span> <span class="token operator">/</span>usr<span class="token operator">/</span>share<span class="token operator">/</span>php<span class="token operator">/</span>
+</code></pre></div>
+<p>Zend Framework users may want to take a <a href="http://rediska.geometria-lab.net/documentation/integration-with-frameworks/zend-framework" title="Integrate Redis with Zend Framework">different approach</a></p>
+
+<h2 id="toc_2">Code</h2>
+
+<p>Alright, we are ready to start saving some data.</p>
+
+<p>Let me show you 4 common Redis datatypes to work with:
+<code>Keys</code>, <code>Lists</code>, <code>Sets</code> and <code>Sorted Sets</code>.</p>
+
+<h3 id="toc_3">Keys</h3>
+
+<p>In PHP syntax, a <code>Key</code> could be thought of as:</p>
+<div class="highlight"><pre class=" language-php"><code class="php  language-php" data-lang="php"><span class="token php"><span class="token delimiter">&lt;?php</span>
+<span class="token variable">$firstname</span> <span class="token operator">=</span> <span class="token string">'kevin'</span><span class="token punctuation">;</span>
+<span class="token delimiter">?&gt;</span></span>
+</code></pre></div>
+<p>Ok, let's save something into Redis.
+First, initialize a 'firstname' Key:</p>
+<div class="highlight"><pre class=" language-php"><code class="php  language-php" data-lang="php"><span class="token php"><span class="token delimiter">&lt;?php</span>
+<span class="token keyword">require_once</span> <span class="token string">'Rediska/Key.php'</span><span class="token punctuation">;</span>
+<span class="token variable">$Key</span> <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Rediska_Key</span><span class="token punctuation">(</span><span class="token string">'firstname'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token delimiter">?&gt;</span></span>
+</code></pre></div>
+<p>Now let's give it the value 'kevin':</p>
+<div class="highlight"><pre class=" language-php"><code class="php  language-php" data-lang="php"><span class="token php"><span class="token delimiter">&lt;?php</span>
+<span class="token variable">$Key</span><span class="token operator">-</span><span class="token operator">&gt;</span><span class="token function">setValue<span class="token punctuation">(</span></span><span class="token string">'kevin'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token delimiter">?&gt;</span></span>
+</code></pre></div>
+<p>It's nice to know that <code>-&gt;setValue()</code> <strong>instantly saves</strong> 'kevin' to
+Redis memory. And you don't have to worry about every losing this name,
+cause Redis will automatically save to disk afterwards.</p>
+
+<p>Basically that's it. You've saved something in Redis!</p>
+
+<p>At a later point in time you can always retrieve that name by
+(initializing the 'firstname' <code>Key</code> if you haven't already and) doing a:</p>
+<div class="highlight"><pre class=" language-php"><code class="php  language-php" data-lang="php"><span class="token php"><span class="token delimiter">&lt;?php</span>
+<span class="token keyword">echo</span> <span class="token variable">$Key</span><span class="token operator">-</span><span class="token operator">&gt;</span><span class="token function">getValue<span class="token punctuation">(</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token delimiter">?&gt;</span></span>
+</code></pre></div>
+<h3 id="toc_4">Lists</h3>
+
+<p><code>Lists</code> are 'collections of unsorted elements'.</p>
+
+<p>In PHP syntax, a <code>List</code> could be thought of as a simple array:</p>
+<div class="highlight"><pre class=" language-php"><code class="php  language-php" data-lang="php"><span class="token php"><span class="token delimiter">&lt;?php</span><span class="token comment" spellcheck="true">
+// Names
+</span><span class="token variable">$list</span> <span class="token operator">=</span> <span class="token keyword">array</span><span class="token punctuation">(</span>
+    <span class="token string">'kevin'</span><span class="token punctuation">,</span>
+    <span class="token string">'john'</span><span class="token punctuation">,</span>
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token delimiter">?&gt;</span></span>
+</code></pre></div>
+<p>Adding new elements to a Redis <code>Lists</code> happens in realtime and at constant
+speed.
+Meaning that adding an item to a 10 elements <code>List</code>, happens at the same speed
+as adding an element to the to a 10 million elements <code>List</code>.</p>
+
+<p>So that's the upside.</p>
+
+<p>The downside of this, is that looking up items by index is less fast.</p>
+
+<p>So use Redis <code>Lists</code> every time you require to access data in the same order
+they are added.
+A message queue would make a perfect <code>List</code>.
+Also see <a href="http://code.google.com/p/redis/wiki/IntroductionToRedisDataTypes" title="Introduction to Redis Data Types">Redis Data Types</a></p>
+
+<p>So how do you work with Redis <code>Lists</code> in PHP?</p>
+<div class="highlight"><pre class=" language-php"><code class="php  language-php" data-lang="php"><span class="token php"><span class="token delimiter">&lt;?php</span><span class="token comment" spellcheck="true">
+// Init
+</span><span class="token keyword">require_once</span> <span class="token string">'Rediska/Key/List.php'</span><span class="token punctuation">;</span>
+<span class="token variable">$List</span> <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Rediska_List</span><span class="token punctuation">(</span><span class="token string">'names'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">
+// Set
+</span><span class="token variable">$List</span><span class="token operator">-</span><span class="token operator">&gt;</span><span class="token function">append<span class="token punctuation">(</span></span><span class="token string">'kevin'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token variable">$List</span><span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token string">'john'</span><span class="token punctuation">;</span><span class="token comment" spellcheck="true"> // Also works
+</span><span class="token comment" spellcheck="true">
+// Get (this could be done at any time, by any process,
+</span><span class="token comment" spellcheck="true">// just initialize the List again)
+</span><span class="token keyword">foreach</span> <span class="token punctuation">(</span><span class="token variable">$List</span> <span class="token keyword">as</span> <span class="token variable">$name</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">echo</span> <span class="token variable">$name</span> <span class="token punctuation">.</span> <span class="token string">"\n"</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token delimiter">?&gt;</span></span>
+</code></pre></div>
+<p>Easy right? Next up: <code>Sets</code></p>
+
+<h3 id="toc_5">Sets</h3>
+
+<p><code>Sets</code> are 'collections of unique unsorted elements'.
+You can think at this as a hash table where all the values are <code>true</code>.
+So basically, the values don't really matter in this and the keys
+are important.</p>
+
+<p>In PHP syntax, a <code>Set</code> could be thought of as:</p>
+<div class="highlight"><pre class=" language-php"><code class="php  language-php" data-lang="php"><span class="token php"><span class="token delimiter">&lt;?php</span><span class="token comment" spellcheck="true">
+// Names
+</span><span class="token variable">$set</span> <span class="token operator">=</span> <span class="token keyword">array</span><span class="token punctuation">(</span>
+    <span class="token string">'kevin'</span> <span class="token operator">=</span><span class="token operator">&gt;</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+    <span class="token string">'john'</span> <span class="token operator">=</span><span class="token operator">&gt;</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token delimiter">?&gt;</span></span>
+</code></pre></div>
+<p>Because Redis now adds items as keys, they will be unique and you can perform
+operations on <code>Sets</code> that you can't on <code>Lists</code> such as:</p>
+
+<ul>
+<li>Testing if a given element already exists</li>
+<li>performing the intersection</li>
+<li>union</li>
+<li>difference between multiple <code>Sets</code></li>
+<li>and so forth</li>
+</ul>
+
+<p>Now let's see how you can work with <code>Sets</code>:</p>
+<div class="highlight"><pre class=" language-php"><code class="php  language-php" data-lang="php"><span class="token php"><span class="token delimiter">&lt;?php</span><span class="token comment" spellcheck="true">
+// Init
+</span><span class="token keyword">require_once</span> <span class="token string">'Rediska/Key/Set.php'</span><span class="token punctuation">;</span>
+<span class="token variable">$Set</span> <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Rediska_Set</span><span class="token punctuation">(</span><span class="token string">'names'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">
+// Set
+</span><span class="token variable">$Set</span><span class="token operator">-</span><span class="token operator">&gt;</span><span class="token function">add<span class="token punctuation">(</span></span><span class="token string">'kevin'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token variable">$Set</span><span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token string">'john'</span><span class="token punctuation">;</span><span class="token comment" spellcheck="true"> // Also works
+</span><span class="token variable">$Set</span><span class="token operator">-</span><span class="token operator">&gt;</span><span class="token function">add<span class="token punctuation">(</span></span><span class="token string">'john'</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment" spellcheck="true"> // Still only 1 'john' in the set
+</span><span class="token comment" spellcheck="true">
+// Get
+</span><span class="token keyword">foreach</span> <span class="token punctuation">(</span><span class="token variable">$Set</span> <span class="token keyword">as</span> <span class="token variable">$name</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">echo</span> <span class="token variable">$name</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token delimiter">?&gt;</span></span>
+</code></pre></div>
+<h3 id="toc_6">Sorted Sets</h3>
+
+<p>Are always ordered by their 'score'. This is also how they are stored.
+So any time you retrieve such a <code>Set</code>, it's already sorted no matter
+what you have added.</p>
+
+<p>In PHP syntax, a <code>Sorted Set</code> could be thought of as:</p>
+<div class="highlight"><pre class=" language-php"><code class="php  language-php" data-lang="php"><span class="token php"><span class="token delimiter">&lt;?php</span><span class="token comment" spellcheck="true">
+// Names with birthyears
+</span><span class="token variable">$zset</span> <span class="token operator">=</span> <span class="token keyword">array</span><span class="token punctuation">(</span>
+    <span class="token string">'john'</span> <span class="token operator">=</span><span class="token operator">&gt;</span> <span class="token number">1979</span><span class="token punctuation">,</span>
+    <span class="token string">'kevin'</span> <span class="token operator">=</span><span class="token operator">&gt;</span> <span class="token number">1983</span><span class="token punctuation">,</span>
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token delimiter">?&gt;</span></span>
+</code></pre></div>
+<p>If we start adding more names &amp; birthyears, old people will automatically
+be stored on top. Young at the bottom.</p>
+
+<p>Using <code>Sorted Sets</code> in PHP is ridiculously easy:</p>
+<div class="highlight"><pre class=" language-php"><code class="php  language-php" data-lang="php"><span class="token php"><span class="token delimiter">&lt;?php</span><span class="token comment" spellcheck="true">
+// Init
+</span><span class="token keyword">require_once</span> <span class="token string">'Rediska/Key/SortedSet.php'</span><span class="token punctuation">;</span>
+<span class="token variable">$ZSet</span> <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Rediska_Key_SortedSet</span><span class="token punctuation">(</span><span class="token string">'birthyears'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">
+// Set
+</span><span class="token variable">$ZSet</span><span class="token punctuation">[</span><span class="token string">'kevin'</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token number">1983</span><span class="token punctuation">;</span>
+<span class="token variable">$ZSet</span><span class="token operator">-</span><span class="token operator">&gt;</span><span class="token function">add<span class="token punctuation">(</span></span><span class="token string">'john'</span><span class="token punctuation">,</span> <span class="token number">1979</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment" spellcheck="true"> // Also works
+</span><span class="token comment" spellcheck="true">
+// Get
+</span><span class="token keyword">foreach</span> <span class="token punctuation">(</span><span class="token variable">$ZSet</span> <span class="token keyword">as</span> <span class="token variable">$name</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">echo</span> <span class="token variable">$name</span> <span class="token punctuation">.</span> <span class="token string">" was born in "</span><span class="token punctuation">;</span>
+    <span class="token keyword">echo</span> <span class="token variable">$ZSet</span><span class="token operator">-</span><span class="token operator">&gt;</span><span class="token function">getScore<span class="token punctuation">(</span></span><span class="token variable">$name</span><span class="token punctuation">)</span> <span class="token punctuation">.</span> <span class="token string">"\n"</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token delimiter">?&gt;</span></span>
+</code></pre></div>
+<h2 id="toc_7">Backup</h2>
+
+<p>Before starting to use this in production, you want to know how you can
+keep your data safe.</p>
+
+<p>Well, just copy the DB file to a safe place.
+On ubuntu the file is located in <code>/var/lib/redis/</code>.</p>
+
+<p><code>cp</code>, <code>rsync</code> or <code>scp</code> will all do the trick. Redis
+does active writing in a temp file so you don't have to worry
+about data corruption. Checkout the <a href="http://code.google.com/p/redis/wiki/FAQ" title="Some things to know about Redis if you">Redis FAQ</a> for more info.</p>
+
+<h2 id="toc_8">That's it!</h2>
+
+<p>Don't forget to follow Lead Developer <a href="http://twitter.com/antirez">@antirez</a> on twitter. As of march 2010
+VMware is allowing him to work fulltime on Redis, so lot's of juicy
+updates to get from there!</p>
+
+<p>This article was based on the following documents:</p>
+
+<ul>
+<li><a href="http://code.google.com/p/redis/" title="A persistent key-value database with built-in net interface written in ANSI-C for Posix systems">Redis</a></li>
+<li><a href="http://code.google.com/p/redis/wiki/FAQ" title="Some things to know about Redis if you">Faq</a></li>
+<li><a href="http://rediska.geometria-lab.net/" title="Rediska">Rediska</a></li>
+<li><a href="http://www.paperplanes.de/2009/10/30/how-to-redis.html" title="How to Redis">Howto</a></li>
+<li><a href="http://code.google.com/p/redis/wiki/IntroductionToRedisDataTypes" title="Introduction to Redis Data Types">Datatypes</a></li>
+</ul>
+
+
+            
+        </section>
+
+        
+
+        <footer class="post-footer">
+        	<!-- If we want to display author's name and bio -->
+            
+                <section class="author">
+                	<header> <a href="https://twitter.com/kvz"> <img class="profile" src="Redis%20PHP%20Introduction%20%7C%20kvz.io_files/3210e1be3e4059b93c4a88309e2183a2.png" alt="Author's profile picture"></a></header>
+                	<article>
+                        <!-- Author Name -->
+                        <h4> Kevin van Zonneveld </h4>
+                    	<p>
+                            </p><p>For 8 years I was lead developer at a hosting company. I wrote <a href="https://github.com/kvz">code</a> for automation and designed their cloud offering.
+In spare time I cofounded <a href="https://transloadit.com/" title="File uploading and encoding as a service">Transloadit</a>
+and <a href="http://tus.io/" title="Resumable File Upload Protocol">tus.io</a>.<br>
+Currently I'm <a href="http://kvz.io/about/#consultancy">freelancing</a> for NRC.nl &amp; URS.com.
+Maybe I can help your company as well. Feel free to reach out.</p>
+
+                        <p></p>
+
+                        <iframe allowtransparency="true" src="Redis%20PHP%20Introduction%20%7C%20kvz.io_files/follow_button.html" style="
+                                width:300px;
+                                height:20px;
+                                margin:0px;
+                                float:left;
+                            " frameborder="0" scrolling="no"></iframe>
+                    </article>
+                </section>
+            
+
+            <section class="share">
+                <h4>Share this post</h4>
+                <a class="icon-twitter" href="http://twitter.com/share?text=Redis%20PHP%20Introduction%20htt/blog/2010/03/25/redis-in-php/" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <span class="hidden">Twitter</span>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=/blog/2010/03/25/redis-in-php/" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    <span class="hidden">Facebook</span>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=/blog/2010/03/25/redis-in-php/" onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    <span class="hidden">Google+</span>
+                </a>
+            </section>
+
+            
+            <p>
+                &nbsp;
+            </p>
+            <section class="disqus">
+            	<div id="disqus_thread"><iframe verticalscrolling="no" horizontalscrolling="no" src="Redis%20PHP%20Introduction%20%7C%20kvz.io_files/a.html" style="width: 100% ! important; border: medium none ! important; overflow: hidden ! important; height: 634px ! important;" title="Disqus" tabindex="0" allowtransparency="true" data-disqus-uid="2" id="dsq-2" frameborder="0" scrolling="no" width="100%"></iframe></div>
+            	<script type="text/javascript">
+
+            	    var disqus_shortname = 'kvzio';
+            		var disqus_developer = 0; // developer mode is on
+            	    (function() {
+            	        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            	        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            	        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            	    })();
+            	</script>
+            	<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            	
+            </section>
+            
+
+        </footer>
+
+    </article>
+
+</main>
+
+
+    <footer class="site-footer">
+        <a class="subscribe icon-feed" href="http://kvz.io/rss.xml"><span class="tooltip">Subscribe!</span></a>
+        <div class="inner">
+             <section class="archives">
+
+                <a href="http://kvz.io/archives/">Archives</a>
+                 |
+                 <a href="http://kvz.io/about/">About</a>
+                 |
+                 <a href="http://kvz.io/twitter/timeline/">Twitter</a>
+                 |
+                 <a href="http://kvz.io/twitter/favorites/">Favorites</a>
+                 <br>
+                 <br>
+             </section>
+
+
+             <section class="copyright">
+
+              Except where otherwise noted,
+
+              all content copyright <a href="http://kvz.io/">Kevin van Zonneveld</a>
+              © 2007-2014
+
+              <br>
+              licensed under a
+
+              <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+            </section>
+
+
+            
+
+            <section class="poweredby">Made with Jekyll using <a href="http://github.com/rosario/kasper">Kasper theme</a></section>
+
+
+        </div>
+    </footer>
+
+    <script type="text/javascript" src="Redis%20PHP%20Introduction%20%7C%20kvz.io_files/jquery-1.js"></script>
+    <script type="text/javascript" src="Redis%20PHP%20Introduction%20%7C%20kvz.io_files/jquery.js"></script>
+    <script type="text/javascript" src="Redis%20PHP%20Introduction%20%7C%20kvz.io_files/index.js"></script>
+    <script type="text/javascript" src="Redis%20PHP%20Introduction%20%7C%20kvz.io_files/prism.js"></script>
+
+    <!-- Google Analytics Tracking code -->
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-63083-9']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+
+
+</body></html>

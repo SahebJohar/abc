@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html slick-uniqueid="3" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-gb" lang="en-gb"><head><script src="Introducing%20MySQL%20to%20MongoDB%20Replication%20-%20Continuent%20Tungsten.%20Database%20clustering%20and%20replication._files/ga.js" async="" type="text/javascript"></script><script src="Introducing%20MySQL%20to%20MongoDB%20Replication%20-%20Continuent%20Tungsten.%20Database%20clustering%20and%20replication._files/munchkin.js" async="" type="text/javascript"></script><!-- base href="http://www.continuent.com/news/live-webinars/18-news/blogs/1196-introducing-mysql-to-mongodb-replication848" -->
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="keywords" content="introducing, mysql, mongodb, replication, MySQL">
+  <meta name="author" content="Andras Ratonyi">
+  <meta name="description" content="Continuent Tungsten. Database Clustering and Replication.">
+  <meta name="generator" content="Joomla! - Open Source Content Management">
+  <title>Introducing MySQL to MongoDB Replication - Continuent Tungsten. Database clustering and replication.</title>
+  <link href="http://www.continuent.com/templates/continuent-new/favicon.ico" rel="shortcut icon" type="image/vnd.microsoft.icon">
+  <link href="http://www.continuent.com/component/search/?Itemid=416&amp;catid=18&amp;id=1196&amp;format=opensearch" rel="search" title="Search Continuent Tungsten. Database clustering and replication." type="application/opensearchdescription+xml">
+  <link rel="stylesheet" href="Introducing%20MySQL%20to%20MongoDB%20Replication%20-%20Continuent%20Tungsten.%20Database%20clustering%20and%20replication._files/jcemediabox.css" type="text/css">
+  <link rel="stylesheet" href="Introducing%20MySQL%20to%20MongoDB%20Replication%20-%20Continuent%20Tungsten.%20Database%20clustering%20and%20replication._files/style.css" type="text/css">
+  <script src="Introducing%20MySQL%20to%20MongoDB%20Replication%20-%20Continuent%20Tungsten.%20Database%20clustering%20and%20replication._files/mootools-core.js" type="text/javascript"></script>
+  <script src="Introducing%20MySQL%20to%20MongoDB%20Replication%20-%20Continuent%20Tungsten.%20Database%20clustering%20and%20replication._files/core.js" type="text/javascript"></script>
+  <script src="Introducing%20MySQL%20to%20MongoDB%20Replication%20-%20Continuent%20Tungsten.%20Database%20clustering%20and%20replication._files/caption.js" type="text/javascript"></script>
+  <script src="Introducing%20MySQL%20to%20MongoDB%20Replication%20-%20Continuent%20Tungsten.%20Database%20clustering%20and%20replication._files/jcemediabox.js" type="text/javascript"></script>
+  <script type="text/javascript">
+window.addEvent('load', function() {
+				new JCaption('img.caption');
+			});
+JCEMediaObject.init('/', {flash:"10,0,22,87",windowmedia:"5,1,52,701",quicktime:"6,0,2,0",realmedia:"7,0,0,0",shockwave:"8,5,1,0"});JCEMediaBox.init({popup:{width:"",height:"",legacy:0,lightbox:0,shadowbox:0,resize:1,icons:1,overlay:1,overlayopacity:0.8,overlaycolor:"#000000",fadespeed:500,scalespeed:500,hideobjects:0,scrolling:"fixed",close:2,labels:{'close':'Close','next':'Next','previous':'Previous','cancel':'Cancel','numbers':'{$current} of {$total}'}},tooltip:{className:"tooltip",opacity:0.8,speed:150,position:"br",offsets:{x: 16, y: 16}},base:"/",imgpath:"plugins/system/jcemediabox/img",theme:"standard",themecustom:"",themepath:"plugins/system/jcemediabox/themes"});
+  </script>
+
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Continuent</title>
+        <script src="Introducing%20MySQL%20to%20MongoDB%20Replication%20-%20Continuent%20Tungsten.%20Database%20clustering%20and%20replication._files/jquery_002.js" type="text/javascript"></script>
+        <script src="Introducing%20MySQL%20to%20MongoDB%20Replication%20-%20Continuent%20Tungsten.%20Database%20clustering%20and%20replication._files/jquery.js" type="text/javascript"></script>       
+        <script src="Introducing%20MySQL%20to%20MongoDB%20Replication%20-%20Continuent%20Tungsten.%20Database%20clustering%20and%20replication._files/continuent.js" type="text/javascript"></script>
+     
+<script type="text/javascript"> 
+  function supports_html5() {
+  var i = document.createElement('input');
+  return 'autofocus' in i;
+}
+  </script> 
+  
+    <!--[if lte IE 9]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    
+    <link href="Introducing%20MySQL%20to%20MongoDB%20Replication%20-%20Continuent%20Tungsten.%20Database%20clustering%20and%20replication._files/css.css" rel="stylesheet" type="text/css">
+    
+    <link rel="stylesheet" type="text/css" href="Introducing%20MySQL%20to%20MongoDB%20Replication%20-%20Continuent%20Tungsten.%20Database%20clustering%20and%20replication._files/reset.css">
+        <link rel="stylesheet" type="text/css" href="Introducing%20MySQL%20to%20MongoDB%20Replication%20-%20Continuent%20Tungsten.%20Database%20clustering%20and%20replication._files/grid.css">
+        <link rel="stylesheet" type="text/css" href="Introducing%20MySQL%20to%20MongoDB%20Replication%20-%20Continuent%20Tungsten.%20Database%20clustering%20and%20replication._files/continuent.css">
+      
+
+
+
+
+  <!-- Typography - NoteThis - FontSquirel -->
+  <link rel="stylesheet" href="Introducing%20MySQL%20to%20MongoDB%20Replication%20-%20Continuent%20Tungsten.%20Database%20clustering%20and%20replication._files/stylesheet.css" type="text/css" charset="utf-8">
+
+
+
+
+
+  
+  <!--[if lte IE 9]>
+          <link rel="stylesheet" type="text/css" href="/templates/continuent-new/css/ie9.css" />
+  <![endif]-->
+  
+  <!--[if lte IE 8]>
+          <link rel="stylesheet" type="text/css" href="/templates/continuent-new/css/ie8.css" />
+  <![endif]-->
+  
+  <!--[if lte IE 7]>
+          <link rel="stylesheet" type="text/css" href="/templates/continuent-new/css/ie7.css" />
+  <![endif]-->
+  
+
+  <!--[if lte IE 8]>
+      <style>
+        
+      </style>
+  <![endif]-->
+
+
+
+  
+</head><body>
+<div class="wrapper continuent" style="border: 1px solid rgba(255, 255, 255, 0.1) !important;">
+
+       <header class="container_16">
+          <div class="grid_12 alpha">
+            <a href="http://www.continuent.com/index.php"><img class="logo" src="Introducing%20MySQL%20to%20MongoDB%20Replication%20-%20Continuent%20Tungsten.%20Database%20clustering%20and%20replication._files/logo.png"></a>
+                <nav class="main">
+                  
+<ul class="menu">
+<li class="item-124 parent"><a href="http://www.continuent.com/">Home</a></li><li class="item-138 parent"><a href="http://www.continuent.com/solutions">Solutions</a></li><li class="item-415"><a href="https://docs.continuent.com/">Documentation</a></li><li class="item-3 parent"><a href="http://www.continuent.com/downloads/software">Downloads</a></li><li class="item-4"><a href="http://www.continuent.com/support">Support</a></li><li class="item-434"><a href="http://www.continuent.com/customers">Customers</a></li><li class="item-180 parent"><a href="http://www.continuent.com/partners">Partners</a></li><li class="item-26 active deeper parent"><a href="http://www.continuent.com/news">News</a><ul><li class="item-378"><a href="http://www.continuent.com/news/blogs">Blogs</a></li><li class="item-27"><a href="http://www.continuent.com/news/press">Press Releases</a></li><li class="item-28"><a href="http://www.continuent.com/news/in-the-news">Articles</a></li><li class="item-416 current active"><a href="http://www.continuent.com/news/live-webinars">Live Webinars</a></li><li class="item-417"><a href="http://www.continuent.com/news/tungsten-university-videos">Tungsten University Videos</a></li><li class="item-436"><a href="http://www.continuent.com/news/tungsten-use-case-videos">Tungsten Use Case Videos</a></li><li class="item-32"><a href="http://www.continuent.com/news/events">Events</a></li></ul></li><li class="item-24 parent"><a href="http://www.continuent.com/about">About Us</a></li></ul>
+ <!-- main menu --> 
+                </nav>
+            </div>    
+          <div class="grid_4 omega menu-search">    
+          
+        
+      <form action="/news/live-webinars" method="post">
+	<div class="search">
+		<label for="mod-search-searchword">Search...</label><input name="searchword" id="mod-search-searchword" maxlength="20" class="inputbox" size="20" value="Search..." onblur="if (this.value=='') this.value='Search...';" onfocus="if (this.value=='Search...') this.value='';" type="text">	<input name="task" value="search" type="hidden">
+	<input name="option" value="com_search" type="hidden">
+	<input name="Itemid" value="416" type="hidden">
+	</div>
+</form>
+
+      
+      
+          </div>  
+          <h1>Database Replication and Clustering</h1>   
+        </header>
+
+
+<!-- ======= GENERAL PAGE ======= -->
+        <div class="container_16 breadcrumbs">
+
+        <div class="grid_16">
+                   
+                 
+                 
+               
+          <h1>
+            
+          </h1>          
+        </div>
+        </div>
+     <div class="clear"></div>    
+     <div class="container_16 submenu">
+       
+<div class="breadcrumbs">
+<a style="display: inline;" href="http://www.continuent.com/news" class="pathway">News<span class="pathway-img"></span></a> <img src="Introducing%20MySQL%20to%20MongoDB%20Replication%20-%20Continuent%20Tungsten.%20Database%20clustering%20and%20replication._files/arrow.png" alt=""> <a style="display: none;" href="http://www.continuent.com/news/live-webinars" class="pathway">Live Webinars<span class="pathway-img"></span></a> <img src="Introducing%20MySQL%20to%20MongoDB%20Replication%20-%20Continuent%20Tungsten.%20Database%20clustering%20and%20replication._files/arrow.png" alt=""> <a style="display: none;" href="http://www.continuent.com/news/live-webinars/21-news" class="pathway">News<span class="pathway-img"></span></a> <img src="Introducing%20MySQL%20to%20MongoDB%20Replication%20-%20Continuent%20Tungsten.%20Database%20clustering%20and%20replication._files/arrow.png" alt=""> <a style="display: none;" href="http://www.continuent.com/news/live-webinars/18-news/blogs" class="pathway">Blogs<span class="pathway-img"></span></a> <img src="Introducing%20MySQL%20to%20MongoDB%20Replication%20-%20Continuent%20Tungsten.%20Database%20clustering%20and%20replication._files/arrow.png" alt=""> </div>
+ 
+             
+<ul class="menu">
+<li class="item-378"><a href="http://www.continuent.com/news/blogs">Blogs</a></li><li class="item-27"><a href="http://www.continuent.com/news/press">Press Releases</a></li><li class="item-28"><a href="http://www.continuent.com/news/in-the-news">Articles</a></li><li class="item-416 current active"><a href="http://www.continuent.com/news/live-webinars">Live Webinars</a></li><li class="item-417"><a href="http://www.continuent.com/news/tungsten-university-videos">Tungsten University Videos</a></li><li class="item-436"><a href="http://www.continuent.com/news/tungsten-use-case-videos">Tungsten Use Case Videos</a></li><li class="item-32"><a href="http://www.continuent.com/news/events">Events</a></li></ul>
+    
+        
+     </div>
+        <section class="container_16 main-content">
+            
+            <!--
+            <div class="grid_16 see-all">
+          <div class="grid_13 alpha">
+          <h3></h3>
+          </div>
+          
+          <div class="grid_3 omega alpha" style="text-align: right;">
+          <button>See all</button>
+          </div>
+        </div>
+        -->
+           <div class="clear"></div>
+           
+          
+        
+      <!-- class="grid_16" -->   <div style="width: 900px; margin: 0 auto;">
+          
+          
+
+<div id="system-message-container">
+</div>
+<div class="item-page">
+	<h1>
+	Live Webinars	</h1>
+
+	<h2>
+			Introducing MySQL to MongoDB Replication		</h2>
+
+
+
+
+
+
+
+
+ href="http://code.google.com/p/tungsten-replicator/"&gt;Tungsten 
+Replicator project. &nbsp; This article describes exactly what we did to
+ write the code and set up replication. &nbsp;You can view it as a kind 
+of cookbook both for implementing new database types in Tungsten as well
+ as setting up replication to MongoDB.<br><br><b>The Team</b><br><br>MySQL to MongoDB replication was a group effort with three people: &nbsp;<a href="http://blog.flaper87.org/">Flavio Percoco</a>,
+ Stephane Giron, and me. &nbsp;Flavio has worked on MongoDB for a couple
+ of years and is extremely well-informed both on database setup as well 
+as application design. &nbsp;Stephane Giron is a replication engineer at
+ Continuent and has done a substantial amount of the work on data 
+extraction from MySQL, especially row replication. &nbsp;I work on the 
+core execution framework as well as performance.<br><br><b>Getting Started with MongoDB</b><br><br>There
+ were a couple of talks on MongoDB during the first morning of Open DB 
+camp (Saturday May 7th), which Stephane and I dutifully attended to 
+raise our consciousness. &nbsp;We got cracking on implementation around 
+2pm that afternoon. &nbsp; The first step was to bring up MongoDB 1.8.1 
+and study its habits with help from Flavio.<br><br>MongoDB is definitely easy to set up. &nbsp;You get binary builds from the <a href="http://www.mongodb.org/downloads">MongoDB download page</a>. &nbsp;Here is a minimal set of commands to unpack MongoDB 1.8.1 and start the mongod using directory <b>data</b> to hold tables. &nbsp; <br><br><code>$ tar -xvzf mongodb-osx-x86_64-1.8.1.tgz<br>$ cd mongodb-osx-x86_64-1.8.1<br>$ mkdir data<br>$ bin/mongo --dbpath data<br>(... messages ...)</code><br><br>You connect to mongod using the mongo client. &nbsp;Here's an example of connecting and creating a table with a single row. <br><br><code>$ bin/mongo localhost:27017<br>MongoDB shell version: 1.8.1<br>connecting to: localhost:27017/test<br>&gt; use mydb<br>switched to db mydb<br>&gt; db.test.insert({"test": "test value", "anumber" : 5 }) &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <br>&gt; db.test.find()<br>{ "_id" : ObjectId("4dce9a4f3d6e186ffccdd4bb"), "test" : "test value", "anumber" : 5 }<br>&gt; exit</code><br><br>This is schema-less programming in action. &nbsp;You just insert BSON documents (BSON = &nbsp;Binary JSON) into <i>collections</i>, which is Mongolese for <i>tables</i>.
+ &nbsp;MongoDB creates the collection for you as soon as you put 
+something in it. The automatic materialization is quite addictive once 
+you get used to it, which takes about 5 minutes. <br><br>The MongoDB 
+client language is really handy. &nbsp;It is based on JavaScript. 
+&nbsp;There are what seem to be some non-Javascript commands like "show 
+dbs" to show databases or "show collections" to list the tables. 
+&nbsp;Everything else is object-oriented and easy to understand. 
+&nbsp;For example, to find all the records in collection test, as we saw
+ above, you just connect to the database and issue a command on the 
+local db object. &nbsp;Collections appear as properties of db, and 
+operations on the collection are methods. <br><br>It helps that the MongoDB folks provide very accessible documentation, for example a <a href="http://www.mongodb.org/display/DOCS/SQL+to+Mongo+Mapping+Chart">SQL to MongoDB translation chart</a>. &nbsp; I put together a little practice program using the <a href="http://www.mongodb.org/display/DOCS/Java+Language+Center">MongoDB Java driver</a> to insert, referring to the<a href="http://api.mongodb.org/java/2.5.3/"> Javadoc for the class library</a> when in doubt about API calls. &nbsp;There are also a couple of very helpful examples, <a href="https://github.com/mongodb/mongo-java-driver/blob/master/examples/QuickTour.java">like this one</a>, included with the driver.<br><br>All
+ told, setup and orientation took us about 45 minutes. &nbsp;It helped 
+enormously that Flavio is a MongoDB expert, which minimized flail 
+considerably. <br><br><b>Implementing Basic Replication from MySQL to MongoDB</b><br><br>After
+ setup we proceeded to implement replication. &nbsp;Here is an overview 
+of the replicator pipeline to move data from MySQL to MongoDB. 
+&nbsp;Pipelines are message processing flows within the replicator.<br><br><div><a href="http://3.bp.blogspot.com/-tGOIq1DiuR8/Tc6gy44k00I/AAAAAAAAAHI/jHLNF2huoBw/s1600/MySQL-to-MongoDB-Pipeline.jpg" imageanchor="1"><img src="Introducing%20MySQL%20to%20MongoDB%20Replication%20-%20Continuent%20Tungsten.%20Database%20clustering%20and%20replication._files/MySQL-to-MongoDB-Pipeline.jpg" border="0" height="307" width="640"></a></div><br>Direct
+ pipelines move data from DBMS to another within a single replicator. 
+&nbsp;They are already a standard part of Tungsten Replicator and most 
+of the code shown above already exists, except for the parts shown in 
+red. &nbsp; Before we started, we therefore needed to set up a 
+replicator with a direct pipeline. <br><br>We first built the code according to the <a href="http://code.google.com/p/tungsten-replicator/wiki/HowToBuild">instructions on the Tungsten project wiki</a>, uploaded the binary to our test host, and configured the replicator. &nbsp; First, we&nbsp;ran the Tungsten <b>configure</b>
+ script to set defaults for the MySQL server (user name, extract method,
+ etc.). &nbsp; Next we ran the configure-service command to set up the 
+direct pipeline configuration file. &nbsp; Both commands together look 
+like the following:<br><code><br>./configure<br>./configure-service&nbsp;-C --role=direct mongodb<br></code><br>The
+ second command created a file called 
+tungsten-replicator/conf/static-mongodb.properties with all the 
+information about the direct pipeline implementation but of course 
+nothing yet about MongoDB.<br><br>Now we could start the implementation. &nbsp;&nbsp;To move data to MongoDB, we needed two new components:<br><ol><li>A Tungsten&nbsp;<a href="http://code.google.com/p/tungsten-replicator/source/browse/trunk/replicator/src/java/com/continuent/tungsten/replicator/applier/RawApplier.java">RawApplier</a>&nbsp;to
+ apply row updates to MongoDB. &nbsp;RawApplier is the basic interface 
+you implement to create an applier to a database. &nbsp;</li><li>A Tungsten <a href="http://code.google.com/p/tungsten-replicator/source/browse/trunk/replicator/src/java/com/continuent/tungsten/replicator/filter/Filter.java">Filter</a>
+ to stick column names on row updates after extracting from MySQL. 
+&nbsp;MySQL row replication does not do this automatically, which makes 
+it difficult to construct JSON at the other end because you do not have 
+the right property names.&nbsp;</li></ol><div>To get started on the applier I implemented&nbsp;a very simple class named <a href="http://code.google.com/p/tungsten-replicator/source/browse/trunk/replicator/src/java/com/continuent/tungsten/replicator/applier/MongoApplier.java">MongoApplier</a>
+ that could take an insert from MySQL, turn it into a BSON document, and
+ add it to an equivalently named database and collection in MongoDB. 
+&nbsp;I added this to the replicator code tree, then built and uploaded 
+tungsten-replicator.jar. &nbsp;(Use 'ant dist' in the replicator 
+directory to build the JAR.)<br><br>To start using the new MongoDB 
+applier, we needed to edit the service properties file to use this 
+component instead of the standard MySQL applier that configuration adds 
+by default. &nbsp;To do this, you can open up static-mongodb.properties 
+with your favorite editor. &nbsp;Add the following properties at the 
+bottom of the APPLIERS section.<br><code><br># MongoDB applier. &nbsp;You must specify a connection string for the server. <br># This currently supports only a single server. <br>replicator.applier.mongodb=com.continuent.tungsten.replicator.applier.MongoApplier<br>replicator.applier.mongodb.connectString=localhost:27017</code><br><br>Next,
+ you need to fix up the direct pipeline so that the last stage uses the 
+new applier. &nbsp;We located the direct pipeline definition (around 
+line 208 in the properties file) and set the applier to mongodb as shown
+ in the following example.<br><code><br># Write from parallel queue to database.<br>replicator.stage.d-pq-to-dbms=com.continuent.tungsten.replicator.pipeline.SingleThreadStageTask<br>replicator.stage.d-pq-to-dbms.extractor=parallel-q-extractor<br><b>replicator.stage.d-pq-to-dbms.applier=mongodb</b><br>replicator.stage.d-pq-to-dbms.filters=mysqlsessions<br>replicator.stage.d-pq-to-dbms.taskCount=${replicator.global.apply.channels}<br>replicator.stage.d-pq-to-dbms.blockCommitRowCount=${replicator.global.buffer.size}</code></div><br>We then started the replicator using 'replicator start.' &nbsp;At that point we could do the following on MySQL:<br><code><br>mysql&gt; create table foo(id int primary key, msg varchar(35));<br>Query OK, 0 rows affected (0.05 sec)<br>mysql&gt; insert into foo values(1, 'hello from MySQL!');<br>Query OK, 1 row affected (0.00 sec)</code><br><br>...And within a second we could see the following over in MongoDB:<br><code><br>&gt; show collections<br>foo<br>system.indexes<br>&gt; db.foo.find();<br>{ "_id" : ObjectId("4dc55e45ad90a25b9b57909d"), "1" : "1", "2" : "hello from MySQL!" }</code><br><br><div><div><div>This
+ kind of progress was very encouraging. &nbsp;It took roughly 2 hours to
+ get to move the first inserts across. &nbsp;Compared to replicating to a
+ new SQL database like Oracle that's lightning fast. &nbsp;However, 
+there were still no property names because we were not adding column 
+names to row updates.<br><br>Meanwhile, Stephane had finished the column name filter (<a href="http://code.google.com/p/tungsten-replicator/source/browse/trunk/replicator/src/java/com/continuent/tungsten/replicator/filter/ColumnNameFilter.java">ColumnNameFilter</a>)
+ and checked it in. &nbsp;I rebuilt and refreshed the replicator code, 
+then edited static-mongodb.properties as follows to add the filter. 
+&nbsp;First put in the filter definition in the FILTERS section:<br><code><br># Column name filter. &nbsp;Adds column name metadata to row updates. &nbsp;This is<br># required for MySQL row replication if you have logic that requires column<br># names.<br>replicator.filter.colnames=com.continuent.tungsten.replicator.filter.ColumnNameFilter<br></code><br>Next, make the first stage of the direct pipeline use the filter:<br><code><br># Extract from binlog into queue.<br>replicator.stage.d-binlog-to-q=com.continuent.tungsten.replicator.pipeline.SingleThreadStageTask<br>replicator.stage.d-binlog-to-q.extractor=mysql<br><b>replicator.stage.d-binlog-to-q.filters=colnames,pkey</b><br>replicator.stage.d-binlog-to-q.applier=queue<br></code><br>We then restarted the replicator. &nbsp;Thereupon, we started to see inserts like the following, complete with property names:<br><br><code>&gt; db.foo.find()<br>{ "_id" : ObjectId("4dc77bacad9092bd1aef046d"), "id" : "25", "data" : "data value" }<br></code><br>That
+ was better, much better! &nbsp; To this point we had put in exactly 2 
+hours and 45 minutes wall clock time. &nbsp;It was enough to prove the 
+point and more than enough for a demo the next day. &nbsp; The hackathon
+ was a rousing success. <br><br></div></div></div><b>Further Development</b><br><br>Over
+ the next couple of days I rounded out the MongoApplier to add support 
+for UPDATE and DELETE operations, as well as to implement restart. 
+&nbsp;The full implementation is now checked in on code.google.com, so 
+you can repeat our experiences by downloading code and building yourself
+ or by grabbing one of the Tungsten nightly builds. <br><br>Restart is 
+an interesting topic. &nbsp;Tungsten uses a table to store the sequence 
+number of the last transaction it applied. &nbsp;We do this by creating 
+an equivalent collection in MongoDB, which is updated after each commit.
+ &nbsp;There is a problem in that MongoDB does not have transactions. 
+&nbsp;Each update is effectively auto-commit, much like MyISAM table 
+type on MySQL. &nbsp;This means that while Tungsten can restart properly
+ after a clean shutdown, slave replication is not crash safe. &nbsp;Lack
+ of atomic transactions is&nbsp;a bigger issue with MongoDB and other 
+NoSQL databases that goes far beyond replication. &nbsp;For now, this is
+ just how Tungsten's MongoDB support works.<br><br>Speaking of things 
+that don't work, the current implementation is a prototype only. 
+&nbsp;We have not tested it with more than a few data types. &nbsp;It 
+only works with a single MongoDB daemon. &nbsp;It does not set keys 
+properly or specify indexes on tables. &nbsp;There are no guarantees 
+about performance, except to say that if you had more than a small 
+amount of data it would be quite slow. &nbsp;(OK, that's a guarantee 
+after all.) <br><br><b>Epilog</b><br><br>Overall all the hackathon was a
+ great success, not to mention lots of fun. &nbsp;It went especially 
+well because we had a relatively small problem and three people 
+(Stephane, Flavio, and Robert) with complementary skills that we could 
+combine easily for a quick solution. &nbsp;That seems to be a recipe for
+ succeeding on future hackathons. <br><br>From a technical point of 
+view, it helped that MongoDB is schema-less. &nbsp;Unlike SQL databases,
+ just adding a document materializes the table in MongoDB. &nbsp;This 
+made our applier implementation almost trivially easy, because 
+processing row updates takes only a few dozen lines of Java code in 
+total. &nbsp;It also explains why a lot of people are quite attached to 
+the NoSQL programming model. <br><br>I am looking forward to learning a 
+lot more about MongoDB and other NoSQL databases. &nbsp;It would take 
+two or three weeks of work to get our prototype to work with real 
+applications. &nbsp;Also, it looks as if we can implement replication 
+going from MongoDB to MySQL. &nbsp;According to Flavio there is a way to
+ search the transaction log of MongoDB as a regular collection. &nbsp;By
+ appropriately transforming BSON objects back to SQL tuples, we can 
+offer replication back to MySQL. <br><br>There are many other lessons 
+about MongoDB and NoSQL in general but it seems best to leave them for a
+ future article when I have more experience and actually know what I'm 
+talking about. &nbsp;Meanwhile, you are welcome to try out our newest 
+Tungsten replication feature.<div><img src="Introducing%20MySQL%20to%20MongoDB%20Replication%20-%20Continuent%20Tungsten.%20Database%20clustering%20and%20replication._files/768233104244702633-3819509900512957218.html" alt="" height="1" width="1"></div><p><strong>Read more: </strong> <a class="rssreadon" rel="nofollow" title="Introducing MySQL to MongoDB Replication" href="http://scale-out-blog.blogspot.com/2011/05/introducing-mysql-to-mongodb.html">Introducing MySQL to MongoDB Replication</a></p>
+	
+</div>
+          
+        
+        </div>
+        </section>
+<!-- ======= END GENERAL PAGE ======= -->
+
+
+<!-- ======= FOOTER ======= -->       
+    <footer class="container_16 share" style="text-align: right;">
+             <p>
+             Connect with us:</p> 
+
+             <a href="http://www.facebook.com/Continuent"><img src="Introducing%20MySQL%20to%20MongoDB%20Replication%20-%20Continuent%20Tungsten.%20Database%20clustering%20and%20replication._files/facebook.png"></a>
+             <a href="http://twitter.com/continuent"><img src="Introducing%20MySQL%20to%20MongoDB%20Replication%20-%20Continuent%20Tungsten.%20Database%20clustering%20and%20replication._files/twitter.png"></a>
+             <a href="http://www.youtube.com/user/v1rsun3n/feed"><img src="Introducing%20MySQL%20to%20MongoDB%20Replication%20-%20Continuent%20Tungsten.%20Database%20clustering%20and%20replication._files/youtube.jpg"></a>
+             <a href="http://www.linkedin.com/company/continuent"><img src="Introducing%20MySQL%20to%20MongoDB%20Replication%20-%20Continuent%20Tungsten.%20Database%20clustering%20and%20replication._files/linkedin.jpg"></a>
+             <a href="https://google.com/+Continuent" rel="publisher" style="text-decoration:none;">
+             <img src="Introducing%20MySQL%20to%20MongoDB%20Replication%20-%20Continuent%20Tungsten.%20Database%20clustering%20and%20replication._files/gplus-32.png" alt="Google+" style="border:0;width:25px;height:25px;"></a>
+             <a href="http://pipes.yahoo.com/pipes/pipe.run?_id=e7599ac8adac9b726bf90f76fb033a68&amp;_render=rss"><img src="Introducing%20MySQL%20to%20MongoDB%20Replication%20-%20Continuent%20Tungsten.%20Database%20clustering%20and%20replication._files/blog.jpg"></a>
+              
+        </footer>
+
+        <footer class="container_16">
+          <div class="grid_10 alpha">
+            
+<ul class="menu">
+<li class="item-369"><a href="http://www.continuent.com/about/contact">Contact Us</a></li><li class="item-370"><a href="http://www.continuent.com/downloads/software">Downloads</a></li><li class="item-371"><a href="http://www.continuent.com/solutions/clustering">Solutions</a></li><li class="item-372"><a href="http://www.continuent.com/news/blogs">Blogs</a></li><li class="item-375"><a href="http://www.continuent.com/about/legal">Legal Notice</a></li></ul>
+
+            </div>     
+                
+            <div class="grid_6 omega" style="text-align: right; float: right;">
+            Copyright © 2014 Continuent, Inc. All rights reserved.
+            </div>       
+        </footer>
+</div>  
+<script type="text/javascript">
+document.write(unescape("%3Cscript src='//munchkin.marketo.net/munchkin.js' type='text/javascript'%3E%3C/script%3E"));
+</script><script src="Introducing%20MySQL%20to%20MongoDB%20Replication%20-%20Continuent%20Tungsten.%20Database%20clustering%20and%20replication._files/munchkin_002.js" type="text/javascript"></script>
+<script>Munchkin.init('936-JDR-381');</script>
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-9466819-1']);
+  _gaq.push(['_setDomainName', 'continuent.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+</body></html>

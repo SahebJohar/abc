@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html class=" js canvas canvastext geolocation crosswindowmessaging no-websqldatabase indexeddb hashchange historymanagement draganddrop websockets rgba hsla multiplebgs backgroundsize borderimage borderradius boxshadow opacity cssanimations csscolumns cssgradients no-cssreflections csstransforms no-csstransforms3d csstransitions  video audio localstorage sessionstorage webworkers applicationcache svg smil svgclippaths   fontface" xmlns="http://www.w3.org/1999/xhtml" xmlns:og="http://ogp.me/ns#" xmlns:fb="http://www.facebook.com/2008/fbml"><head profile="http://gmpg.org/xfn/11">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+	<meta property="fb:admins" content="763699465">
+	<meta property="og:url" content="http://www.hongkiat.com/blog/webdev-with-mongodb-part3/">
+	<meta property="og:title" content="MongoDB For Beginners: Setting up MongoDB For PHP (Part 3/3)">
+	<meta property="og:description" content="Before diving into this, I recommend that you read the following related articles if you have not: Introduction to MongoDB Basic MongoDB shell commands The MongoDB server is built to already work with your current web server. The problem is that you’ll need to install drivers for your preferred backend ... Continue reading »">
+	<meta property="og:type" content="article">
+	<meta property="og:image" content="http://media02.hongkiat.com/webdev-with-mongodb-part1/mongodb-logo.jpg">
+
+<title>MongoDB For Beginners: Setting up MongoDB For PHP</title>
+
+<link href="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/css.css" rel="stylesheet" type="text/css">
+<link href="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/style.css" rel="stylesheet" type="text/css" media="screen, projection">
+<link href="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/print.css" rel="stylesheet" type="text/css" media="print">
+<!--[if IE]><link rel='stylesheet' href="http://static04.hongkiat.com/v5/css/ie.css" type='text/css' media='screen, projection'><![endif]-->
+
+<!-- google dfp -->
+<script src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/a_003.html" async=""></script><script src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/ps.js" async="" type="text/javascript"></script><script src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/ping.asc" async="" type="text/javascript"></script><script async="" src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/cbgapi.loaded_1"></script><script async="" src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/cbgapi.loaded_0"></script><script src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/load.js" async=""></script><script gapi_processed="true" src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/plusone.js" async="" type="text/javascript"></script><script src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/all_002.js" id="facebook-jssdk"></script><script src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/gpt.js" type="text/javascript" async=""></script><script src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/start-5c5c650d27.js" async="" type="text/javascript"></script><script src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/beacon.js" async=""></script><script src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/quant.js" async="" type="text/javascript"></script><script src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/p-9dsZX-5zhUuTg.js" async="" type="text/javascript"></script><script src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/beacon.js" async=""></script><script async="" src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/dfp-lib.js" type="text/javascript"></script><script src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/widgets.js" async="" type="text/javascript"></script><script src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/widgets_002.js" id="twitter-wjs"></script><script src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/ga.js" async="" type="text/javascript"></script><script src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/google_service.js" type="text/javascript"></script>
+<script type="text/javascript">
+	GS_googleAddAdSenseService("ca-pub-8918970543424762");
+	GS_googleEnableAllServices();
+</script><script src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/google_ads.js"></script>
+<script type="text/javascript">
+	GA_googleAddSlot("ca-pub-8918970543424762", "hkdc_145x120-01");
+	GA_googleAddSlot("ca-pub-8918970543424762", "hkdc_145x120-02");
+	GA_googleAddSlot("ca-pub-8918970543424762", "hkdc_145x120-03");
+	GA_googleAddSlot("ca-pub-8918970543424762", "hkdc_sidebar_all_top-right_300x250");
+</script>
+<script type="text/javascript">GA_googleFetchAds();</script>
+<!-- google dfp -->
+
+
+<link rel="alternate" type="application/rss+xml" title="Hongkiat.com RSS Feed" href="http://feeds2.feedburner.com/24thfloor">
+<link rel="pingback" href="http://www.hongkiat.com/blog/xmlrpc.php">
+<link rel="shortcut icon" href="http://mediatemplestatic.hongkiat.netdna-cdn.com/logo/hkdc/favicon.ico">
+
+
+<script type="text/javascript" src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/jquery_002.js"></script>
+<script type="text/javascript" src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/jquery-ui.js"></script>
+<script type="text/javascript" src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/include-top.js"></script>
+
+<link rel="alternate" type="application/rss+xml" title="hongkiat.com » MongoDB For Beginners: Setting up MongoDB For PHP (Part 3/3) Comments Feed" href="http://www.hongkiat.com/blog/webdev-with-mongodb-part3/feed/">
+<script type="text/javascript" src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/jquery.js"></script>
+<link rel="prev" title="Cartoonize Your Face With IMadeFace iPhone App" href="http://www.hongkiat.com/blog/cartoonize-face-with-imadeface/">
+<link rel="next" title="WordPress Job Board Themes And Plugins – Best Of" href="http://www.hongkiat.com/blog/wp-job-board-themes-plugins/">
+
+<link rel="canonical" href="http://www.hongkiat.com/blog/webdev-with-mongodb-part3/">
+<link rel="shortlink" href="http://www.hongkiat.com/blog/?p=16530">
+	<link href="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/SyntaxHighlighter.css" type="text/css" rel="stylesheet">
+	
+<!--Plugin WP Missed Schedule 2013.1024.8888 Active - Tag 6d807758f47abdb4ae626b9fa261d2f5-->
+
+
+<!-- All in One SEO Pack 2.0.4 by Michael Torbert of Semper Fi Web Design[1034,1123] -->
+<meta name="description" content="Before diving into this, I recommend that you read the following related articles if you have not: Introduction to MongoDB Basic MongoDB shell">
+
+<meta name="keywords" content="web design">
+
+<!-- /all in one seo pack -->
+
+<script src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/osd.js" type="text/javascript"></script><script src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/pubads_impl_40.js" type="text/javascript" async=""></script><script src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/embed.js" async="" type="text/javascript"></script><script src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/bsa.js" async="" type="text/javascript"></script><script src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/count.js" type="text/javascript" async=""></script><script async="async" src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/s_9d66286b452642a759aabeac9d39d265.js" id="_bsap_js_9d66286b452642a759aabeac9d39d265" type="text/javascript"></script><style type="text/css">.fb_hidden{position:absolute;top:-10000px;z-index:10001}.fb_invisible{display:none}.fb_reset{background:none;border:0;border-spacing:0;color:#000;cursor:auto;direction:ltr;font-family:"lucida grande", tahoma, verdana, arial, sans-serif;font-size:11px;font-style:normal;font-variant:normal;font-weight:normal;letter-spacing:normal;line-height:1;margin:0;overflow:visible;padding:0;text-align:left;text-decoration:none;text-indent:0;text-shadow:none;text-transform:none;visibility:visible;white-space:normal;word-spacing:normal}.fb_reset>div{overflow:hidden}.fb_link img{border:none}
+.fb_dialog{background:rgba(82, 82, 82, .7);position:absolute;top:-10000px;z-index:10001}.fb_reset .fb_dialog_legacy{overflow:visible}.fb_dialog_advanced{padding:10px;-moz-border-radius:8px;-webkit-border-radius:8px;border-radius:8px}.fb_dialog_content{background:#fff;color:#333}.fb_dialog_close_icon{background:url(http://static.ak.fbcdn.net/rsrc.php/v2/yq/r/IE9JII6Z1Ys.png) no-repeat scroll 0 0 transparent;_background-image:url(http://static.ak.fbcdn.net/rsrc.php/v2/yL/r/s816eWC-2sl.gif);cursor:pointer;display:block;height:15px;position:absolute;right:18px;top:17px;width:15px}.fb_dialog_mobile .fb_dialog_close_icon{top:5px;left:5px;right:auto}.fb_dialog_padding{background-color:transparent;position:absolute;width:1px;z-index:-1}.fb_dialog_close_icon:hover{background:url(http://static.ak.fbcdn.net/rsrc.php/v2/yq/r/IE9JII6Z1Ys.png) no-repeat scroll 0 -15px transparent;_background-image:url(http://static.ak.fbcdn.net/rsrc.php/v2/yL/r/s816eWC-2sl.gif)}.fb_dialog_close_icon:active{background:url(http://static.ak.fbcdn.net/rsrc.php/v2/yq/r/IE9JII6Z1Ys.png) no-repeat scroll 0 -30px transparent;_background-image:url(http://static.ak.fbcdn.net/rsrc.php/v2/yL/r/s816eWC-2sl.gif)}.fb_dialog_loader{background-color:#f2f2f2;border:1px solid #606060;font-size:24px;padding:20px}.fb_dialog_top_left,.fb_dialog_top_right,.fb_dialog_bottom_left,.fb_dialog_bottom_right{height:10px;width:10px;overflow:hidden;position:absolute}.fb_dialog_top_left{background:url(http://static.ak.fbcdn.net/rsrc.php/v2/ye/r/8YeTNIlTZjm.png) no-repeat 0 0;left:-10px;top:-10px}.fb_dialog_top_right{background:url(http://static.ak.fbcdn.net/rsrc.php/v2/ye/r/8YeTNIlTZjm.png) no-repeat 0 -10px;right:-10px;top:-10px}.fb_dialog_bottom_left{background:url(http://static.ak.fbcdn.net/rsrc.php/v2/ye/r/8YeTNIlTZjm.png) no-repeat 0 -20px;bottom:-10px;left:-10px}.fb_dialog_bottom_right{background:url(http://static.ak.fbcdn.net/rsrc.php/v2/ye/r/8YeTNIlTZjm.png) no-repeat 0 -30px;right:-10px;bottom:-10px}.fb_dialog_vert_left,.fb_dialog_vert_right,.fb_dialog_horiz_top,.fb_dialog_horiz_bottom{position:absolute;background:#525252;filter:alpha(opacity=70);opacity:.7}.fb_dialog_vert_left,.fb_dialog_vert_right{width:10px;height:100%}.fb_dialog_vert_left{margin-left:-10px}.fb_dialog_vert_right{right:0;margin-right:-10px}.fb_dialog_horiz_top,.fb_dialog_horiz_bottom{width:100%;height:10px}.fb_dialog_horiz_top{margin-top:-10px}.fb_dialog_horiz_bottom{bottom:0;margin-bottom:-10px}.fb_dialog_iframe{line-height:0}.fb_dialog_content .dialog_title{background:#6d84b4;border:1px solid #3b5998;color:#fff;font-size:14px;font-weight:bold;margin:0}.fb_dialog_content .dialog_title>span{background:url(http://static.ak.fbcdn.net/rsrc.php/v2/yd/r/Cou7n-nqK52.gif) no-repeat 5px 50%;float:left;padding:5px 0 7px 26px}body.fb_hidden{-webkit-transform:none;height:100%;margin:0;overflow:visible;position:absolute;top:-10000px;left:0;width:100%}.fb_dialog.fb_dialog_mobile.loading{background:url(http://static.ak.fbcdn.net/rsrc.php/v2/ya/r/3rhSv5V8j3o.gif) white no-repeat 50% 50%;min-height:100%;min-width:100%;overflow:hidden;position:absolute;top:0;z-index:10001}.fb_dialog.fb_dialog_mobile.loading.centered{max-height:590px;min-height:590px;max-width:500px;min-width:500px}#fb-root #fb_dialog_ipad_overlay{background:rgba(0, 0, 0, .45);position:absolute;left:0;top:0;width:100%;min-height:100%;z-index:10000}#fb-root #fb_dialog_ipad_overlay.hidden{display:none}.fb_dialog.fb_dialog_mobile.loading iframe{visibility:hidden}.fb_dialog_content .dialog_header{-webkit-box-shadow:white 0 1px 1px -1px inset;background:-webkit-gradient(linear, 0% 0%, 0% 100%, from(#738ABA), to(#2C4987));border-bottom:1px solid;border-color:#1d4088;color:#fff;font:14px Helvetica, sans-serif;font-weight:bold;text-overflow:ellipsis;text-shadow:rgba(0, 30, 84, .296875) 0 -1px 0;vertical-align:middle;white-space:nowrap}.fb_dialog_content .dialog_header table{-webkit-font-smoothing:subpixel-antialiased;height:43px;width:100%}.fb_dialog_content .dialog_header td.header_left{font-size:12px;padding-left:5px;vertical-align:middle;width:60px}.fb_dialog_content .dialog_header td.header_right{font-size:12px;padding-right:5px;vertical-align:middle;width:60px}.fb_dialog_content .touchable_button{background:-webkit-gradient(linear, 0% 0%, 0% 100%, from(#4966A6), color-stop(.5, #355492), to(#2A4887));border:1px solid #29447e;-webkit-background-clip:padding-box;-webkit-border-radius:3px;-webkit-box-shadow:rgba(0, 0, 0, .117188) 0 1px 1px inset, rgba(255, 255, 255, .167969) 0 1px 0;display:inline-block;margin-top:3px;max-width:85px;line-height:18px;padding:4px 12px;position:relative}.fb_dialog_content .dialog_header .touchable_button input{border:none;background:none;color:#fff;font:12px Helvetica, sans-serif;font-weight:bold;margin:2px -12px;padding:2px 6px 3px 6px;text-shadow:rgba(0, 30, 84, .296875) 0 -1px 0}.fb_dialog_content .dialog_header .header_center{color:#fff;font-size:16px;font-weight:bold;line-height:18px;text-align:center;vertical-align:middle}.fb_dialog_content .dialog_content{background:url(http://static.ak.fbcdn.net/rsrc.php/v2/y9/r/jKEcVPZFk-2.gif) no-repeat 50% 50%;border:1px solid #555;border-bottom:0;border-top:0;height:150px}.fb_dialog_content .dialog_footer{background:#f2f2f2;border:1px solid #555;border-top-color:#ccc;height:40px}#fb_dialog_loader_close{float:left}.fb_dialog.fb_dialog_mobile .fb_dialog_close_button{text-shadow:rgba(0, 30, 84, .296875) 0 -1px 0}.fb_dialog.fb_dialog_mobile .fb_dialog_close_icon{visibility:hidden}
+.fb_iframe_widget{display:inline-block;position:relative}.fb_iframe_widget span{display:inline-block;position:relative;text-align:justify}.fb_iframe_widget iframe{position:absolute}.fb_iframe_widget_lift{z-index:1}.fb_hide_iframes iframe{position:relative;left:-10000px}.fb_iframe_widget_loader{position:relative;display:inline-block}.fb_iframe_widget_fluid{display:inline}.fb_iframe_widget_fluid span{width:100%}.fb_iframe_widget_loader iframe{min-height:32px;z-index:2;zoom:1}.fb_iframe_widget_loader .FB_Loader{background:url(http://static.ak.fbcdn.net/rsrc.php/v2/y9/r/jKEcVPZFk-2.gif) no-repeat;height:32px;width:32px;margin-left:-16px;position:absolute;left:50%;z-index:4}
+.fb_connect_bar_container div,.fb_connect_bar_container span,.fb_connect_bar_container a,.fb_connect_bar_container img,.fb_connect_bar_container strong{background:none;border-spacing:0;border:0;direction:ltr;font-style:normal;font-variant:normal;letter-spacing:normal;line-height:1;margin:0;overflow:visible;padding:0;text-align:left;text-decoration:none;text-indent:0;text-shadow:none;text-transform:none;visibility:visible;white-space:normal;word-spacing:normal;vertical-align:baseline}.fb_connect_bar_container{position:fixed;left:0 !important;right:0 !important;height:42px !important;padding:0 25px !important;margin:0 !important;vertical-align:middle !important;border-bottom:1px solid #333 !important;background:#3b5998 !important;z-index:99999999 !important;overflow:hidden !important}.fb_connect_bar_container_ie6{position:absolute;top:expression(document.compatMode=="CSS1Compat"? document.documentElement.scrollTop+"px":body.scrollTop+"px")}.fb_connect_bar{position:relative;margin:auto;height:100%;width:100%;padding:6px 0 0 0 !important;background:none;color:#fff !important;font-family:"lucida grande", tahoma, verdana, arial, sans-serif !important;font-size:13px !important;font-style:normal !important;font-variant:normal !important;font-weight:normal !important;letter-spacing:normal !important;line-height:1 !important;text-decoration:none !important;text-indent:0 !important;text-shadow:none !important;text-transform:none !important;white-space:normal !important;word-spacing:normal !important}.fb_connect_bar a:hover{color:#fff}.fb_connect_bar .fb_profile img{height:30px;width:30px;vertical-align:middle;margin:0 6px 5px 0}.fb_connect_bar div a,.fb_connect_bar span,.fb_connect_bar span a{color:#bac6da;font-size:11px;text-decoration:none}.fb_connect_bar .fb_buttons{float:right;margin-top:7px}
+.fbpluginrecommendationsbarleft,.fbpluginrecommendationsbarright{position:fixed !important;bottom:0;z-index:999}.fbpluginrecommendationsbarleft{left:10px}.fbpluginrecommendationsbarright{right:10px}</style><style id="bsa_css" type="text/css">div.bsap_1235460{width:100%;display:block}div.bsap_1235460 a{width:468px}div.bsap_1235460 a img{padding:0}div.bsap_1235460 a em{font-style:normal}div.bsap_1235460 a{font-size:11px;color:#888;font-family:verdana,sans-serif;text-align:center;text-decoration:none;overflow:hidden;float:right;float:left;}div.bsap_1235460 img{border:0;clear:right;}div.bsap_1235460 a.adhere{color:#666;font-weight:bold;font-size:12px;border:1px solid #ccc;background:#e7e7e7;text-align:center;}div.bsap_1235460 a.adhere:hover{border:1px solid #999;background:#ddd;color:#333;}div.bsap_1235460 a{line-height:100%}div.bsap_1235460 a.adhere{width:468px;height:60px;line-height:480%}html>body div.bsap_1235460 a.adhere{width:466px;height:58px}div.bsap_1235460 img.s{height:0;width:0}div.bsap_1237809{width:100%;display:block}div.bsap_1237809 a{width:300px}div.bsap_1237809 a img{padding:0}div.bsap_1237809 a em{font-style:normal}div.bsap_1237809 a{display:block;font-size:11px;margin-top:10px;color:#888;font-family:verdana,sans-serif;text-align:center;text-decoration:none;overflow:hidden;float:left;}div.bsap_1237809 img{border:0;clear:right;}div.bsap_1237809 a.adhere{color:#666;font-weight:bold;font-size:12px;border:1px solid #ccc;background:#e7e7e7;text-align:center;}div.bsap_1237809 a.adhere:hover{border:1px solid #999;background:#ddd;color:#333;}div.bsap_1237809 iframe{display:block;font-size:11px;margin-top:10px;color:#888;font-family:verdana,sans-serif;text-align:center;text-decoration:none;overflow:hidden;float:left;}div.bsap_1237809 a{line-height:100%}div.bsap_1237809 a.adhere{width:300px;height:120px;line-height:960%}html>body div.bsap_1237809 a.adhere{width:298px;height:118px}div.bsap_1237809 img.s{height:0;width:0}div.bsap_1247679{width:100%;display:block}div.bsap_1247679 a{width:500px}div.bsap_1247679 a img{padding:0}div.bsap_1247679 a em{font-style:normal}div.bsap_1247679 a{display:block;font-size:11px;color:#888;font-family:verdana,sans-serif;margin:0 4px 10px 0;text-align:center;text-decoration:none;overflow:hidden;float:left;}div.bsap_1247679 img{border:0;clear:right;}div.bsap_1247679 a.adhere{color:#666;font-weight:bold;font-size:12px;border:1px solid #ccc;background:#e7e7e7;text-align:center;}div.bsap_1247679 a.adhere:hover{border:1px solid #999;background:#ddd;color:#333;}div.bsap_1247679 a{line-height:100%}div.bsap_1247679 a.adhere{width:500px;height:100px;line-height:800%}html>body div.bsap_1247679 a.adhere{width:498px;height:98px}div.bsap_1247679 img.s{height:0;width:0}div.bsap_1249810{width:100%;display:block}div.bsap_1249810 a{width:300px}div.bsap_1249810 a img{padding:0}div.bsap_1249810 a em{font-style:normal}div.bsap_1249810 a{display:block;font-size:11px;color:#888;font-family:verdana,sans-serif;margin:0 4px 10px 0;text-align:center;text-decoration:none;overflow:hidden;float:left;}div.bsap_1249810 img{border:0;clear:right;}div.bsap_1249810 a.adhere{color:#666;font-weight:bold;font-size:12px;border:1px solid #ccc;background:#e7e7e7;text-align:center;}div.bsap_1249810 a.adhere:hover{border:1px solid #999;background:#ddd;color:#333;}div.bsap_1249810 a{line-height:100%}div.bsap_1249810 a.adhere{width:300px;height:250px;line-height:2000%}html>body div.bsap_1249810 a.adhere{width:298px;height:248px}div.bsap_1249810 img.s{height:0;width:0}</style></head>
+
+<body style="" data-twttr-rendered="true"><div id="crowdscience_invitation" style="z-index: 150000; position: fixed; right: 50px; overflow: hidden; bottom: 0px; visibility: visible; height: 211px; display: none;">         <table style="width:auto; margin:0; padding:0; border:none; border-collapse:collapse;">                 <tbody>                         <tr>                                 <td style="background:url(http://static.crowdscience.com/inv/tl.png); height:10px; width:10px; overflow:hidden; padding:0;"></td>                                 <td style="background:url(http://static.crowdscience.com/inv/b.png);"></td>                                 <td style="background:url(http://static.crowdscience.com/inv/tr.png); height:10px; width:10px; overflow:hidden; padding:0;"></td>                         </tr>                         <tr>                                 <td style="background:url(http://static.crowdscience.com/inv/b.png);"></td>                                 <td id="crowdscience_invitation_inner" style="background-color: rgb(255, 255, 255); padding: 10px; width: 360px; border-width: 1px 1px medium; border-style: solid solid none; border-color: rgb(102, 102, 102) rgb(102, 102, 102) -moz-use-text-color; -moz-border-top-colors: none; -moz-border-right-colors: none; -moz-border-bottom-colors: none; -moz-border-left-colors: none; border-image: none;">                         <p style="text-align:left; margin:5px 0 10px; padding:0;">                             <img style="min-height: 0px;" id="crowdscience_invitation_logo" src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/default-logo.gif">                         </p>                         <p style="text-align:left; font:13px Helvetica,Arial,Sans Serif; color:#000; margin:10px 0; padding:0;">
+                                         Hongkiat is conducting research
+ to better understand and meet the needs of the users of their site. 
+Would you like to participate?                         </p>                                 <p style="text-align:center; font:18px Helvetica,Arial,Sans Serif; color:#000; margin:15px 0 20px; padding:0;">                                         <a href="#" style="font-size:18px;font-weight:bold;color:#E58712;" onclick="CrowdScience.onAccept(); return false">Yes, I'll help</a>                                         <span style="font-size:13px;">or</span>                                         <a href="#" style="font-size:18px;font-weight:bold; color:#999;" onclick="CrowdScience.onDecline(); return false">No thanks</a>                                 </p>                         <p style="text-align:left; font:13px Helvetica,Arial,Sans Serif; color:#000; margin:10px 0 10px; padding:0;">                                         Responses are anonymous, view our <a style="font-size:13px;color:#E58712;" href="http://app.crowdscience.com/privacy/survey/" target="_blank" onclick="CrowdScience.extendHideTimeout();">privacy policy</a>.                         </p>                             </td>                             <td style="background:url(http://static.crowdscience.com/inv/b.png);"></td>                         </tr>                 </tbody>         </table>     <img src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/a.gif" style="height: 0px; width: 0px; display: none;"></div><div id="itxtexclude"><script type="text/javascript" src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/init.js"></script><link rel="stylesheet" type="text/css" href="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/itxtcss_1396281479.css" id="itxtcss"><script type="text/javascript" src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/ui_mobile_1395261999.js"></script><script type="text/javascript" src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/ui_1400841935.js"></script><script type="text/javascript" src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/tmpl_1395261999.js"></script><script type="text/javascript" src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/metrics_1395261999.js"></script><script type="text/javascript" src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/itxt_1395261999.js"></script><script type="text/javascript" src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/fx2_1395261999.js"></script><script type="text/javascript" src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/fx_1395261999.js"></script><script type="text/javascript" src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/debug_1395261999.js"></script><script type="text/javascript" src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/data_1400710318.js"></script><script type="text/javascript" src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/core_1400590916.js"></script><script type="text/javascript" src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/underscore-min-ns-1.js"></script></div>
+<a name="top"></a>
+
+<!-- stats -->
+<script type="text/javascript">var _gaq=_gaq||[];_gaq.push(["_setAccount","UA-275126-1"]);_gaq.push(["_trackPageview"]);(function(){var b=document.createElement("script");b.type="text/javascript";b.async=true;b.src=("https:"==document.location.protocol?"https://ssl":"http://www")+".google-analytics.com/ga.js";var a=document.getElementsByTagName("script")[0];a.parentNode.insertBefore(b,a)})();</script>
+<!-- stats -->
+
+<!-- sticky header -->
+<div style="top: 0px;" id="hSlideContainer">
+	<div id="hSlideContent">
+		<ul id="sliderLeft">
+		
+			<li class="hkdc_logo"><a href="http://www.hongkiat.com/blog/#top">Back to Home, top</a></li>
+			
+						
+						<li id="hPrevNext">
+				<div class="prev"><a href="http://www.hongkiat.com/blog/wp-job-board-themes-plugins/" rel="next">prev</a> </div>
+				<div class="next"><a href="http://www.hongkiat.com/blog/cartoonize-face-with-imadeface/" rel="prev">next</a> </div>
+			</li>
+			
+			<li class="sharetxt">Share this post - </li>
+			<li class="fb"><div><iframe src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/like.html" scrolling="no" style="border:none; overflow:hidden; width:100px; height:21px;" allowtransparency="true" frameborder="0"></iframe></div></li>
+			<li class="twitter"><div><iframe style="width: 106px; height: 20px;" data-twttr-rendered="true" title="Twitter Tweet Button" class="twitter-share-button twitter-tweet-button twitter-share-button twitter-count-horizontal" src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/tweet_button.html" allowtransparency="true" scrolling="no" id="twitter-widget-0" frameborder="0"></iframe><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script></div></li>
+			<li class="gplus"><div><div id="___plusone_0" style="text-indent: 0px; margin: 0px; padding: 0px; background: none repeat scroll 0% 0% transparent; border-style: none; float: none; line-height: normal; font-size: 1px; vertical-align: baseline; display: inline-block; width: 90px; height: 20px;"><iframe title="+1" data-gapiattached="true" src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/fastbutton.html" name="I2_1402471330215" id="I2_1402471330215" vspace="0" tabindex="0" style="position: static; top: 0px; width: 90px; margin: 0px; border-style: none; left: 0px; visibility: visible; height: 20px;" scrolling="no" marginwidth="0" marginheight="0" hspace="0" frameborder="0" width="100%"></iframe></div></div></li>
+			<li class="su"><div><script src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/hostedbadge.html"></script><iframe id="iframe-stmblpn-widget-1" src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/a.html" style="overflow: hidden; margin: 0px; padding: 0px; border: 0px none;" allowtransparency="true" scrolling="no" frameborder="0" height="18" width="18"></iframe> <script type="text/javascript">   (function() {     var li = document.createElement('script'); li.type = 'text/javascript'; li.async = true;     li.src = window.location.protocol + '//platform.stumbleupon.com/1/widgets.js';     var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(li, s);   })(); </script></div></li>
+						
+		</ul>
+		
+		<ul id="sliderRight">
+			<li class="searchbox">
+				<form id="searchform" method="get" action="/blog/search">
+				<input name="q" id="s" class="search" placeholder="E.g. Free vectors" type="text">
+				</form>			
+			</li>
+			<li class="btt"><a href="#top" title="Back to top">↑</a></li>
+		</ul>
+	</div>
+</div>	
+<!-- sticky header -->
+
+
+	<!-- header type #1 -->
+	<div id="headerbanner01" class="clearfix">
+		<div class="headerbanner_wrap clearfix">
+				
+				<div class="s728">
+				<script type="text/javascript" src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/4724.js"></script><div id="div-fm-gpt-zone-4724"><div style="border: 0pt none;" id="google_ads_iframe_/4601/fmpub.hongkiat_0__container__"><iframe src="javascript:&quot;<html><body style='background:transparent'></body></html>&quot;" style="border: 0px none; vertical-align: bottom;" marginheight="0" marginwidth="0" scrolling="no" name="google_ads_iframe_/4601/fmpub.hongkiat_0" id="google_ads_iframe_/4601/fmpub.hongkiat_0" frameborder="0" height="90" width="728"></iframe></div><iframe src="javascript:&quot;<html><body style='background:transparent'></body></html>&quot;" style="border: 0px none; vertical-align: bottom; visibility: hidden; display: none;" marginheight="0" marginwidth="0" scrolling="no" name="google_ads_iframe_/4601/fmpub.hongkiat_0__hidden__" id="google_ads_iframe_/4601/fmpub.hongkiat_0__hidden__" frameborder="0" height="0" width="0"></iframe></div>
+				</div>
+				
+				<div class="s230">
+				<iframe src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/230x90.html" marginwidth="0" marginheight="0" vspace="0" hspace="0" allowtransparency="true" style="" scrolling="no" frameborder="0" height="90" width="230"></iframe>
+				</div>
+		
+			
+		</div>
+	</div>
+	<!-- header type #1 -->
+	
+	<!-- header start -->
+	<div id="header" class="clearfix">
+		<div class="logorow clearfix">
+			<div class="thelogo">
+				<h1><a href="http://www.hongkiat.com/blog/">hongkiat.com</a></h1>
+			</div>
+			<div class="thebanner">
+            
+				<!-- BuySellAds Zone Code -->
+                <div id="bsap_1235460" class="bsap_1235460 bsap"><a href="http://stats.buysellads.com/click.go?z=1235460&amp;b=4754618&amp;g=&amp;s=&amp;sw=1366&amp;sh=768&amp;br=firefox,29,linux&amp;r=0.3205651984819403&amp;link=http://imcreator.com/?utm_source=hongkiat&amp;utm_medium=banner&amp;utm_content=space" onmouseover="window.status = 'http://imcreator.com/?utm_source=hongkiat&amp;utm_medium=banner&amp;utm_content=space'; return true;" onmouseout="window.status=''; return true;" class="ad1 odd" title="Design Your Website" id="bsa_4754618" target="_blank"><img src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/222592-1400150575.jpg" alt="Design Your Website" height="60" width="468"></a></div>
+                <!-- End BuySellAds Zone Code -->
+			</div>
+		</div>
+		
+		<div class="navirow clearfix">
+			<ul class="sf-menu sf-js-enabled">
+				<li class="home"> <a class="sf-with-ul" href="http://www.hongkiat.com/blog/">Home<span class="sf-sub-indicator"> »</span></a>
+					<ul style="display: none; visibility: hidden;">
+						<li><a href="http://www.hongkiat.com/blog/about-us/">About Us</a></li>
+						<li><a href="http://www.hongkiat.com/blog/advertise/">Advertise</a></li>
+						<li><a href="http://www.hongkiat.com/blog/contact/">Contact us</a></li>
+						<li><a href="http://www.hongkiat.com/blog/write-for-us/">Become an author</a></li>
+						<li><a href="http://www.hongkiat.com/blog/submit-news-tips/">Submit tips</a></li>
+					</ul>
+				</li>
+				<li class=" photoshop"><a href="http://www.hongkiat.com/blog/category/photoshop/">Photoshop</a></li>
+				<li class=" icons"><a href="http://www.hongkiat.com/blog/category/free-icons/">Icons</a></li>
+				<li class="active design"><a href="http://www.hongkiat.com/blog/category/design/">Design</a></li>
+				<li class=" wordpress"><a href="http://www.hongkiat.com/blog/category/wordpress/">WordPress</a></li>
+				<li class=" tools"><a href="http://www.hongkiat.com/blog/category/tools/">Tools</a></li>
+				<li class=" inspiration"><a href="http://www.hongkiat.com/blog/category/inspiration/">Inspiration</a></li>
+				<li class=" graphics"><a href="http://www.hongkiat.com/blog/category/graphics/">Graphics</a></li>
+				<li class=" wallpapers"><a href="http://www.hongkiat.com/blog/category/free-wallpapers/">Wallpapers</a></li>
+				<li class=" howto"><a href="http://www.hongkiat.com/blog/category/how-to/">How-to</a></li>
+				<li class=" web20"><a href="http://www.hongkiat.com/blog/category/web-20/">Web 2.0</a></li>
+                <!--
+				<li class=" freebies"><a href="/blog/category/freebies-online/">Freebies</a></li>
+                -->
+                <li class="deals"><a href="http://hongki.at/deals/">Deals</a></li>
+			</ul>
+			
+			<div class="searchbox">
+				<form id="searchform" method="get" action="/blog/search">
+				<input name="q" id="s" class="search" placeholder="E.g. Free vectors" type="text">
+				</form>
+			</div>
+		</div>
+		
+	</div>
+	<!-- header end -->
+	
+		
+	<div id="main" class="clearfix">
+		<div class="contentwrap"><div class="content single">
+  	<div class="post clearfix" id="post-16530">
+	   	
+		<!-- google_ad_section_start -->
+		<h1>MongoDB For Beginners: Setting up MongoDB For PHP (Part 3/3)</h1>
+		<!-- google_ad_section_end -->
+		
+		<!-- post meta -->
+		<div class="sMeta">
+			<p>
+				By 
+					<strong><a href="http://www.hongkiat.com/blog/author/jake/" title="Posts by Jake Rocheleau" rel="author">Jake Rocheleau</a></strong>. 
+				<span class="cat">Filed in <a href="http://www.hongkiat.com/blog/category/design/" title="View all posts in Web Design" rel="category tag">Web Design</a></span>
+				<span class="edit"></span>
+			</p>  
+		</div>
+		
+		                    <!-- // -->
+                    <div class="gad_wrap"> 
+						<script language="JavaScript"> 
+						var google_adnum = 0;
+						function google_ad_request_done(google_ads) {	
+						var s = ''; var i;
+						if (google_ads.length == 0) { return; }
+							if (google_ads.length == 1) {		
+								s += '<div class=\"gad_adFeedback\"><a href=\"'+google_info.feedback_url+'\">Ads by Google</a></div><div class=\"gad_unit\"><a class=\"gad_adTitle\" href=\"'+google_ads[0].url+'\" onmouseout=\"window.status=\'\'\" onmouseover=\"window.status=\'go to '+google_ads[0].visible_url+';return true\'\"><span>'+google_ads[0].line1+'</span></a><a class=\"gad_adURL\" href=\"'+google_ads[0].url+'\" onmouseout=\"window.status=\'\'\" onmouseover=\"window.status=\'go to '+google_ads[0].visible_url+';return true\'\"><span>'+google_ads[0].visible_url+'</span></a> <span class=\"gad_adText\">'+google_ads[0].line2+' '+google_ads[0].line3+'</span></div>';
+							}
+							else if (google_ads.length > 1) {	
+								s += '<div class=\"gad_adFeedback\"><a href=\"' + google_info.feedback_url + '\">Ads by Google</a></div>';
+								for(i = 0; i < google_ads.length; ++i) {
+								s += '<div class=\"gad_unit\"><a class=\"gad_adTitle\" href=\"'+google_ads[i].url+'\" onmouseout=\"window.status=\'\'\" onmouseover=\"window.status=\'go to '+google_ads[i].visible_url+';return true\'\"><span>'+google_ads[i].line1+'</span></a><a class=\"gad_adURL\" href=\"'+google_ads[i].url+'\" onmouseout=\"window.status=\'\'\" onmouseover=\"window.status=\'go to '+google_ads[i].visible_url+';return true\'\"><span>'+google_ads[i].visible_url+'</span></a> <span class=\"gad_adText\">'+google_ads[i].line2+' '+google_ads[i].line3+'</span></div>';
+								}
+							}
+							if (google_ads[0].bidtype == "CPC") { 
+								google_adnum = google_adnum + google_ads.length;
+							}	
+						document.write(s);
+						return;
+						}
+						google_ad_client = 'pub-8918970543424762'; 
+						google_ad_channel = '0510687918';
+						google_ad_output = 'js'; 
+						google_max_num_ads = '1';
+						google_ad_type = 'text'; 
+						google_feedback = 'on';
+						google_skip = google_adnum;
+						</script> 
+						<script language="JavaScript" src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/show_ads.js"></script><iframe marginwidth="0" marginheight="0" vspace="0" hspace="0" allowtransparency="true" scrolling="no" style="display:none" id="google_esf" name="google_esf" src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/zrt_lookup.html" frameborder="0" height="0" width="0"></iframe><script src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/show_ads_impl.js"></script><script language="JavaScript1.1" src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/ads_002"></script><div class="gad_adFeedback"><a href="https://www.google.com/url?ct=abg&amp;q=https://www.google.com/adsense/support/bin/request.py%3Fcontact%3Dabg_afc%26url%3Dhttp://www.hongkiat.com/blog/webdev-with-mongodb-part3/%26gl%3DIN%26hl%3Den%26client%3Dca-pub-8918970543424762%26ai0%3DC88sSoQOYU6qALZCoigbppIDIA_X2rNIGveGc6KABnaP61QUQASDr-ZQDUIi82ZD7_____wFg5Zrpg-AOyAEBqQKUHx84NSNSPqgDAaoEhgFP0IVZWvt6nPEf0XXSBoYUBuhsF1buqnFwx3RHUQufIjaeJQj5eIfatRSichVmik2cErvkJeq3fdEDa2e5BWrP72VxLtjvt7QU7nTrOx9XUOiT0CjiQfmUIHG8fkMtY8Tnqjy_kpSltadz1jVWBcAh13xr7y84Qd5XdYCVCeOfAOkZmB781YAHjYXGOQ&amp;usg=AFQjCNG6DfmZ-ep56Mha4QiSqc3TZAEV9Q">Ads by Google</a></div><div class="gad_unit"><a class="gad_adTitle" href="http://googleads.g.doubleclick.net/aclk?sa=L&amp;ai=C88sSoQOYU6qALZCoigbppIDIA_X2rNIGveGc6KABnaP61QUQASDr-ZQDUIi82ZD7_____wFg5Zrpg-AOyAEBqQKUHx84NSNSPqgDAaoEhgFP0IVZWvt6nPEf0XXSBoYUBuhsF1buqnFwx3RHUQufIjaeJQj5eIfatRSichVmik2cErvkJeq3fdEDa2e5BWrP72VxLtjvt7QU7nTrOx9XUOiT0CjiQfmUIHG8fkMtY8Tnqjy_kpSltadz1jVWBcAh13xr7y84Qd5XdYCVCeOfAOkZmB781YAHjYXGOQ&amp;num=1&amp;sig=AOD64_1O7PwxpDFu8Np5tUv1WaR1TDI6yA&amp;client=ca-pub-8918970543424762&amp;adurl=http://flugtag.redbull.com/in/" onmouseout="window.status=''" onmouseover="window.status='go to www.flugtag.redbull.com/in/;return true'"><span>Defy the laws of gravity</span></a><a class="gad_adURL" href="http://googleads.g.doubleclick.net/aclk?sa=L&amp;ai=C88sSoQOYU6qALZCoigbppIDIA_X2rNIGveGc6KABnaP61QUQASDr-ZQDUIi82ZD7_____wFg5Zrpg-AOyAEBqQKUHx84NSNSPqgDAaoEhgFP0IVZWvt6nPEf0XXSBoYUBuhsF1buqnFwx3RHUQufIjaeJQj5eIfatRSichVmik2cErvkJeq3fdEDa2e5BWrP72VxLtjvt7QU7nTrOx9XUOiT0CjiQfmUIHG8fkMtY8Tnqjy_kpSltadz1jVWBcAh13xr7y84Qd5XdYCVCeOfAOkZmB781YAHjYXGOQ&amp;num=1&amp;sig=AOD64_1O7PwxpDFu8Np5tUv1WaR1TDI6yA&amp;client=ca-pub-8918970543424762&amp;adurl=http://flugtag.redbull.com/in/" onmouseout="window.status=''" onmouseover="window.status='go to www.flugtag.redbull.com/in/;return true'"><span>www.flugtag.redbull.com/in/</span></a> <span class="gad_adText">India’s 1st Red Bull Flugtag Fly with Indian Physics. Apply now.</span></div>
+					</div>
+                    <!-- /// -->
+                    			
+		<!-- content -->
+		<div class="sContent intxt">
+			<!-- google_ad_section_start -->    
+			<p>Before diving into this, I recommend that you read the following related articles if you have not:</p>
+<ul>
+<li><a href="http://www.hongkiat.com/blog/webdev-with-mongodb-part1/">Introduction to MongoDB</a></li>
+<li><a href="http://www.hongkiat.com/blog/webdev-with-mongodb-part2/">Basic MongoDB shell commands</a></li>
+</ul>
+<p>The MongoDB server is built to already work with your current web 
+server. The problem is that you’ll need to install drivers for your 
+preferred backend language – PHP, Ruby, Node.js, Perl, whatever. I won’t
+ go into the process of installing WAMP/MAMP because this is a bit off 
+topic from Mongo.</p>
+<p class="sw"><img src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/mongodb-logo.jpg" height="282" width="500"></p>
+<p>But there are very easy-to-follow tutorials which already exist for <a href="http://www.tutorialchip.com/php/wamp-server-installation-guide-for-windows-7-3264-bits/">installing WAMP</a> and <a href="http://www.aschroder.com/2009/02/how-to-install-mamp-on-your-macbook/">installing MAMP</a> on either Operating System<strong>.</strong></p>
+<p><strong>Note:</strong> You can still work with your MongoDB server 
+without a web server. But most applications would require this and 
+that’s why I’m focusing primarily on MongoDB for web development.</p>
+<p>You can get some output from the MongoDB process by visiting the 
+localhost address using your installation’s specific port number.</p>
+<p>MongoDB will default to <em>27017</em>. This is the driver port and to view analytics/diagnostics we want to use <em>28017</em>. So you may access the MongoDB server info on your browser by visiting:</p>
+<p><code>http://localhost:28017</code></p>
+<p>This address should still work properly regardless of your local web server being online or not.</p>
+<p>After you have WAMP or MAMP installed and running you can visit the 
+localhost web server on port :80 to see the default page template.</p>
+<p>Now I’m going to walk you through installing the PHP driver, and we’ll finish up developing over MongoDB’s PHP class library.</p>
+<h3>Setup the MongoDB PHP Drivers</h3>
+<p>Mac and Linux users should be able to install these drivers right from the command line. Looking on the MongoDB <a href="http://www.mongodb.org/display/DOCS/PHP+Language+Center">PHP language docs</a> we should install using pecl from the <a href="http://pear.php.net/">Pear Library</a> of PHP code.</p>
+<p>Here’s the line of code you should run from terminal:</p>
+<div class="dp-highlighter"><ol class="dp-c" start="1"><li class="alt"><span><span>sudo&nbsp;apt-get&nbsp;install&nbsp;php5-dev&nbsp;php5-cli&nbsp;php-pear&nbsp;&nbsp;</span></span></li><li class=""><span>sudo&nbsp;pecl&nbsp;install&nbsp;mongo&nbsp;&nbsp;</span></li></ol></div><pre style="display: none;" name="code" class="php">sudo apt-get install php5-dev php5-cli php-pear
+sudo pecl install mongo</pre>
+<p>If you already have Pear installed then you don’t need to run the 
+first line. That is only for PHP installs which are not updated to the 
+latest Pear library. But after the commands finish locate your <strong>php.ini</strong> file and add the following bit of code:</p>
+<div class="dp-highlighter"><ol class="dp-c" start="1"><li class="alt"><span><span>extension=mongo.so&nbsp;&nbsp;</span></span></li></ol></div><pre style="display: none;" name="code" class="php">extension=mongo.so
+</pre>
+<p>You should notice a similar block of code somewhere midway down the 
+file which has a slew of other lines mirroring extension=name. Most 
+extensions are commented out but the lines without a hash symbol(#) are 
+currently active extensions.</p>
+<p>After you’ve added this line save &amp; close the file, then restart your Apache web server for the new changes to take effect.</p>
+<h4>Mongo PHP Extension on Windows</h4>
+<p>All users on Windows will also need to edit their php.ini file. This 
+can be accomplished directly from the WAMP context menu by clicking on 
+the icon, then moving to PHP -&gt; php.ini. You’ll need to add the same 
+line of code except the filename should be <strong>php_mongo.dll</strong>. </p>
+<p>Also instead of installing through the command line it’s much easier 
+to download a copy of the extension and move this over manually.</p>
+<p>Windows users should head over to <a href="https://github.com/mongodb/mongo-php-driver/downloads">this Github directory</a>
+ full of MongoDB PHP drivers. Find the latest release which supports 
+your version of PHP (5.2, 5.3, 5.4) and download the .zip. Once you 
+extract the folder find the extension which matches your version of PHP.
+ In my case I’ll use <strong>php_mongo-1.2.12-5.3-vc9.dll</strong> and rename this to <strong>php_mongo.dll</strong>.</p>
+<p>Now place this file directly inside your PHP extensions directory located in <code>C:\wamp\bin\php\php5.x\ext\</code>.
+ If you have this file moved over and the extension line of code added 
+to your php.ini file then everything should be good to go! Restart your 
+web server and open up a <code>phpinfo()</code> page to view the results.</p>
+<p>You can do a <span class="key">CTRL</span> + <span class="key">F</span> search for “mongo” and should find details about the module itself.</p>
+<h3>Mongo Web Development with PHP</h3>
+<p>There is so much to discuss when it comes to web development and 
+databases. This is only an introduction tutorial so we won’t be able to 
+touch on many topics including users, authentication, updating objects, 
+multiple databases, etc. But let’s finish up by going over the <a href="http://php.net/manual/en/class.mongodb.php">PHP MongoDB class</a> and how we can quickly connect into a database.</p>
+<p>I’ll use our test DB in this example accessing our previously created
+ “shows” collection. We can pull all this data out using PHP and display
+ the contents on a webpage. I’m creating a new PHP file in my local 
+server root named <strong>shows.php</strong> with the following code:</p>
+<div class="dp-highlighter"><div class="bar"><div class="tools"><a href="#" onclick="dp.sh.Toolbar.Command('ViewSource',this);return false;">view plain</a><a href="#" onclick="dp.sh.Toolbar.Command('CopyToClipboard',this);return false;">copy to clipboard</a><a href="#" onclick="dp.sh.Toolbar.Command('PrintSource',this);return false;">print</a><a href="#" onclick="dp.sh.Toolbar.Command('About',this);return false;">?</a></div></div><ol class="dp-c" start="1"><li class="alt"><span><span>&lt;?php&nbsp;&nbsp;</span></span></li><li class=""><span><span class="comment">//&nbsp;Config</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span><span class="vars">$dbhost</span><span>&nbsp;=&nbsp;</span><span class="string">'localhost'</span><span>;&nbsp;&nbsp;</span></span></li><li class=""><span><span class="vars">$dbname</span><span>&nbsp;=&nbsp;</span><span class="string">'test'</span><span>;&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;</span></li><li class=""><span><span class="comment">//&nbsp;Connect&nbsp;to&nbsp;test&nbsp;database</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span><span class="vars">$m</span><span>&nbsp;=&nbsp;</span><span class="keyword">new</span><span>&nbsp;Mongo(</span><span class="string">"mongodb://$dbhost"</span><span>);&nbsp;&nbsp;</span></span></li><li class=""><span><span class="vars">$db</span><span>&nbsp;=&nbsp;</span><span class="vars">$m</span><span>-&gt;</span><span class="vars">$dbname</span><span>;&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;</span></li><li class=""><span><span class="comment">//&nbsp;select&nbsp;the&nbsp;collection</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span><span class="vars">$collection</span><span>&nbsp;=&nbsp;</span><span class="vars">$db</span><span>-&gt;shows;&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;</span></li><li class="alt"><span><span class="comment">//&nbsp;pull&nbsp;a&nbsp;cursor&nbsp;query</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span><span class="vars">$cursor</span><span>&nbsp;=&nbsp;</span><span class="vars">$collection</span><span>-&gt;find();&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;</span></li><li class=""><span>?&gt;&nbsp;&nbsp;</span></li></ol></div><pre style="display: none;" name="code" class="php">&lt;?php
+// Config
+$dbhost = 'localhost';
+$dbname = 'test';
+
+// Connect to test database
+$m = new Mongo("mongodb://$dbhost");
+$db = $m-&gt;$dbname;
+
+// select the collection
+$collection = $db-&gt;shows;
+
+// pull a cursor query
+$cursor = $collection-&gt;find();
+
+?&gt;
+</pre>
+<p>What I’m doing is selecting our test database and further accessing the internal shows collection. We can run the <a href="http://php.net/manual/en/mongocollection.find.php">find()</a> function on any Mongo collection object to pull out a cursor with all the related internal data.</p>
+<p>Now to output this information onto the page let’s use <a href="http://php.net/manual/en/function.var-dump.php">var_dump()</a> which is a much better alternative than <a href="http://php.net/manual/en/function.print-r.php">print_r()</a>. Add this last block of code directly underneath the <code>$cursor</code> variable.</p>
+<div class="dp-highlighter"><div class="bar"><div class="tools"><a href="#" onclick="dp.sh.Toolbar.Command('ViewSource',this);return false;">view plain</a><a href="#" onclick="dp.sh.Toolbar.Command('CopyToClipboard',this);return false;">copy to clipboard</a><a href="#" onclick="dp.sh.Toolbar.Command('PrintSource',this);return false;">print</a><a href="#" onclick="dp.sh.Toolbar.Command('About',this);return false;">?</a></div></div><ol class="dp-c" start="1"><li class="alt"><span><span class="keyword">foreach</span><span>(</span><span class="vars">$cursor</span><span>&nbsp;</span><span class="keyword">as</span><span>&nbsp;</span><span class="vars">$document</span><span>)&nbsp;{&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;var_dump(<span class="vars">$document</span><span>);&nbsp;&nbsp;</span></span></li><li class="alt"><span>}&nbsp;&nbsp;</span></li></ol></div><pre style="display: none;" name="code" class="php">foreach($cursor as $document) {
+ var_dump($document);
+}</pre>
+<p>This <code>foreach()</code> loop will go through the cursor results 
+and output variable data for each internal array. We should have 3 
+objects displaying the data added into our TV Shows earlier. You will 
+notice there is also another key named <strong>_id</strong> which is the automatic object ID created for each document.</p>
+<p>I have to recommend just going through Google or the <a href="http://www.mongodb.org/display/DOCS/Home;jsessionid=9CF361BA610A9FAC3DA4C1024FD982FB">MongoDB docs</a>
+ to learn more about the PHP class. There is so much information that it
+ cannot all be crammed into this introductory tutorial. But this small 
+PHP script should be an example of just how flexible Mongo databases 
+really are! No confusing SQL commands, no requirements for 
+authentication(unless needed), and all the syntax is very easy to read.</p>
+<h3>Final Thoughts</h3>
+<p>Developers who are familiar with databases may still be pushing 
+through this article with difficulty. Going through this tutorial two or
+ three times may still even leave you confused on some terminology. But 
+don’t get discouraged by Mongo’s initial hurdles. Even a week’s worth of
+ practice is enough to nail down a really good understanding.</p>
+<p>The Mongo open source database system is schemaless and quickly 
+scalable in comparison to other rival systems. You are not limited to 
+columns or tables and inserting data can be quickly accomplished through
+ JSON-like syntax. Also, connecting your web applications using PHP is 
+often easier than MySQL/MSSQL once you understand the code.</p>
+<p>I do hope this beginner’s tutorial can provide a solid overview from MongoDB terminology to <a href="http://www.hongkiat.com/blog/webdev-with-mongodb-part1/">installation</a>, <a href="http://www.hongkiat.com/blog/webdev-with-mongodb-part2/">shell commands</a>, and light web development.</p>
+<p>Overall Mongo may not be your first database choice when building a 
+new web project. But the system is safe, very reliable, and slowly 
+gaining attention with a growing community of dedicated supporters.</p>
+			
+							<script type="text/javascript">
+				<!--
+            google_ad_client = "ca-pub-8918970543424762";
+            google_ad_slot = "5791071802";
+            google_ad_channel = '4314338609';
+            google_override_format = true;
+            google_ad_width = 600;
+            google_ad_height = 250;
+            //-->
+            </script>
+            <script type="text/javascript" src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/show_ads.js"></script><ins style="display:inline-table;border:none;height:250px;margin:0;padding:0;position:relative;visibility:visible;width:600px;background-color:transparent"><ins id="aswift_0_anchor" style="display:block;border:none;height:250px;margin:0;padding:0;position:relative;visibility:visible;width:600px;background-color:transparent"><iframe marginwidth="0" marginheight="0" vspace="0" hspace="0" allowtransparency="true" scrolling="no" onload="var i=this.id,s=window.google_iframe_oncopy,H=s&amp;&amp;s.handlers,h=H&amp;&amp;H[i],w=this.contentWindow,d;try{d=w.document}catch(e){}if(h&amp;&amp;d&amp;&amp;(!d.body||!d.body.firstChild)){if(h.call){setTimeout(h,0)}else if(h.match){try{h=s.upd(h,i)}catch(e){}w.location.replace(h)}}" id="aswift_0" name="aswift_0" style="left:0;position:absolute;top:0;" frameborder="0" height="250" width="600"></iframe></ins></ins>
+						
+			<!-- google_ad_section_end -->
+					</div> 
+		
+		<!-- slider -->
+		<!--
+		<div id="slidebox">
+			<a class="close"></a>
+			<h6>Suggestion:</h6>
+			<div class="related">
+				<a href="">
+				<img src="" />
+				<span class="title"></span>
+				</a>
+			</div>
+		</div>
+		-->
+
+		<p id="last"></p>
+		
+		<!-- related post -->
+		<div class="sRelated_post clearfix">
+			<div class="yarpp-related">
+
+
+<h4>You might like:</h4>
+<ol class="related-posts-thumbs clearfix">
+			<li>			<a href="http://www.hongkiat.com/blog/webdev-with-mongodb-part2/" rel="bookmark" title="MongoDB For Beginners: Basic Shell Commands (Part 2/3)" onclick="javascript: _gaq.push(['_trackPageview', '/hkdc/related-posts/bottom-black']);">
+			<img src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/webdev-with-mongodb-part2.jpg" title="MongoDB For Beginners: Basic Shell Commands (Part 2/3)">
+			<span class="yarpp-title" onclick="javascript: _gaq.push(['_trackPageview', '/hkdc/related-posts/bottom-black/text']);">MongoDB For Beginners: Basic Shell Commands (Part 2/3)</span>
+			</a>
+		</li>
+			<li>			<a href="http://www.hongkiat.com/blog/webdev-with-mongodb-part1/" rel="bookmark" title="MongoDB For Beginners: Introduction and Installation (Part 1/3)" onclick="javascript: _gaq.push(['_trackPageview', '/hkdc/related-posts/bottom-black']);">
+			<img src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/webdev-with-mongodb-part1.jpg" title="MongoDB For Beginners: Introduction and Installation (Part 1/3)">
+			<span class="yarpp-title" onclick="javascript: _gaq.push(['_trackPageview', '/hkdc/related-posts/bottom-black/text']);">MongoDB For Beginners: Introduction and Installation (Part 1/3)</span>
+			</a>
+		</li>
+			<li>			<a href="http://www.hongkiat.com/blog/google-apps-for-beginners/" rel="bookmark" title="Beginners Guide to Setting Up Google Apps Email" onclick="javascript: _gaq.push(['_trackPageview', '/hkdc/related-posts/bottom-black']);">
+			<img src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/google-apps-for-beginners.jpg" title="Beginners Guide to Setting Up Google Apps Email">
+			<span class="yarpp-title" onclick="javascript: _gaq.push(['_trackPageview', '/hkdc/related-posts/bottom-black/text']);">Beginners Guide to Setting Up Google Apps Email</span>
+			</a>
+		</li>
+			<li>			<a href="http://www.hongkiat.com/blog/cpanel-settings-for-beginners/" rel="bookmark" title="5 Essential cPanel Settings for Beginners" onclick="javascript: _gaq.push(['_trackPageview', '/hkdc/related-posts/bottom-black']);">
+			<img src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/cpanel-settings-for-beginners.jpg" title="5 Essential cPanel Settings for Beginners">
+			<span class="yarpp-title" onclick="javascript: _gaq.push(['_trackPageview', '/hkdc/related-posts/bottom-black/text']);">5 Essential cPanel Settings for Beginners</span>
+			</a>
+		</li>
+	</ol>
+</div>
+		</div>
+	
+		  
+		<!-- author -->
+		<a name="theauthor"></a>
+		<div class="sAuthor">
+							
+				<div class="AuthorContainer clearfix"><a name="theauthor"></a>
+					<div class="AuthorPic"><img src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/jake.jpg" class="aPhoto"></div>
+					<div class="AuthorBio">
+						<h5><em>Author:</em> <span><a href="http://www.hongkiat.com/blog/author/jake/" title="Posts by Jake Rocheleau" rel="author">Jake Rocheleau</a></span></h5>
+						<p>Jake is a user experience designer for both web and mobile 
+platforms. Having over 4 years of freelance projects under his belt, he 
+frequently writes articles on topics of modern design trends and social 
+media. You can check out some of his work on <a href="http://dribbble.com/jro">Dribbble</a> or follow his tweets <a href="http://twitter.com/jakerocheleau">@jakerocheleau</a>.</p>
+					</div>
+				</div>
+				
+					</div> 
+		
+		<!-- fm content well -->
+      	<script type="text/javascript" src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/7972.js"></script><div style="display: none;" id="div-fm-gpt-zone-7972"><div style="border: 0pt none;" id="google_ads_iframe_/4601/fmpub.hongkiat_1__container__"><iframe src="javascript:&quot;<html><body style='background:transparent'></body></html>&quot;" style="border: 0px none; vertical-align: bottom;" marginheight="0" marginwidth="0" scrolling="no" name="google_ads_iframe_/4601/fmpub.hongkiat_1" id="google_ads_iframe_/4601/fmpub.hongkiat_1" frameborder="0" height="300" width="650"></iframe></div><iframe src="javascript:&quot;<html><body style='background:transparent'></body></html>&quot;" style="border: 0px none; vertical-align: bottom; visibility: hidden; display: none;" marginheight="0" marginwidth="0" scrolling="no" name="google_ads_iframe_/4601/fmpub.hongkiat_1__hidden__" id="google_ads_iframe_/4601/fmpub.hongkiat_1__hidden__" frameborder="0" height="0" width="0"></iframe></div>
+		<!-- fm content well -->
+		
+		<!-- post tags -->
+		<div class="sTags clearfix">
+			<span>Tags:</span> <ul><li><a href="http://www.hongkiat.com/blog/tag/mongodb/" rel="tag">mongodb</a></li></ul>		</div> 
+		 
+		<!-- after content --> 
+		<div class="sBF_banner">
+			<p class="UFSquareAd">Advertisement</p>
+			<!-- BuySellAds.com Zone Code -->
+            <div id="bsap_1247679" class="bsap_1247679 bsap"><a href="http://stats.buysellads.com/click.go?z=1247679&amp;b=4361261&amp;g=&amp;s=&amp;sw=1366&amp;sh=768&amp;br=firefox,29,linux&amp;r=0.19035002120701827&amp;link=http://www.inkydeals.com/deal/free-web-design-bundle-new/?utm_source=www.hongkiat.com&amp;utm_medium=display&amp;utm_content=web-free-bundle-new&amp;utm_campaign=hongkiat-free-design-resources-new" onmouseover="window.status = 'http://www.inkydeals.com/deal/free-web-design-bundle-new/?utm_source=www.hongkiat.com&amp;utm_medium=display&amp;utm_content=web-free-bundle-new&amp;utm_campaign=hongkiat-free-design-resources-new'; return true;" onmouseout="window.status=''; return true;" class="ad1 odd" title="Download free design resources" id="bsa_4361261" target="_blank"><img src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/208485-1392109367.jpg" alt="Download free design resources" height="100" width="500"></a></div>
+            <!-- End BuySellAds.com Zone Code --> 
+		</div>      		    	
+	</div>
+    
+    
+<div id="disqus_thread"><iframe verticalscrolling="no" horizontalscrolling="no" scrolling="no" src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/a_002.html" style="width: 100% ! important; border: medium none ! important; overflow: hidden ! important; height: 783px ! important;" title="Disqus" tabindex="0" allowtransparency="true" data-disqus-uid="2" id="dsq-2" frameborder="0" width="100%"></iframe></div>
+
+<script type="text/javascript">
+/* <![CDATA[ */
+    var disqus_url = 'http://www.hongkiat.com/blog/webdev-with-mongodb-part3/';
+    var disqus_identifier = '16530 http://www.hongkiat.com/blog/?p=16530';
+    var disqus_container_id = 'disqus_thread';
+    var disqus_domain = 'disqus.com';
+    var disqus_shortname = 'hongkiat';
+    var disqus_title = "MongoDB For Beginners: Setting up MongoDB For PHP (Part 3\/3)";
+        var disqus_config = function () {
+        var config = this; // Access to the config object
+        config.language = '';
+
+        /*
+           All currently supported events:
+            * preData — fires just before we request for initial data
+            * preInit - fires after we get initial data but before we load any dependencies
+            * onInit  - fires when all dependencies are resolved but before dtpl template is rendered
+            * afterRender - fires when template is rendered but before we show it
+            * onReady - everything is done
+         */
+
+        config.callbacks.preData.push(function() {
+            // clear out the container (its filled for SEO/legacy purposes)
+            document.getElementById(disqus_container_id).innerHTML = '';
+        });
+                config.callbacks.onReady.push(function() {
+            // sync comments in the background so we don't block the page
+            var script = document.createElement('script');
+            script.async = true;
+            script.src = '?cf_action=sync_comments&post_id=16530';
+
+            var firstScript = document.getElementsByTagName( "script" )[0];
+            firstScript.parentNode.insertBefore(script, firstScript);
+        });
+                    };
+/* ]]> */
+</script>
+
+<script type="text/javascript">
+/* <![CDATA[ */
+    var DsqLocal = {
+        'trackbacks': [
+            {
+                'author_name':    "MongoDB For Beginners: Setting up MongoDB For PHP (Part 3\/3) | webozaurus.com",
+                'author_url':    "http:\/\/www.webozaurus.com\/graphic-design\/mongodb-for-beginners-setting-up-mongodb-for-php-part-33",
+                'date':            "02\/26\/2013 10:12 PM",
+                'excerpt':        "[...] Read the rest of the article on : hongkiat.com [...] ",
+                'type':            "pingback"            }
+,            {
+                'author_name':    "MongoDB For Beginners: Setting up MongoDB For PHP (Part 3\/3) | Android News",
+                'author_url':    "http:\/\/www.androidfools.com\/2013\/android-news\/mongodb-for-beginners-setting-up-mongodb-for-php-part-33\/",
+                'date':            "02\/27\/2013 03:48 AM",
+                'excerpt':        "[...] Source: hongkiat.com [...] ",
+                'type':            "pingback"            }
+,            {
+                'author_name':    "MongoDB For Beginners: Setting up MongoDB For PHP (Part 3\/3) | DesignNews",
+                'author_url':    "http:\/\/tech.vuilam.mobi\/design\/2013\/02\/26\/mongodb-for-beginners-setting-up-mongodb-for-php-part-33\/",
+                'date':            "02\/28\/2013 12:49 AM",
+                'excerpt':        "[...] MongoDB For Beginners: Setting up MongoDB For PHP (Part 3\/3) [...] ",
+                'type':            "pingback"            }
+,            {
+                'author_name':    "MongoDB For Beginners: Setting up MongoDB For PHP | Big Data Press",
+                'author_url':    "http:\/\/bigdatapress.com\/2013\/03\/02\/mongodb-for-beginners-setting-up-mongodb-for-php\/",
+                'date':            "03\/02\/2013 09:47 PM",
+                'excerpt':        "[...] http:\/\/www.hongkiat.com\/blog\/webdev-with-mongodb-part3\/ [...] ",
+                'type':            "pingback"            }
+,            {
+                'author_name':    "Guía del principiante a la Configuración de sus propios podcasts - | Indagadores |Seguridad informatica |Seguridad en internet",
+                'author_url':    "http:\/\/www.indagadores.com\/guia-del-principiante-a-la-configuracion-de-sus-propios-podcasts\/",
+                'date':            "03\/05\/2013 09:37 PM",
+                'excerpt':        "[...]  MongoDB para principiantes: Configuración de MongoDB para PHP (Parte 3\/3)  [...] ",
+                'type':            "pingback"            }
+,            {
+                'author_name':    "MongoDB For Beginners: Setting up MongoDB For PHP (Part 3\/3) | DesignBloq",
+                'author_url':    "http:\/\/designbloq.com\/mongodb-for-beginners-setting-up-mongodb-for-php-part-33\/",
+                'date':            "03\/06\/2013 12:11 AM",
+                'excerpt':        "[...] Source: hongkiat [...] ",
+                'type':            "pingback"            }
+,            {
+                'author_name':    "Beginner&#8217;s Guide to Setting Up Your Own Podcasts | DesignNews",
+                'author_url':    "http:\/\/tech.vuilam.mobi\/design\/2013\/03\/05\/beginners-guide-to-setting-up-your-own-podcasts\/",
+                'date':            "03\/06\/2013 03:21 AM",
+                'excerpt':        "[...] MongoDB For Beginners: Setting up MongoDB For PHP (Part 3\/3) [...] ",
+                'type':            "pingback"            }
+,            {
+                'author_name':    "Beginner&#8217;s Guide to Setting Up Your Own Podcasts | Android News",
+                'author_url':    "http:\/\/www.androidfools.com\/2013\/android-news\/beginners-guide-to-setting-up-your-own-podcasts\/",
+                'date':            "03\/06\/2013 03:48 AM",
+                'excerpt':        "[...] MongoDB For Beginners: Setting up MongoDB For PHP (Part 3\/3) [...] ",
+                'type':            "pingback"            }
+,            {
+                'author_name':    "Beginner&#8217;s Guide to Setting Up Your Own Podcasts | OGM Français - Une vue terrifiante de l&#039;Asie",
+                'author_url':    "http:\/\/ogm.fr2asia.com\/blog\/beginners-guide-to-setting-up-your-own-podcasts\/",
+                'date':            "03\/06\/2013 03:48 AM",
+                'excerpt':        "[...] MongoDB For Beginners: Setting up MongoDB For PHP (Part 3\/3) [...] ",
+                'type':            "pingback"            }
+,            {
+                'author_name':    "Beginner&#8217;s Guide to Setting Up Your Own Podcasts | Start a Web Design Company",
+                'author_url':    "http:\/\/startawebdesigncompany.com\/?p=709",
+                'date':            "03\/07\/2013 12:47 AM",
+                'excerpt':        "[...] MongoDB For Beginners: Setting up MongoDB For PHP (Part 3\/3) [...] ",
+                'type':            "pingback"            }
+,            {
+                'author_name':    "MongoDB For Beginners: Setting up MongoDB For PHP | MongoDB PHP",
+                'author_url':    "http:\/\/mongodbphp.com\/2013\/03\/06\/mongodb-for-beginners-setting-up-mongodb-for-php\/",
+                'date':            "03\/07\/2013 05:50 AM",
+                'excerpt':        "[...] http:\/\/www.hongkiat.com\/blog\/webdev-with-mongodb-part3\/ [...] ",
+                'type':            "pingback"            }
+        ],
+        'trackback_url': "http:\/\/www.hongkiat.com\/blog\/webdev-with-mongodb-part3\/trackback\/"    };
+/* ]]> */
+</script>
+
+<script type="text/javascript">
+/* <![CDATA[ */
+(function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.' + 'disqus.com' + '/embed.js?pname=wordpress&pver=2.74';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();
+/* ]]> */
+</script>
+	
+    </div>
+
+<!-- -->
+	<!-- google_ad_section_start(weight=ignore) -->
+<div class="sidebar"> 
+
+	<div id="mc_embed_signup">
+	<form action="http://hongkiat.us1.list-manage.com/subscribe/post?u=2cad5936fa92d77b81f41d691&amp;id=e23e003d87" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank">
+		<label for="mce-EMAIL">Get the latest in your Inbox for free.</label>
+		<input name="EMAIL" class="email" id="mce-EMAIL" placeholder="Insert email address" required="" type="email">
+		<div class="clear"><input value="Subscribe!" name="subscribe" id="mc-embedded-subscribe" class="button" type="submit"></div>
+		<div style="clear:both"></div>
+	</form>
+	</div>
+	
+	<div class="block social_container clearfix">
+		<div class="facebook">
+			<iframe src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/like_002.html" scrolling="no" style="border:none; overflow:hidden; width:95px; height:21px;" allowtransparency="true" frameborder="0"></iframe>
+		</div>
+		
+		<div class="gplus">
+			<div id="___plusone_1" style="text-indent: 0px; margin: 0px; padding: 0px; background: none repeat scroll 0% 0% transparent; border-style: none; float: none; line-height: normal; font-size: 1px; vertical-align: baseline; display: inline-block; width: 32px; height: 20px;"><iframe title="+1" data-gapiattached="true" src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/fastbutton_002.html" name="I3_1402471330222" id="I3_1402471330222" vspace="0" tabindex="0" style="position: static; top: 0px; width: 32px; margin: 0px; border-style: none; left: 0px; visibility: visible; height: 20px;" scrolling="no" marginwidth="0" marginheight="0" hspace="0" frameborder="0" width="100%"></iframe></div>
+		</div>
+		
+		<div class="twitter">
+			<iframe style="width: 150px; height: 20px;" data-twttr-rendered="true" title="Twitter Follow Button" class="twitter-follow-button twitter-follow-button" src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/follow_button.html" allowtransparency="true" scrolling="no" id="twitter-widget-1" frameborder="0"></iframe>
+			<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>		
+		</div>		
+	</div>
+	
+	<div class="block bannerWrap clearfix" style="margin-bottom:10px;">
+		<div class="b300x250">     
+		<script type="text/javascript" src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/4723.js"></script><div id="div-fm-gpt-zone-4723"><div style="border: 0pt none;" id="google_ads_iframe_/4601/fmpub.hongkiat_2__container__"><iframe src="javascript:&quot;<html><body style='background:transparent'></body></html>&quot;" style="border: 0px none; vertical-align: bottom;" marginheight="0" marginwidth="0" scrolling="no" name="google_ads_iframe_/4601/fmpub.hongkiat_2" id="google_ads_iframe_/4601/fmpub.hongkiat_2" frameborder="0" height="250" width="300"></iframe></div><iframe src="javascript:&quot;<html><body style='background:transparent'></body></html>&quot;" style="border: 0px none; vertical-align: bottom; visibility: hidden; display: none;" marginheight="0" marginwidth="0" scrolling="no" name="google_ads_iframe_/4601/fmpub.hongkiat_2__hidden__" id="google_ads_iframe_/4601/fmpub.hongkiat_2__hidden__" frameborder="0" height="0" width="0"></iframe></div>        
+		</div>
+	</div>
+	
+	<div class="block bannerWrap clearfix">
+	
+		<div class="b300x120">
+			<div id="bsap_1237809" class="bsap_1237809 bsap"><a href="http://stats.buysellads.com/click.go?z=1237809&amp;b=3013907&amp;g=&amp;s=&amp;sw=1366&amp;sh=768&amp;br=firefox,29,linux&amp;r=0.07399763208526733&amp;link=http://www.vectorstock.com/free-vectors?bsa=1" onmouseover="window.status = 'http://www.vectorstock.com/free-vectors?bsa=1'; return true;" onmouseout="window.status=''; return true;" class="ad1 odd" title=" " id="bsa_3013907" target="_blank"><img src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/147865-1355708306.gif" alt=" " height="120" width="300"></a><a href="http://stats.buysellads.com/click.go?z=1237809&amp;b=5299&amp;g=&amp;s=&amp;sw=1366&amp;sh=768&amp;br=firefox,29,linux&amp;r=0.6446305722039635&amp;link=http://www.dreamtemplate.com/?ref=bsa" onmouseover="window.status = 'http://www.dreamtemplate.com/?ref=bsa'; return true;" onmouseout="window.status=''; return true;" class="ad2 even" title="Premium Website Templates &amp; WordPress Themes" id="bsa_5299" target="_blank"><img src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/196870-1384531140.gif" alt="Premium Website Templates &amp; WordPress Themes" height="120" width="300"></a></div>
+		</div>
+		<div class="b145x120 clearfix"><!--145x120 -->
+			<div id="bsap_1557" class="bsap_1557 bsap"></div>
+			<script type="text/javascript">GA_googleFillSlot("hkdc_145x120-01");</script><script src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/ads"></script><div id="google_ads_div_hkdc_145x120-01_ad_wrapper">
+<div id="google_ads_div_hkdc_145x120-01_ad_container" style="display:inline-block;">
+<ins style="width: 145px; height: 120px; display: inline-table; position: relative; border: 0px none;"><ins style="width: 145px; height: 120px; display: block; position: relative; border: 0px none;"><iframe style="border: 0px none; position: absolute; top: 0px; left: 0px;" marginheight="0" marginwidth="0" scrolling="no" name="google_ads_iframe_hkdc_145x120-01" id="google_ads_iframe_hkdc_145x120-01" frameborder="0" height="120" width="145"></iframe></ins></ins></div>
+</div>
+<script>GA_googleCreateDomIframe("google_ads_div_hkdc_145x120-01_ad_container" ,"hkdc_145x120-01");</script>
+		</div>
+ 	</div>
+	
+	<h4 class="rad_top"><strong>Popular</strong> Now</h4>
+	<div class="block listtop clearfix rad_bot shadowXtop">
+	<script type="text/javascript" src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/popular_threads_widget.js"></script> <style type="text/css" media="screen">	 .dsq-widget ul.dsq-widget-list {	 padding: 0;	 margin: 0;	 text-align: left;	 }	 img.dsq-widget-avatar {	 border: 0px;	 margin: 0px;	 padding: 0px 3px 3px 0px;	 float: left;	 }	 a.dsq-widget-user {	 font-weight: bold;	 }	 a.dsq-widget-thread {	 font-weight: bold;	 }	 p.dsq-widget-meta {	 clear: both;	 font-size: 80%;	 padding: 0;	 margin: 0;	 }	 li.dsq-widget-item {	 margin: 15px 0;	 list-style-type: none;	 clear: both;	 }	 span.dsq-widget-clout {	 padding: 0 2px;	 background-color: #ff7300;	 color: #fff;	 }	 table.dsq-widget-horiz td {	 padding-right: 15px;	 }	 .dsq-widget-comment p {	 display: inline;	 }	 </style>	 <ul class="dsq-widget-list">	 <li class="dsq-widget-item even"><span>1</span>	 <a class="dsq-widget-thread" href="http://www.hongkiat.com/blog/world-cup-2014-facts/">10 Things You Probably Didn’t Know About World Cup 2014</a>	 <p class="dsq-widget-meta">2 comments · 4 hours ago</p>	 </li>	 <li class="dsq-widget-item odd"><span>2</span>	 <a class="dsq-widget-thread" href="http://www.hongkiat.com/blog/misconceptions-website-design-client/">7 Deadly Misconceptions About Web Design Every Client Needs To Know</a>	 <p class="dsq-widget-meta">2 comments · 14 hours ago</p>	 </li>	 <li class="dsq-widget-item even"><span>3</span>	 <a class="dsq-widget-thread" href="http://www.hongkiat.com/blog/avoid-exceeding-mobile-data-quota/">10 Tips To Avoid Exceeding Your Mobile Data Quota</a>	 <p class="dsq-widget-meta">1 comment · 1 day ago</p>	 </li>	 <li class="dsq-widget-item odd"><span>4</span>	 <a class="dsq-widget-thread" href="http://www.hongkiat.com/blog/host-static-website-dropbox-pancake/">Host Your Static Website in Dropbox With Pancake</a>	 <p class="dsq-widget-meta">1 comment · 1 day ago</p>	 </li>	 <li class="dsq-widget-item even"><span>5</span>	 <a class="dsq-widget-thread" href="http://www.hongkiat.com/blog/giant-origami-installations/">15 Giant Origami Installations That Will Amaze You</a>	 <p class="dsq-widget-meta">2 comments · 23 hours ago</p>	 </li>	 <li class="dsq-widget-item odd"><span>6</span>	 <a class="dsq-widget-thread" href="http://www.hongkiat.com/blog/giveaway-6x-wordpress-theme-club-memberships-by-crocoblock/">[Giveaway] 6x WordPress Theme Club Memberships By Crocoblock</a>	 <p class="dsq-widget-meta">32 comments · 2 weeks ago</p>	 </li>	 <li class="dsq-widget-item even"><span>7</span>	 <a class="dsq-widget-thread" href="http://www.hongkiat.com/blog/smart-road-technologies/">5 Smart Road Technologies Of The Future</a>	 <p class="dsq-widget-meta">1 comment · 1 day ago</p>	 </li>	 <li class="dsq-widget-item odd"><span>8</span>	 <a class="dsq-widget-thread" href="http://www.hongkiat.com/blog/future-techonology-coming-true-soon/">10 Futuristic Technolgy That May Come True Very Soon</a>	 <p class="dsq-widget-meta">2 comments · 3 days ago</p>	 </li>	 <li class="dsq-widget-item even"><span>9</span>	 <a class="dsq-widget-thread" href="http://www.hongkiat.com/blog/animated-interactive-infographics/">20 Animated And Interactive Infographics You Have To See</a>	 <p class="dsq-widget-meta">7 comments · 2 days ago</p>	 </li>	 <li class="dsq-widget-item odd"><span>10</span>	 <a class="dsq-widget-thread" href="http://www.hongkiat.com/blog/restore-default-libraries-windows/">How To Restore Deleted Default Libraries Shortcuts In Windows 7 And 8 [Quicktip]</a>	 <p class="dsq-widget-meta">2 comments · 1 day ago</p>	 </li>	 </ul>
+	</div>
+	
+	<div class="block clearfix">
+		<div class="rad_all shadow" id="fbWrapper">
+			<iframe class="fbLikeBox" src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/likebox.html" scrolling="no" style="border:none; overflow:hidden; width:300px; height:258px;" allowtransparency="true" frameborder="0"></iframe>
+			<iframe class="fbActivity" src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/activity.html" scrolling="no" style="border:none; overflow:hidden; width:298px; height:580px;" allowtransparency="true" frameborder="0"></iframe>
+		</div>
+	</div>
+	
+	<div class="block bannerWrap clearfix">
+		<div class="b300x250">
+			<!-- BuySellAds Zone Code -->
+            <div id="bsap_1249810" class="bsap_1249810 bsap"><a href="http://stats.buysellads.com/click.go?z=1249810&amp;b=4756152&amp;g=&amp;s=&amp;sw=1366&amp;sh=768&amp;br=firefox,29,linux&amp;r=0.5528791051098105&amp;link=http://themeforest.net/item/goodinc-flat-responsive-wordpress-blog-news-theme/5285055?ref=WPExplorer" onmouseover="window.status = 'http://themeforest.net/item/goodinc-flat-responsive-wordpress-blog-news-theme/5285055?ref=WPExplorer'; return true;" onmouseout="window.status=''; return true;" class="ad1 odd" title="GoodInc Theme" id="bsa_4756152" target="_blank"><img src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/182068-1375470347.jpg" alt="GoodInc Theme" height="250" width="300"></a></div>
+            <!-- End BuySellAds Zone Code -->
+		</div>
+	</div>
+	
+	<!-- #-->
+	<!--
+	<div class="block custom-a clearfix">
+		<h5></h5>
+		<p></p>
+		<div><a href="" class="cButton">#</a></div>
+	</div>
+	-->	
+	
+	<div class="block bannerWrap clearfix">
+		<div class="right">
+		<script type="text/javascript" src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/4725.js"></script><div id="div-fm-gpt-zone-4725"><div style="border: 0pt none;" id="google_ads_iframe_/4601/fmpub.hongkiat_3__container__"><iframe src="javascript:&quot;<html><body style='background:transparent'></body></html>&quot;" style="border: 0px none; vertical-align: bottom;" marginheight="0" marginwidth="0" scrolling="no" name="google_ads_iframe_/4601/fmpub.hongkiat_3" id="google_ads_iframe_/4601/fmpub.hongkiat_3" frameborder="0" height="600" width="160"></iframe></div><iframe src="javascript:&quot;<html><body style='background:transparent'></body></html>&quot;" style="border: 0px none; vertical-align: bottom; visibility: hidden; display: none;" marginheight="0" marginwidth="0" scrolling="no" name="google_ads_iframe_/4601/fmpub.hongkiat_3__hidden__" id="google_ads_iframe_/4601/fmpub.hongkiat_3__hidden__" frameborder="0" height="0" width="0"></iframe></div>        
+		</div>
+		
+		
+		<div class="left rad_bot shadowXtop" id="readers_fav">
+		<h4 class="rad_top"><strong>Readers' Fav</strong></h4>
+			<style>
+				#readers_fav .wallpapers a {background-position:0 0;}
+				#readers_fav .social-media a {background-position:-121px 0;}
+				#readers_fav .photography a {background-position:-242px 0;}
+				#readers_fav .photo-manipulation a {background-position:-363px 0;}
+				#readers_fav .freebie a {background-position:-484px 0;}
+				#readers_fav .photoshop a {background-position:-605px 0;}
+				#readers_fav .freelance a {background-position:0 -83px;}
+			</style>
+			<ul>
+				<li class="wallpapers"><a href="http://www.hongkiat.com/blog/category/freebies-online/free-wallpapers/">Wallpapers</a></li>
+				<li class="social-media"><a href="http://www.hongkiat.com/blog/tag/social-media/">Social Media</a></li>
+				<li class="photography"><a href="http://www.hongkiat.com/blog/tag/photography/">Photography</a></li>
+				<li class="photo-manipulation"><a href="http://www.hongkiat.com/blog/tag/photo-manipulation/">Photo Manipulation</a></li>
+				<li class="freebie"><a href="http://www.hongkiat.com/blog/tag/freebie/">Freebie</a></li>
+				<li class="photoshop"><a href="http://www.hongkiat.com/blog/category/photoshop-tutorial/">Photoshop</a></li>
+				<li class="freelance"><a href="http://www.hongkiat.com/blog/tag/freelance/">Freelance</a></li>
+			</ul>
+		</div>
+	</div>
+	
+	
+	<!--
+	<div class="block custom-b clearfix">
+		<h5></h5>
+		<p></p>
+		<div><a href="" class="cButton">#</a></div>
+	</div>
+	-->
+
+</div>
+<!-- google_ad_section_end --><!-- -->
+
+
+			</div><!--contentwrap-->
+		</div><img style="width: 0px; height: 0px; border: 0px none;" src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/img_002.gif" height="0" border="0" width="0"><img style="width: 0px; height: 0px; border: 0px none;" src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/img.gif" height="1" border="0" width="1"><script async="" src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/hongkiat.js" type="text/javascript"></script><script async="" src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/a_005.js" type="text/javascript"></script><script async="" src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/a.js" type="text/javascript"></script><script async="" src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/a_003.js" type="text/javascript"></script><script async="" src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/a_002.js" type="text/javascript"></script><script async="" src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/a_004.js" type="text/javascript"></script><!--main-->
+<!-- google_ad_section_start(weight=ignore) -->	
+	<div id="footer">
+		<div class="footer_container">
+			<div class="footer-row1 clearfix">
+				<div id="footCol01">
+				</div>
+				
+				<div id="footCol02">
+					<h4>About Us</h4>
+					<p>Hongkiat.com is a design weblog dedicated to designers and 
+bloggers. We constantly publish useful tricks, tools, tutorials and 
+inspirational artworks. <a href="http://www.hongkiat.com/blog/about-us/">Read more...</a></p>
+				</div>
+				
+				<div id="footCol03">
+					<h4>Navigate</h4>
+					<ul>
+						<li><a href="http://www.hongkiat.com/blog/about-us/">About Us</a></li>
+						<li><a href="http://www.hongkiat.com/blog/advertise/">Advertise</a></li>
+						<li><a href="http://www.hongkiat.com/blog/contact/">Contact Us</a></li>
+						<li><a href="http://www.hongkiat.com/blog/write-for-us/">Write for Us</a></li>
+						<li><a href="http://www.hongkiat.com/blog/submit-news-tips/">Submit Tips</a></li>
+						<li><a href="http://www.hongkiat.com/blog/privacy-policy-for-hongkiatcom/">Privacy Policy</a></li>
+						<li><a href="http://www.hongkiat.com/blog/publishing-policy/">Publishing Policy</a></li>
+					</ul>
+				</div>
+				
+				<div id="footCol04">
+					<h4>We're Social</h4>
+					<ul class="social">
+						<li class="fb"><span></span><a target="_blank" rel="external" href="http://www.facebook.com/hongkiatcom">Facebook</a></li>
+						<li class="tw"><span></span><a target="_blank" rel="external" href="http://www.twitter.com/hongkiat">Twitter</a></li>
+						<li class="gp"><span></span><a rel="external publisher" href="https://plus.google.com/102816829103930695344">Google +</a></li>
+						<li class="rf"><span></span><a target="_blank" rel="external" href="http://feeds2.feedburner.com/24thfloor">RSS</a></li>
+						<li class="dg"><span></span><a target="_blank" rel="external" href="http://digg.com/hongkiat">Digg</a></li>
+						<li class="da"><span></span><a target="_blank" rel="external" href="http://hongkiat.deviantart.com/">Deviant Art</a></li>
+						<li class="ff"><span></span><a target="_blank" rel="external" href="http://friendfeed.com/hongkiat">FriendFeed</a></li>
+					</ul>
+				</div>
+				
+				<div id="footCol05">
+					<h4 id="foot-partners">Our Partners</h4>
+					<ul class="foot-partners-logo">
+						<li id="netdna" class="partners" title="Content accelerated by MaxCDN"><a target="_blank" rel="external" href="http://www.maxcdn.com/">MaxCDN</a></li>
+						<li id="wpwebhost" class="partners" title="Hosting powered by WPWebHost"><a target="_blank" rel="external" href="http://www.wpwebhost.com/">WPWebhost</a></li>
+					</ul>
+					
+				</div>
+				
+			</div>
+			
+			<div class="footer-row2 clearfix">
+				<p class="disclaimer">
+					© 2013 Hongkiat.com. Design by Hongkiat Lim. <a target="_blank" rel="external" href="http://www.hongkiat.com/blog/sitemap.xml">Sitemap</a><br>
+					Reproduction without explicit permission is prohibited.  All Rights Reserved.<br>
+					<br>
+					Disclaimer: The editor(s) reserve the right to edit any comments 
+that are found to be abusive, offensive, contain profanity, serves as 
+spam, is largely self-promotional, or displaying attempts to harbour 
+irrelevant text links for any purpose.
+				</p>
+				<p class="endofpage-btt">
+					<a href="#top" title="Back to top">↑ Back to Top</a>
+				</p>
+			</div>
+			
+			<!-- fm -->
+         	<script type="text/javascript" src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/hongkiat.js"></script>		
+			
+			<!-- facebook -->
+			<div class=" fb_reset" id="fb-root"><div style="position: absolute; top: -10000px; height: 0px; width: 0px;"><div><iframe src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/V80PAcvrynR.html" style="border: medium none;" tabindex="-1" title="Facebook Cross Domain Communication Frame" aria-hidden="true" id="fb_xdm_frame_http" scrolling="no" allowtransparency="true" name="fb_xdm_frame_http" frameborder="0"></iframe><iframe src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/V80PAcvrynR_002.html" style="border: medium none;" tabindex="-1" title="Facebook Cross Domain Communication Frame" aria-hidden="true" id="fb_xdm_frame_https" scrolling="no" allowtransparency="true" name="fb_xdm_frame_https" frameborder="0"></iframe></div></div><div style="position: absolute; top: -10000px; height: 0px; width: 0px;"><div><iframe src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/ping.html" style="display: none;" scrolling="no" allowtransparency="true" name="f104fd4fab5a838" frameborder="0"></iframe></div></div></div>
+			<script>(function(d, s, id) {
+			  var js, fjs = d.getElementsByTagName(s)[0];
+			  if (d.getElementById(id)) return;
+			  js = d.createElement(s); js.id = id;
+			  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=14499445211";
+			  fjs.parentNode.insertBefore(js, fjs);
+			}(document, 'script', 'facebook-jssdk'));
+			</script>
+            
+            
+ 			<!-- mailchimp -->
+            
+			<script type="text/javascript">
+			(function(){
+               function clearMCEmail(a){if(a.defaultValue==a.value)a.value="";else if(a.value=="")a.value=a.defaultValue}function mce_success_cb(a){mce_jQuery("#mce-success-response").hide();mce_jQuery("#mce-error-response").hide();if(a.result=="success"){mce_jQuery("#mce-"+a.result+"-response").show();mce_jQuery("#mce-"+a.result+"-response").html(a.msg);mce_jQuery("#mc-embedded-subscribe-form").each(function(){this.reset()})}else{var b=-1;var c;try{var d=a.msg.split(" - ",2);if(d[1]==undefined){c=a.msg}else{i=parseInt(d[0]);if(i.toString()==d[0]){b=d[0];c=d[1]}else{b=-1;c=a.msg}}}catch(e){b=-1;c=a.msg}try{if(b==-1){mce_jQuery("#mce-"+a.result+"-response").show();mce_jQuery("#mce-"+a.result+"-response").html(c)}else{err_id="mce_tmp_error_msg";html='<div id="'+err_id+'" style="'+err_style+'"> '+c+"</div>";var f="#mc_embed_signup";var g=mce_jQuery(f);if(ftypes[b]=="address"){f="#mce-"+fnames[b]+"-addr1";g=mce_jQuery(f).parent().parent().get(0)}else{if(ftypes[b]=="date"){f="#mce-"+fnames[b]+"-month";g=mce_jQuery(f).parent().parent().get(0)}else{f="#mce-"+fnames[b];g=mce_jQuery().parent(f).get(0)}}if(g){mce_jQuery(g).append(html);mce_jQuery(f).focus()}else{mce_jQuery("#mce-"+a.result+"-response").show();mce_jQuery("#mce-"+a.result+"-response").html(c)}}}catch(e){mce_jQuery("#mce-"+a.result+"-response").show();mce_jQuery("#mce-"+a.result+"-response").html(c)}}}var fnames=new Array;var ftypes=new Array;fnames[0]="EMAIL";ftypes[0]="email";fnames[1]="NAME";ftypes[1]="text";var err_style="";try{err_style=mc_custom_error_style}catch(e){err_style=""}var mce_jQuery=jQuery.noConflict();mce_jQuery(document).ready(function(a){var b={errorClass:"mce_inline_error",errorElement:"div",errorStyle:err_style,onkeyup:function(){},onfocusout:function(){},onblur:function(){}};var c=mce_jQuery("#mc-embedded-subscribe-form").validate(b);b={url:"http://hongkiat.us1.list-manage.com/subscribe/post-json?u=2cad5936fa92d77b81f41d691&id=e23e003d87&c=?",type:"GET",dataType:"json",contentType:"application/json; charset=utf-8",beforeSubmit:function(){mce_jQuery("#mce_tmp_error_msg").remove();mce_jQuery(".datefield","#mc_embed_signup").each(function(){var a="filled";var b=new Array;var c=0;mce_jQuery(":text",this).each(function(){b[c]=this;c++});mce_jQuery(":hidden",this).each(function(){if(b[0].value=="MM"&&b[1].value=="DD"&&b[2].value=="YYYY"){this.value=""}else{if(b[0].value==""&&b[1].value==""&&b[2].value==""){this.value=""}else{this.value=b[0].value+"/"+b[1].value+"/"+b[2].value}}})});return c.form()},success:mce_success_cb};mce_jQuery("#mc-embedded-subscribe-form").ajaxForm(b)});			
+             })();
+
+			
+			</script>
+            
+			<!-- bsa -->
+			<script type="text/javascript">
+             (function(){
+               var bsa = document.createElement('script');
+                  bsa.type = 'text/javascript';
+                  bsa.async = true;
+                  bsa.src = 'http://s3.buysellads.com/ac/bsa.js';
+               (document.getElementsByTagName('head')[0]||document.getElementsByTagName('body')[0]).appendChild(bsa);
+             })();
+             </script>
+	
+			
+			<!-- Google +1 -->
+			<script type="text/javascript">
+			  (function() {
+				var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+				po.src = 'https://apis.google.com/js/plusone.js';
+				var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+			  })();
+			</script>
+			
+			
+			<!-- Intellitxt -->
+			<script type="text/javascript" src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/front.js"></script>
+			
+			
+			<!-- comScore -->
+			<script>var csDocDomain = document.location.href; document.write(unescape("%3Cscript src='" + (document.location.protocol == "https:" ? "https://sb" : "http://b") + ".scorecardresearch.com/beacon.js' %3E%3C/script%3E")); </script><script src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/beacon.js"></script>
+			<script>COMSCORE.beacon({ c1:2, c2:"6035753", c3:"6035753", c4:csDocDomain, c5:"Technology - News", c6:"", c15:"" }); </script>
+			<noscript><img src="http://b.scorecardresearch.com/b?c1=2&c2=6035753&c3=6035753&c4=http://www.hongkiat.com&c5=Technology - News&c6=&c15=&cv=1.3&cj=1" style="display:none" width="0" height="0" alt="" /></noscript>
+			
+			
+			<!-- Quantcast -->
+			<script type="text/javascript"> _qoptions={ qacct:"p-306sOjcgY0NWo" }; </script>
+			<script type="text/javascript" src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/quant.js"></script>
+			<noscript><img src="http://pixel.quantserve.com/pixel/p-306sOjcgY0NWo.gif" style="display: none;" border="0" height="1" width="1" alt="Quantcast"/> </noscript>
+			
+			
+           
+			    <script type="text/javascript">
+    // <![CDATA[
+        var disqus_shortname = 'hongkiat';
+        (function () {
+            var nodes = document.getElementsByTagName('span');
+            for (var i = 0, url; i < nodes.length; i++) {
+                if (nodes[i].className.indexOf('dsq-postid') != -1) {
+                    nodes[i].parentNode.setAttribute('data-disqus-identifier', nodes[i].getAttribute('rel'));
+                    url = nodes[i].parentNode.href.split('#', 1);
+                    if (url.length == 1) url = url[0];
+                    else url = url[1]
+                    nodes[i].parentNode.href = url + '#disqus_thread';
+                }
+            }
+            var s = document.createElement('script'); s.async = true;
+            s.type = 'text/javascript';
+            s.src = '//' + 'disqus.com/forums/' + disqus_shortname + '/count.js';
+            (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+        }());
+    //]]>
+    </script>
+<script class="javascript" src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/all.js"></script>
+<script class="javascript">
+dp.SyntaxHighlighter.ClipboardSwf = 'http://mediatemplestatic.hongkiat.netdna-cdn.com/v5/js/google-syntax-highlighter/Scripts/clipboard.swf';
+dp.SyntaxHighlighter.HighlightAll('code');
+</script>
+
+<!--Plugin WP Missed Schedule 2013.1024.8888 Active - Tag 6d807758f47abdb4ae626b9fa261d2f5-->
+
+			</div><!--footer_container-->
+		
+	</div><iframe tabindex="-1" style="width: 1px; height: 1px; position: absolute; top: -100px;" src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/postmessageRelay.html" id="oauth2relay410663629" name="oauth2relay410663629"></iframe><!--footer-->
+<!-- google_ad_section_end -->
+
+
+
+
+
+
+<div style="position: absolute; left: 0px; top: 0px;" class="" id="itxtmobtholder"></div><div class="itxtrst itxtrstdiv" id="itxtttholder" style="z-index: 9900000; position: absolute; top: 0; left:0;"><div style="z-index: 9910000; display: none; visibility: hidden;" id="itxttt" class="itxtrst itxtrstdiv"><div id="itxtchrome" class="itxtrst itxtrstdiv"><div class="itxtrst itxtrstdiv" style="background-color:#ececec" id="itxtcontentbg"><div id="itxt12_left_edge" class="itxtrst itxtrstdiv itxt12_left_edge"></div><div id="itxt12_right_edge" class="itxtrst itxtrstdiv itxt12_right_edge"></div><div id="itxt_bg_inside" class="itxtrst itxtrstdiv itxt_bg_inside"></div></div><div id="itxtheader" class="itxtrst itxtrstdiv"><div id="itxtcrnhldr" class="itxtrst itxtrstdiv itxtcrnhldr"><div class="itxt12_tlc itxt12_sprited"></div><div class="itxt12_tm itxt12_sprited"></div><div class="itxt12_trc itxt12_sprited"></div></div><div class=" itxt12_hdr_lft" id="itxt12_hdr_lft"><a class="itxtrst itxtrsta" target="_blank"><div class=" itxt12_vmlogo itxt_sprited"></div></a><div class="itxt12_priv"><div class="itxt12_adchoices" id="itxt_ad_choices"></div><div class="itxt12_adchoices_txt">AdChoices</div></div></div><div class=" itxt12_hdr_social" id="itxt12_hdr_social"><div class="itxt12_sprited itxt_social" id="itxt_social_twitter"></div><div class="itxt12_sprited itxt_social" id="itxt_social_fb"></div></div><div class=" itxt12_hdr_rt" id="itxt12_hdr_lft"><div class="itxt12_sprited" id="itxt_whats_this"></div><div class="itxt12_cls_btn"></div></div><div class="itxt_underliner" id="itxt_underliner">&nbsp;</div></div><div id="itxtfooter" class="itxtrst itxtrstdiv"><div class="itxt12_ftr"><div class="itxt12_ftr_left itxt12_sprited" id="itxt12_ftr_left "></div><div class="itxt12_ftr_mid itxt12_sprited" id="itxt12_ftr_mid"></div><div class="itxt12_ftr_right itxt12_sprited" id="itxt12_ftr_right"></div></div></div><div style="width: 30px; height: 15px;" id="itxttail" class="itxtrst itxtrstdiv"><div id="itxt12_tail" class="itxtrst itxtrstdiv itxt12_tail itxt12_sprited itxt12_tail_abovecenter"></div></div><div style="width: 300px; height: 100px;" id="itxtcontent" class="itxtrst itxtrstdiv itxt12content"><div class="itxtrst itxtrstdiv" id="itxtcontentLdg" style="position: absolute; display: none; width: 300px; height: 100px;"><img class="itxtrst itxtrstimg" src="MongoDB%20For%20Beginners:%20Setting%20up%20MongoDB%20For%20PHP_files/loading.gif" id="itxtcontentLdgImg" style="position: absolute; left: 50%; top: 50%; margin-left: 0px; margin-top: 0px;" height="32" width="32"></div></div></div></div></div><iframe style="display: none; width: 0px; height: 0px;" name="google_osd_static_frame" id="google_osd_static_frame_186007545967"></iframe></body></html>
+<!-- Dynamic page generated in 0.359 seconds. -->
+<!-- Cached page generated by WP-Super-Cache on 2014-06-03 15:17:18 -->
+<!-- super cache -->
